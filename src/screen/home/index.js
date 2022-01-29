@@ -1,5 +1,6 @@
 import React from 'react';
-import { ImageBackground, View, StyleSheet, StatusBar, TouchableOpacity, Text } from 'react-native';
+import { ImageBackground, View, StyleSheet, StatusBar, TouchableOpacity, Text, Button } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 
 export default function Home({ navigation }) {
@@ -8,6 +9,9 @@ export default function Home({ navigation }) {
         <View style={style.container}>
             <StatusBar backgroundColor='#486d6e' />    
             <Text>Tela principal</Text>
+            <Button title='signout' onPress={() => {
+                    auth().signOut();
+            }} />
         </View>    
     );
 }
