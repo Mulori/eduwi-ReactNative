@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "164722996765",
+    "project_id": "eduwi-64db3",
+    "storage_bucket": "eduwi-64db3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164722996765:android:f3851d798fb01f2903b8f4",
+        "android_client_info": {
+          "package_name": "com.eduwi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164722996765-oi9ai3899rn2bs4o2glk7hr9dkpqu0m4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH_0zMvt915LwPtYeXY5hAtVzgO5k8uTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "164722996765-oi9ai3899rn2bs4o2glk7hr9dkpqu0m4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
