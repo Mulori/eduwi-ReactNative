@@ -4,8 +4,11 @@ import Icon from 'react-native-vector-icons/Entypo'
 import LottieRegister from '../../components/lotties/register';
 import * as Animatable from 'react-native-animatable';
 import auth from '@react-native-firebase/auth';
+import userServices from '../../services/userService/userService';
 
 export default function Register({ navigation }) {
+    const [name, setName] = useState('')
+    const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
@@ -17,28 +20,35 @@ export default function Register({ navigation }) {
     const validator = require('validator');
 
     function Register(){
-        if(!email || !password || !passwordConfirm){
+
+        const name_clean = name.trim()
+        const last_name_clean = lastName.trim()
+        const email_clean = email.trim()
+        const password_clean = password.trim()
+        const password_confirm_clean = passwordConfirm.trim()
+
+        if(!name_clean || !last_name_clean || !email_clean || !password_clean || !password_confirm_clean){
             setisFieldEmpty(true);
             return;
         }else{
             setisFieldEmpty(false);
         }
 
-        if (validator.isEmail(email)) {
+        if (validator.isEmail(email_clean)) {
             setEmailIncorrect(false);
         } else {
             setEmailIncorrect(true);
             return;
         }
 
-        if(password !== passwordConfirm){
+        if(password_clean !== password_confirm_clean){
             setPassIncorrect(true);
             return;
         }else{
             setPassIncorrect(false);
         }
 
-        if(password.length < 6){
+        if(password_clean.length < 6){
             setisPassLower(true);
             return;
         }else{
@@ -46,8 +56,25 @@ export default function Register({ navigation }) {
         }
 
         auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then()
+        .createUserWithEmailAndPassword(email_clean, password_clean)
+        .then((ok) => {
+            let data = {
+                firebase_uid: ok.user.uid,
+                email: ok.user.email,
+                name: name_clean,
+                last_name: last_name_clean
+            }   
+
+            userServices.userCreate(data)
+            .then((response) => {
+                Alert.alert('Sucesso', 'Conta criada com sucesso!', [{text: 'Ok',style: 'destructive', }]);
+                navigation.pop();
+            })
+            .catch((error) => {
+                console.log(error);
+                Alert.alert('Erro', 'Ocorreu um problema ao criar a conta', [{text: 'Ok',style: 'destructive', }]);
+            })        
+        })
         .catch((erro) => {
             Alert.alert("Erro", erro);
         })
@@ -60,12 +87,13 @@ export default function Register({ navigation }) {
     return (    
         <View style={style.container}>
             <StatusBar backgroundColor='#d2583a' barStyle='light-content'/>   
-            <LottieRegister />
-            <Text style={style.title}>Cadastre-se</Text>            
-            <View style={style.containerForm}>                
-                <TextInput style={style.inputHead} placeholder='Email' onChangeText={ (value) => setEmail(value)}/>
-                <TextInput style={style.input} placeholder='Senha' secureTextEntry onChangeText={ (value) => setPassword(value)}/>
-                <TextInput style={style.input} placeholder='Confirme a senha' secureTextEntry onChangeText={ (value) => setPasswordConfirm(value)}/>
+            <Animatable.Text animation="fadeInLeft" duration={500} style={style.title}>Cadastre-se</Animatable.Text>            
+            <View style={style.containerForm}>     
+                <TextInput style={style.inputHead} placeholder='Nome' onChangeText={ (value) => setName(value)}/>
+                <TextInput style={style.input} placeholder='Sobrenome' onChangeText={ (value) => setLastName(value)}/>           
+                <TextInput style={style.input} placeholder='Email' autoCapitalize = 'none' onChangeText={ (value) => setEmail(value)}/>
+                <TextInput style={style.input} placeholder='Senha' autoCapitalize = 'none' secureTextEntry onChangeText={ (value) => setPassword(value)}/>
+                <TextInput style={style.input} placeholder='Confirme a senha' autoCapitalize = 'none' secureTextEntry onChangeText={ (value) => setPasswordConfirm(value)}/>
                 <TouchableOpacity style={style.containerButton} onPress={Register}>
                     <Text style={style.textButton}>Registrar</Text>
                 </TouchableOpacity>        
@@ -75,6 +103,8 @@ export default function Register({ navigation }) {
                 <Icon name="reply-all" size={20} style={{ color: '#FFF'}} />
                 <Text style={style.textBack}>Já possuo uma conta</Text>
             </TouchableOpacity>
+            <Icon name="star" size={20} style={style.iconName} />
+            <Icon name="star-outlined" size={20} style={style.iconLastName} />
             <Icon name="mail" size={20} style={style.iconEmail} />
             <Icon name="lock" size={20} style={style.iconPass} />
             <Icon name="lock" size={20} style={style.iconPassTwo} />
@@ -158,20 +188,30 @@ const style = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 30,
         color: '#FFF',
+    },    
+    iconName:{
+        position: 'absolute',
+        marginTop: 104,
+        marginLeft: 28,
+    },
+    iconLastName:{
+        position: 'absolute',
+        marginTop: 160,
+        marginLeft: 28,
     },
     iconEmail:{
         position: 'absolute',
-        marginTop: 216,
+        marginTop: 221,
         marginLeft: 28,
     },
     iconPass:{
         position: 'absolute',
-        marginTop: 270,
+        marginTop: 276,
         marginLeft: 28,
     },
     iconPassTwo:{
         position: 'absolute',
-        marginTop: 328,
+        marginTop: 333,
         marginLeft: 28,
     },
     containerBack:{

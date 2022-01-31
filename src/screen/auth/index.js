@@ -24,17 +24,26 @@ function RouteAuth() {
 }
 
 export default function Auth() {
-    const [user, setUser] = useState(null); 
-      
-    useEffect(() => {
-      const subscriber = auth().onAuthStateChanged(setUser);
-      return subscriber;
-    }, []);  
+    // Set an initializing state whilst Firebase connects
+    const [initializing, setInitializing] = useState(true);
+    const [user, setUser] = useState();
 
-    return (
-      
+    // Handle user state changes
+    function onAuthStateChanged(user) {
+      setUser(user);
+      if (initializing) setInitializing(false);
+    }
+
+    useEffect(() => {
+      const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+      return subscriber;
+    }, []);
+    
+    if (initializing) return null;
+
+    return (      
         <NavigationContainer>
           {user ? <Home /> : <RouteAuth /> }           
         </NavigationContainer>
-      );
+    );
 }
