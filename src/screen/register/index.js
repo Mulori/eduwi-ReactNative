@@ -191,27 +191,27 @@ const style = StyleSheet.create({
     },    
     iconName:{
         position: 'absolute',
-        marginTop: 104,
+        marginTop: '26.5%',
         marginLeft: 28,
     },
     iconLastName:{
         position: 'absolute',
-        marginTop: 160,
+        marginTop: '41%',
         marginLeft: 28,
     },
     iconEmail:{
         position: 'absolute',
-        marginTop: 221,
+        marginTop: '56%',
         marginLeft: 28,
     },
     iconPass:{
         position: 'absolute',
-        marginTop: 276,
+        marginTop: '70.5%',
         marginLeft: 28,
     },
     iconPassTwo:{
         position: 'absolute',
-        marginTop: 333,
+        marginTop: '85%',
         marginLeft: 28,
     },
     containerBack:{
