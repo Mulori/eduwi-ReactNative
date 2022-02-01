@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import exploreCommunity from '../../screen/community/explore';
 import myCommunity from '../../screen/community/my';
 import myProfile from '../../screen/profile';
+import my_main from '../community/my_main';
 
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -27,6 +28,7 @@ export default function Home() {
     return (    
         <NavigationContainer independent={true}>
             <Tab.Navigator            
+                initialRouteName="myCommunity"
                 screenOptions={{
                     showLabel: false,
                     tabBarStyle: {
@@ -60,7 +62,7 @@ export default function Home() {
                         headerShown: false,
                     }}
                 />
-                <Tab.Screen name="myCommunity" component={myCommunity} 
+                <Tab.Screen name="myCommunity" component={my_main} 
                     options={{
                         tabBarIcon: ({focused}) => (
                             <View style={{ 
