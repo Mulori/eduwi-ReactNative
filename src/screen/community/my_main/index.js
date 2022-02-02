@@ -10,12 +10,10 @@ const stack = createNativeStackNavigator();
 
 export default function my_main() {
     return(
-        <NavigationContainer independent={true}>
-            <stack.Navigator initialRouteName="myCommunity">
-                <stack.Screen name="listCommunity" options={{ headerShown: false }} component={myCommunity}/>
-                <stack.Screen name="listGroup" options={{ headerShown: false }} component={listGroup}/>                
-            </stack.Navigator>            
-        </NavigationContainer>
+        <stack.Navigator initialRouteName="myCommunity">
+            <stack.Screen name="listCommunity" options={{ headerShown: false }} component={myCommunity}/>
+            <stack.Screen name="listGroup" options={{ headerShown: false }} component={listGroup}/>                
+        </stack.Navigator>   
     );
 }
 

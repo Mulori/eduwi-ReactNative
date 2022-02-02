@@ -21,7 +21,7 @@ export default function Welcome({ navigation }) {
             </View>
             <View style={style.containerSignUp}>
                 <TouchableOpacity onPress={() => {navigation.navigate('Register');}} style={style.backsignup}>
-                    <Text style={style.text}>Quero criar minha conta</Text>                
+                    <Text style={style.text}>Criar minha conta</Text>                
                 </TouchableOpacity>
             </View>
         </View>    
@@ -36,7 +36,7 @@ const style = StyleSheet.create({
     backsignin: {
         backgroundColor: '#fae5d9',
         width: '60%',
-        marginTop: 350,
+        marginTop: '80%',
         padding: 10,
         borderBottomEndRadius: 15,
         borderTopEndRadius: 15,

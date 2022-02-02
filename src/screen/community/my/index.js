@@ -58,7 +58,7 @@ export default function myCommunity({ navigation }) {
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFF', marginLeft: 10}}>Minhas comunidades</Text>
             </View>                 
         <ScrollView
-            style={{ marginBottom: 104  }}  
+            style={{ marginBottom: 0, backgroundColor: '#fff'  }}  
             refreshControl={
                 <RefreshControl
                 refreshing={refreshing}
@@ -73,16 +73,16 @@ export default function myCommunity({ navigation }) {
                     <TouchableOpacity style={style.itemList} key={key} onPress={() => navigation.navigate('listGroup', { valueCommunity: value})} >
                         <View style={{ flexDirection: 'row'}}>
                             <View style={{ width: '95%' }}>
-                                <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 15}}>{value.title}</Text>
-                                <Text style={{color: '#FFF', fontSize: 12}}>{'Descrição: ' + value.description}</Text>
-                                <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 9}}>{'Quantidade de membros: ' + value.quantity_members}</Text>
-                                <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 9}}>{'Criado por: ' + value.name}</Text>
+                                <Text style={{color: '#000', fontWeight: 'bold', fontSize: 15}}>{value.title}</Text>
+                                <Text style={{color: '#000', fontSize: 12}}>{'Descrição: ' + value.description}</Text>
+                                <Text style={{color: '#000', fontWeight: 'bold', fontSize: 9}}>{'Quantidade de membros: ' + value.quantity_members}</Text>
+                                <Text style={{color: '#000', fontWeight: 'bold', fontSize: 9}}>{'Criado por: ' + value.name}</Text>
                             </View>
                             <View style={{ width: '5%' }}> 
                                 {
                                     value.with_password >= 1 
-                                    ? <IconFont5 name="lock" size={12} style={{ color : '#FFF', marginTop: '50%'}} /> 
-                                    : <IconFont5 name="lock-open" size={12} style={{ color : '#FFF', marginTop: '50%'}} /> 
+                                    ? <IconFont5 name="lock" size={12} style={{ color : '#000', marginTop: '50%'}} /> 
+                                    : <IconFont5 name="lock-open" size={12} style={{ color : '#000', marginTop: '50%'}} /> 
                                 }                           
                             </View>
                         </View>
@@ -120,9 +120,13 @@ const style = StyleSheet.create({
         right: 90,
     },
     itemList:{
-        backgroundColor: '#486d6e',
+        backgroundColor: '#FFF',
         margin: 3,
         padding: 10,
-        borderRadius: 12
+        borderRadius: 12,
+        shadowColor: '#470000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2,
+        elevation: 10
     }
 })

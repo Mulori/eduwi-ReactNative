@@ -67,8 +67,9 @@ export default function Register({ navigation }) {
 
             userServices.userCreate(data)
             .then((response) => {
-                Alert.alert('Sucesso', 'Conta criada com sucesso!', [{text: 'Ok',style: 'destructive', }]);
                 navigation.pop();
+                Alert.alert('Sucesso', 'Conta criada com sucesso!', [{text: 'Ok',style: 'destructive', }]);
+                
             })
             .catch((error) => {
                 console.log(error);
@@ -88,7 +89,7 @@ export default function Register({ navigation }) {
         <View style={style.container}>
             <StatusBar backgroundColor='#d2583a' barStyle='light-content'/>   
             <Animatable.Text animation="fadeInLeft" duration={500} style={style.title}>Cadastre-se</Animatable.Text>            
-            <View style={style.containerForm}>     
+            <View style={style.containerForm}>   
                 <TextInput style={style.inputHead} placeholder='Nome' onChangeText={ (value) => setName(value)}/>
                 <TextInput style={style.input} placeholder='Sobrenome' onChangeText={ (value) => setLastName(value)}/>           
                 <TextInput style={style.input} placeholder='Email' autoCapitalize = 'none' onChangeText={ (value) => setEmail(value)}/>
@@ -103,11 +104,6 @@ export default function Register({ navigation }) {
                 <Icon name="reply-all" size={20} style={{ color: '#FFF'}} />
                 <Text style={style.textBack}>Já possuo uma conta</Text>
             </TouchableOpacity>
-            <Icon name="star" size={20} style={style.iconName} />
-            <Icon name="star-outlined" size={20} style={style.iconLastName} />
-            <Icon name="mail" size={20} style={style.iconEmail} />
-            <Icon name="lock" size={20} style={style.iconPass} />
-            <Icon name="lock" size={20} style={style.iconPassTwo} />
 
             { !isEmaiIncorrect ? null : 
             <Animatable.View  animation="fadeInLeft" duration={500} style={style.emailInvalid}>
@@ -153,8 +149,7 @@ const style = StyleSheet.create({
         marginTop: 10,
         borderRadius: 10,
         fontSize: 20,
-        padding: 10,        
-        paddingLeft: 35,
+        padding: 10,     
     },
     input:{
         backgroundColor: '#FFFFFF',
@@ -164,7 +159,6 @@ const style = StyleSheet.create({
         fontSize: 20,
         padding: 10,
         alignItems: 'center',
-        paddingLeft: 35,
     },
     containerForm:{
         alignItems : 'center'
@@ -189,31 +183,6 @@ const style = StyleSheet.create({
         fontSize: 30,
         color: '#FFF',
     },    
-    iconName:{
-        position: 'absolute',
-        marginTop: '26.5%',
-        marginLeft: 28,
-    },
-    iconLastName:{
-        position: 'absolute',
-        marginTop: '41%',
-        marginLeft: 28,
-    },
-    iconEmail:{
-        position: 'absolute',
-        marginTop: '56%',
-        marginLeft: 28,
-    },
-    iconPass:{
-        position: 'absolute',
-        marginTop: '70.5%',
-        marginLeft: 28,
-    },
-    iconPassTwo:{
-        position: 'absolute',
-        marginTop: '85%',
-        marginLeft: 28,
-    },
     containerBack:{
         paddingLeft: 20,
         marginTop: 40,

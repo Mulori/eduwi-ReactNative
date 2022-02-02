@@ -91,8 +91,8 @@ export default function Login({ navigation }) {
             <LottieCrashHead />            
             <Text style={style.title}>Entrar</Text>            
             <View style={style.containerForm}>                
-                <TextInput style={style.inputHead} placeholder='Email' onChangeText={ (value) => setEmail(value)}/>
-                <TextInput style={style.input} placeholder='Senha' secureTextEntry onChangeText={ (value) => setPassword(value)}/>
+                <TextInput style={style.inputHead} placeholder='Email' autoCapitalize='none' keyboardType='email-address' onChangeText={ (value) => setEmail(value)}/>
+                <TextInput style={style.input} placeholder='Senha'  secureTextEntry onChangeText={ (value) => setPassword(value)}/>
                 <TouchableOpacity style={style.containerButton} onPress={Login}>
                     <Text style={style.textButton}>Entrar</Text>
 
