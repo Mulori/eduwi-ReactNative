@@ -10,6 +10,7 @@ import Home from '../home';
 import Register from '../register';
 import Login from '../login';
 import Welcome from '../welcome';
+import VG from '../../components/variables/VG';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,15 +25,19 @@ function RouteAuth() {
 }
 
 export default function Auth() {
-    // Set an initializing state whilst Firebase connects
     const [initializing, setInitializing] = useState(true);
-    const [user, setUser] = useState();
+    const [user, setUser] = useState(null);
 
-    // Handle user state changes
-    function onAuthStateChanged(user) {
-      setUser(user);
-      if (initializing) setInitializing(false);
-    }
+     function onAuthStateChanged(user) {
+       setUser(user);
+       
+       if(user){
+          VG.user_uid = user.uid
+       }
+       
+       console.log(user)
+       if (initializing) setInitializing(false);
+     }
 
     useEffect(() => {
       const subscriber = auth().onAuthStateChanged(onAuthStateChanged);

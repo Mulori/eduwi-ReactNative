@@ -1,17 +1,20 @@
 import React, { useState, useEffect, state } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, StatusBar, TextInput, ImageBackground, RefreshControl, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, StatusBar, TextInput, ImageBackground, RefreshControl, Alert, ScrollView, KeyboardAvoidingView, Modal, Button, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFont5 from 'react-native-vector-icons/FontAwesome5';
 import * as Animatable from 'react-native-animatable';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import community from '../../../services/communityService/communityService';
 import VG from '../../../components/variables/VG';
+import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 const wait = (timeout) => {
 return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
+
 export default function exploreCommunity() {
+    const [modalVisible, setModalVisible] = useState(false);
     const [openAddCommunity, setOpenAddCommunity] = useState(false);
     const [openAddCommunityPassword, setOpenAddCommunityPassword] = useState(false);
     const [fielEmpty, setFielEmpty] = useState(false);
@@ -130,6 +133,10 @@ export default function exploreCommunity() {
         setOpenAddCommunity(value ? !value : false);
     }
 
+    function setModalMenu(value){
+        setModalVisible(value);
+    }
+
     function createCommunity(){
         const title_clean = title.trim()
         const description_clean = description.trim()
@@ -167,22 +174,16 @@ export default function exploreCommunity() {
             <View style={{ 
                 backgroundColor: '#294444', 
                 padding: 12, 
-                borderBottomLeftRadius:10, 
-                borderBottomRightRadius: 10,
                 flexDirection: 'row',
             }}>
-                 <Icon name="md-earth" size={26} style={{ color : '#FFF'}} />
+                <Icon name="md-earth" size={26} style={{ color : '#FFF'}} />
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFF', marginLeft: 10}}>Explorar comunidades</Text>
-                              
-                <TouchableOpacity style={style.addCommunity} onPress={() => openModalNew(true)}>
-                    <Icon name="md-add-circle" size={30} style={{ color : '#FFF'}} />
-                </TouchableOpacity>
-                <TouchableOpacity style={style.searchCommunity}>
-                    <Icon name="md-search-circle" size={33} style={{ color : '#FFF'}} />
+                <TouchableOpacity style={style.searchCommunity} onPress={(() => setModalMenu(true))}>
+                    <Icon name="ellipsis-vertical" size={26} style={{ color : '#FFF'}} />
                 </TouchableOpacity>
             </View>
+
             <ScrollView 
-            style={{ marginBottom: 104  }}
             refreshControl={
                 <RefreshControl
                 refreshing={refreshing}
@@ -196,21 +197,21 @@ export default function exploreCommunity() {
                     <TouchableOpacity style={style.itemList} key={key} onPress={() => enterCommunity(item, item.id)}>
                         <View style={{ flexDirection: 'row'}}>
                             <View style={{ width: '95%' }}>
-                                <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 15}}>{item.title}</Text>
-                                <Text style={{color: '#FFF', fontSize: 12}}>{'Descrição: ' +item.description}</Text>
-                                <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 9}}>{'Quantidade de membros: ' + item.quantity_members}</Text>
-                                <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 9}}>{'Criado por: ' + item.name}</Text>
+                                <Text style={{color: '#000', fontWeight: 'bold', fontSize: 15}}>{item.title}</Text>
+                                <Text style={{color: '#000', fontSize: 12}}>{'Descrição: ' +item.description}</Text>
+                                <Text style={{color: '#000', fontWeight: 'bold', fontSize: 9}}>{'Quantidade de membros: ' + item.quantity_members}</Text>
+                                <Text style={{color: '#000', fontWeight: 'bold', fontSize: 9}}>{'Criado por: ' + item.name}</Text>
                             </View>
                             <View style={{ width: '5%' }}>
                                 {
                                     item.entered >= 1 
-                                    ? <IconFont5 name="star" size={12} style={{ color : '#FFF'}} /> 
+                                    ? <IconFont5 name="star" size={12} style={{ color : '#000'}} /> 
                                     : null
                                 }   
                                 {
                                     item.with_password >= 1 
-                                    ? <IconFont5 name="lock" size={12} style={{ color : '#FFF', marginTop: '50%'}} /> 
-                                    : <IconFont5 name="lock-open" size={12} style={{ color : '#FFF', marginTop: '50%'}} /> 
+                                    ? <IconFont5 name="lock" size={12} style={{ color : '#000', marginTop: '50%'}} /> 
+                                    : <IconFont5 name="lock-open" size={12} style={{ color : '#000', marginTop: '50%'}} /> 
                                 }                           
                             </View>
                         </View>
@@ -219,42 +220,48 @@ export default function exploreCommunity() {
                 : null
             }
             </ScrollView>
-
-            {
-                //aqui tinha uns botao
-            }
     
-
-            {!openAddCommunity ? null : 
+            <Modal
+                visible={openAddCommunity} 
+                animationType="slide"
+            >
                 <View style={styleModalAdd.modalNew}>
                     <ImageBackground  
                         source={require('../../../assets/image/img_new_community.png')} 
-                        style={{width: '100%', height: '100%', position: 'absolute'}}  
-                    />
-                    <View style={{ justifyContent: 'center', alignItems: 'center'}}>                        
-                        <TextInput placeholder='Nome da comunidade' maxLength={50} onChangeText={(value) => setTitle(value)} style={styleModalAdd.titleInput} /> 
-                        <TextInput placeholder='Descrição' maxLength={100} onChangeText={(value) => setDescription(value)} multiline numberOfLines={3} style={styleModalAdd.descriptionInput} />
-                        <TextInput placeholder='Senha opcional' maxLength={20} secureTextEntry={true} autoCapitalize='none' onChangeText={(value) => setPassword(value)} style={styleModalAdd.passInput} /> 
-                    </View>
-                    
-                    <View style={styleModalAdd.containerButton}>                        
-                        <TouchableOpacity style={styleModalAdd.buttonCancelar} onPress={() => openModalNew(false)}>
-                            <Text style={{ textAlign: 'center', color: '#FFF', fontWeight: 'bold' }}>Cancelar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styleModalAdd.buttonSalvar} onPress={() => createCommunity(false)}>
-                            <Text style={{ textAlign: 'center', color: '#FFF', fontWeight: 'bold' }}>Salvar</Text>
-                        </TouchableOpacity>
-                    </View>
+                        style={{
+                            width: Dimensions.get('window').width,
+                            height: Dimensions.get('window').height,
+                            position: 'absolute'}}  
+                    >
+                        <View style={{ justifyContent: 'center', alignItems: 'center'}}>                        
+                            <TextInput placeholder='Nome da comunidade' maxLength={50} onChangeText={(value) => setTitle(value)} style={styleModalAdd.titleInput} /> 
+                            <TextInput placeholder='Descrição' maxLength={100} onChangeText={(value) => setDescription(value)} multiline numberOfLines={3} style={styleModalAdd.descriptionInput} />
+                            <TextInput placeholder='Senha opcional' maxLength={20} secureTextEntry={true} autoCapitalize='none' onChangeText={(value) => setPassword(value)} style={styleModalAdd.passInput} /> 
+                        </View>
+                        
+                        <View style={styleModalAdd.containerButton}>                        
+                            <TouchableOpacity style={styleModalAdd.buttonCancelar} onPress={() => openModalNew(false)}>
+                                <Text style={{ textAlign: 'center', color: '#FFF', fontWeight: 'bold' }}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styleModalAdd.buttonSalvar} onPress={() => createCommunity(false)}>
+                                <Text style={{ textAlign: 'center', color: '#FFF', fontWeight: 'bold' }}>Salvar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ImageBackground>                    
 
                     { !fielEmpty ? null : 
                         <Animatable.View  animation="fadeInLeft" duration={2000} style={styleModalAdd.errorField}>                        
                             <Text style={styleModalAdd.textMsg}>{textMsg}</Text>
                         </Animatable.View>
                     }                 
-                </View>                
-            }
+                </View> 
+            </Modal>
 
-           {!openAddCommunityPassword ? null : 
+            <Modal
+                visible={openAddCommunityPassword} 
+                animationType="slide"
+                transparent={true}
+            >
                 <View style={styleModalPass.modalNew}>
                     <View style={{flex: 1, backgroundColor: '#FFF', width: '85%', alignItems: 'center', borderRadius: 20}}>
                     <Text style={{ fontWeight: 'bold'}}>Informe a senha:</Text>   
@@ -279,7 +286,37 @@ export default function exploreCommunity() {
                         }                 
                     </View> 
                 </View>   
-            }
+            </Modal>         
+
+            <Modal 
+                visible={modalVisible} 
+                animationType="slide"
+            >
+                <View style={{backgroundColor: '#294444', padding: 12, flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={() => {setModalMenu(false)}}>
+                        <Icon name="chevron-back-circle-sharp" size={26} style={{ color : '#FFF'}} />
+                    </TouchableOpacity>                    
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFF', marginLeft: 10}}>Menu</Text>
+                </View>
+                <View style={{ padding: 5}}>
+                    <TouchableOpacity style={style.buttonMenu} onPress={() => {
+                        setOpenAddCommunity(true)
+                        setModalMenu(false)
+                    }}>
+                        <Text style={{color: '#FFF'}}>Nova Comunidade</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ padding: 5}}>
+                    <TouchableOpacity style={style.buttonMenu}>
+                        <Text style={{color: '#FFF'}}>Pesquisar</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ padding: 5}}>
+                    <TouchableOpacity onPress={() => {setModalMenu(false)}} style={style.buttonMenu}>
+                        <Text style={{color: '#FFF'}}>Fechar Menu</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
                         
         </View>
         
@@ -293,6 +330,8 @@ const styleModalPass = StyleSheet.create({
         height: 140,
         alignItems: 'center',
         marginTop: '50%',
+        shadowColor: '#470000',
+        elevation: 15
     },
     passInput: {
         width: 150,
@@ -370,20 +409,20 @@ const styleModalAdd = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: '3%',
+        padding: 8
     },
     buttonCancelar: {
         backgroundColor: 'red',
         marginRight: 10,
         padding: 10,
-        width: 165,
+        width: '44%',
         borderRadius: 12,
     },
     buttonSalvar: {
         backgroundColor: 'green',
         marginLeft: 10,
         padding: 10,
-        width: 165,
+        width: '44%',
         borderRadius: 12,
     },
     textMsg:{
@@ -402,7 +441,6 @@ const styleModalAdd = StyleSheet.create({
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#294444'
     },    
     addCommunity: {
         position: 'absolute',
@@ -420,9 +458,20 @@ const style = StyleSheet.create({
         right: 90,
     },
     itemList:{
-        backgroundColor: '#486d6e',
+        backgroundColor: '#FFF',
         margin: 3,
         padding: 10,
-        borderRadius: 12
-    }
+        borderRadius: 12,
+        shadowColor: '#470000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2,
+        elevation: 10
+    },
+    buttonMenu: {
+        backgroundColor: '#294444',
+        padding: 8,
+        borderRadius: 10,
+        shadowColor: '#470000',
+        elevation: 10
+    },
 })
