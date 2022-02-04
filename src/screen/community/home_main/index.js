@@ -2,17 +2,18 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import listGroup from '../../group/list';
 import myCommunity from '../my';
+import Home from '../home';
+import Activity from '../activity';
 
 const stack = createNativeStackNavigator();
 
 export default function my_main() {
     return(
         <stack.Navigator initialRouteName="myCommunity">
-            <stack.Screen name="listCommunity" options={{ headerShown: false }} component={myCommunity}/>
-            <stack.Screen name="listGroup" options={{ headerShown: false }} component={listGroup}/>                
+            <stack.Screen name="listCommunity" options={{ headerShown: false }} component={myCommunity}/>           
+            <stack.Screen name="listUsers" options={{ headerShown: false }} component={Home}/>  
+            <stack.Screen name="listActivity" options={{ headerShown: false }} component={Activity}/>           
         </stack.Navigator>   
     );
 }

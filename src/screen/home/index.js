@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import exploreCommunity from '../../screen/community/explore';
 import myCommunity from '../../screen/community/my';
 import myProfile from '../../screen/profile';
-import my_main from '../community/my_main';
+import my_main from '../community/home_main';
 
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
