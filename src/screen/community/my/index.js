@@ -7,8 +7,6 @@ import IconFont5 from 'react-native-vector-icons/FontAwesome5';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 
-import group from '../../group/list';
-
 const wait = (timeout) => {
 return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -70,7 +68,7 @@ export default function myCommunity({ navigation }) {
             {
                 listCommunity ?
                 listCommunity.map((value, key) => 
-                    <TouchableOpacity style={style.itemList} key={key} onPress={() => navigation.navigate('listGroup', { valueCommunity: value})} >
+                    <TouchableOpacity style={style.itemList} key={key} >
                         <View style={{ flexDirection: 'row'}}>
                             <View style={{ width: '95%' }}>
                                 <Text style={{color: '#000', fontWeight: 'bold', fontSize: 15}}>{value.title}</Text>
