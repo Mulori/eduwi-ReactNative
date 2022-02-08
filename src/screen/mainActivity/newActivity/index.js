@@ -1,17 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, Button, StyleSheet, StatusBar } from 'react-native';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
-export default function myProfile({ navigation }) {
 
-function sair(){
-    auth().signOut();
-}
-
+export default function newActivity({ navigation }) {
     return(
         <View style={style.container}>
             <StatusBar barStyle='dark-content' backgroundColor='#fff' />
-            <Button title='Sair' onPress={sair}/>
+            <Button title='Nova'/>
         </View>
         
     );
