@@ -64,6 +64,7 @@ export default function MainActivity({ navigation }) {
                 break;          
         }
     }
+    
 
     return(
         <View style={style.container}>
