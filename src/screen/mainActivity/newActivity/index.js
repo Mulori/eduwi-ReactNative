@@ -3,10 +3,12 @@ import { View, TouchableOpacity, Text, Button, StyleSheet, StatusBar, SafeAreaVi
 import * as Animatable from 'react-native-animatable';
 import LottieQuestion from '../../../components/lotties/question';
 import LottieWrite from '../../../components/lotties/write';
-
+import firestore from '@react-native-firebase/firestore';
+import VG from '../../../components/variables/VG';
 
 export default function newActivity({ navigation }) {
-    const [info, setInfo] = useState(true);
+    const [info, setInfo] = useState(true);   
+    
 
     function Info(){
         return(
