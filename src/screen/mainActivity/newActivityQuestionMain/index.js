@@ -5,6 +5,22 @@ import Icon from 'react-native-vector-icons/Entypo';
 import * as Animatable from 'react-native-animatable';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
+import ColorPalette from 'react-native-color-palette'
+
+const ControlledColorPicker = () => {
+    let selectedColor = '';
+    return (
+      <ColorPalette
+        onChange={color => selectedColor = color}
+        value={selectedColor}
+        colors={['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9']}
+        title={"Selecione a cor principal da atividade:"}
+        icon={
+          <Icon name={'check'} size={25} color={'black'} />
+        // React-Native-Vector-Icons Example
+      }
+    />)
+  }
 
 export default function newActivityQuestionMain({ navigation }) {
     const [itens, setItens] = useState(0)
@@ -83,6 +99,7 @@ export default function newActivityQuestionMain({ navigation }) {
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} onChangeText={(value) => setItens(value)} maxLength={10} keyboardType='numeric' placeholderTextColor='#008000'/> 
                         </View>     
+                        <ControlledColorPicker />
                         <View style={{alignItems: 'center', marginTop: 30}}>
                             <TouchableOpacity onPress={handlerNext} style={{
                                 backgroundColor: '#008000',
