@@ -4,9 +4,14 @@ import { RadioButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../../components/variables/VG';
+import ActivityServices from '../../../../services/activityService/activityService';
+import LottieFinishBlue from '../../../../components/lotties/finishBlue';
+import * as Animatable from 'react-native-animatable';
+
 
 export default function newActivityQuestions({ navigation, route }) {    
-    const { itens } = route.params;
+    const { itens, title, pass } = route.params;
+    const [end, setEnd] = useState(false);
     var slide = [];
     const _questions = [];
 
@@ -22,9 +27,42 @@ export default function newActivityQuestions({ navigation, route }) {
                 return;
             }
 
-            querySnapshot.forEach(documentSnapshot => {
-                console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-            });
+            let data_header = {
+                title: title,
+                password: !pass ? "" : pass, 
+                type_activity: 'questions'
+            }
+
+            ActivityServices.ActivityCreate(data_header, VG.user_uid)
+            .then((response) => {
+                querySnapshot.forEach(documentSnapshot => {
+                    const obj_f = documentSnapshot.data()
+
+                    let data_answer = {
+                        activity_id: parseInt(response.data.id),
+                        number_question: parseInt(obj_f.number_question), 
+                        answer_one: obj_f.responseOne,
+                        answer_two: obj_f.responseTwo,
+                        answer_tree: obj_f.responseTree,
+                        answer_four: obj_f.responseFour,
+                        right_answer: obj_f.question_correcty,
+                    }
+
+                    ActivityServices.ActivityQuestionCreate(data_answer, VG.user_uid)
+                    .then((response) => {
+        
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{text: 'Ok',style: 'destructive', }]);
+                    })                     
+                });               
+                setEnd(true);
+            })
+            .catch((error) => {
+                console.log(error);
+                Alert.alert('Erro', 'Ocorreu um problema ao criar a atividade', [{text: 'Ok',style: 'destructive', }]);
+            })            
         })
         .catch(() => {
             Alert.alert('Erro', 'Ocorreu um erro ao concluir a atividade. Tente novamente!')
@@ -166,8 +204,21 @@ export default function newActivityQuestions({ navigation, route }) {
                     }}>
                         <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 20}}>Concluir a Atividade</Text>
                     </TouchableOpacity>
+                </View>                
+                
+            </ScrollView>   
+
+            {!end ? null :
+            <View style={{flex: 1, position: 'absolute', backgroundColor: '#394FBC', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                <StatusBar barStyle='light-content' backgroundColor='#394FBC' /> 
+                <Animatable.Text animation='fadeInUpBig' duration={1000} style={{color: 'white', fontWeight: 'bold', fontSize: 23}}>
+                    Atividade criada!
+                </Animatable.Text>
+                <View>                    
+                    <LottieFinishBlue />
                 </View>
-            </ScrollView>       
+            </View>                
+            }    
         </View>        
     );
 }
