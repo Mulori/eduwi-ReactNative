@@ -7,6 +7,7 @@ import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
 import ColorPalette from 'react-native-color-palette'
 
+
 const ControlledColorPicker = () => {
     let selectedColor = '';
     return (
@@ -38,7 +39,7 @@ export default function newActivityQuestionMain({ navigation }) {
                 firestore().collection('user_activity_build_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
             });
 
-            navigation.navigate('newActivityQuestions', { itens: itens})
+            navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password})
         })
         .catch(() => {
             Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
@@ -46,8 +47,6 @@ export default function newActivityQuestionMain({ navigation }) {
     }
 
     function handlerNext(){
-
-        
 
         if(!title){
             setMsgErro('Informe o nome da atividade.')
@@ -99,7 +98,6 @@ export default function newActivityQuestionMain({ navigation }) {
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} onChangeText={(value) => setItens(value)} maxLength={10} keyboardType='numeric' placeholderTextColor='#008000'/> 
                         </View>     
-                        <ControlledColorPicker />
                         <View style={{alignItems: 'center', marginTop: 30}}>
                             <TouchableOpacity onPress={handlerNext} style={{
                                 backgroundColor: '#008000',
