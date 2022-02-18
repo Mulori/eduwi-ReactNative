@@ -59,6 +59,10 @@ export default function MainActivity({ navigation }) {
                 setModalVisible(false)
                 break;
             case 2:             
+                navigation.navigate('myActivity')
+                setModalVisible(false)
+                break;
+            case 3:             
                 navigation.navigate('searchActivity')
                 setModalVisible(false)
                 break;
@@ -76,7 +80,7 @@ export default function MainActivity({ navigation }) {
             <Animatable.View animation="jello" duration={2000} style={{ backgroundColor: '#FFF', padding: 12, flexDirection: 'row' }}>
                 <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#000000'}}>Atividades Populares</Text>
                 <TouchableOpacity style={style.searchCommunity} onPress={(() => setModalMenu(true))}>
-                    <Icon name="dice-six" size={29} style={{ color : '#' + Math.floor(Math.random() * 0x1000000).toString(16).padStart(6, '0'), }} />
+                    <Icon name="dice-six" size={29} style={{ color : '#000', }} />
                 </TouchableOpacity>
             </Animatable.View>
 

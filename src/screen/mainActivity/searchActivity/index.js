@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, Modal, ActivityIndicator, ScrollViewBase, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, Modal, ActivityIndicator, ImageBackground } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ActivityServices from '../../../services/activityService/activityService';
 import VG from '../../../components/variables/VG';
-import { Buffer } from 'buffer';
-import { render } from 'react-dom';
 
 export default function searchActivity({ navigation }) {
     const [code, setCode] = useState(null);
@@ -99,9 +97,11 @@ export default function searchActivity({ navigation }) {
             } 
 
             <Modal visible={modalVisible} animationType="slide" >
-                <ScrollView></ScrollView>
-                <View style={{ backgroundColor: '#4B0082'}}>
-                    <Animatable.View animation='fadeInDownBig' duration={1000} style={{height: '10%', padding: 15, backgroundColor: '#9400D3', borderBottomEndRadius: 20, borderBottomStartRadius: 20, }}>
+                    <ImageBackground  
+                        source={require('../../../assets/image/activity.png')} 
+                        style={{width: '100%', height: '100%', position: 'absolute'}}  
+                    />
+                    <Animatable.View animation='fadeInDownBig' duration={1000} style={{height: '8%', padding: 15, backgroundColor: '#9400D3', borderBottomEndRadius: 20, borderBottomStartRadius: 20, }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => SetModal(false)}>
                             <Icon name='arrow-left' size={23} style={{ color: '#FFF'}} />
                             <Text style={{ color: '#FFF', fontSize: 20, fontWeight: 'bold', marginLeft: 15}}>Voltar</Text>
@@ -111,41 +111,33 @@ export default function searchActivity({ navigation }) {
                         !Loading 
                         
                         ? 
-                            <View style={{ padding: 15, }}>
-                                <View style={{ marginTop: 15, height: '90%', borderWidth: 2, backgroundColor: '#FFF', borderColor: '#FFF', borderRadius: 20 }}>
-                                    <View style={{ marginTop: '10%', alignItems: 'center', }}>    
-                                        <Text style={{color: '#000', fontSize: 25, fontWeight: 'bold'}}>Atividade</Text>    
-                                        <View style={{ alignItems: 'flex-start', width: '90%', marginTop: '10%'}}>
-                                            <Text style={{color: '#000', fontWeight: 'bold', fontSize: 18}}>Nome da Atividade:</Text>
-                                            <Text style={{color: '#000'}}>{ !activity ? null : activity.title}</Text>
-                                            <Text style={{color: '#000', fontWeight: 'bold', fontSize: 18, marginTop: 10}}>Nome do(a) Autor(a):</Text>
-                                            <Text style={{color: '#000'}}>{ !activity ? null : activity.name}</Text> 
-                                            <Text style={{color: '#000', fontWeight: 'bold', fontSize: 18, marginTop: 10}}>Acesso:</Text>
-                                            <Text style={{color: '#000'}}>{ !activity ? null : activity.with_password == 1 ? 'Privado' : 'Publico'}</Text> 
-                                            <Text style={{color: '#000', fontWeight: 'bold', fontSize: 18, marginTop: 10}}>Tipo:</Text>
-                                            <Text style={{color: '#000'}}>{ !activity ? null : tipo}</Text> 
-                                            {
-                                            !activity ? null : activity.with_password !== 1 ? null : 
-                                            <View>
-                                                <Text style={{color: '#000', fontWeight: 'bold', fontSize: 18, marginTop: 10}}>Senha:</Text>
-                                                <TextInput placeholder='Informe a senha' style={{fontSize: 18}} />
-                                                </View>
-                                            }
-                                            <TouchableOpacity style={{ padding: 15, backgroundColor: '#9400D3', width: '100%', alignItems: 'center', marginTop: '10%'}}>
-                                                <Text style={{color: '#FFF', fontWeight: 'bold'}}>Iniciar</Text>
-                                            </TouchableOpacity>
-                                        </View>    
-                                    </View>
-                                </View>   
-                            </View>                                                                     
+                           <View>
+                                <View style={{ alignItems: 'flex-start', width: '90%', marginTop: '38%', padding: '8%'}}>
+                                    <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 15}}>Nome da Atividade:</Text>
+                                    <Text style={{color: '#FFF'}}>{ !activity ? null : activity.title}</Text>
+                                    <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 15, marginTop: 5}}>Nome do(a) Autor(a):</Text>
+                                    <Text style={{color: '#FFF'}}>{ !activity ? null : activity.name}</Text> 
+                                    <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 15, marginTop: 5}}>Acesso:</Text>
+                                    <Text style={{color: '#FFF'}}>{ !activity ? null : activity.with_password == 1 ? 'Privado' : 'Publico'}</Text> 
+                                    <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 15, marginTop: 5}}>Tipo:</Text>
+                                    <Text style={{color: '#FFF'}}>{ !activity ? null : tipo}</Text>                                                                   
+                                </View>  
+                                <View style={{ alignItems: 'center'}}>
+                                    <TouchableOpacity style={{ padding: 10, backgroundColor: 'green', width: '50%', alignItems: 'center', marginTop: '13%', borderRadius: 20}}>
+                                        <View style={{ flexDirection: 'row'}}>
+                                            <Text style={{color: '#FFF', fontWeight: 'bold'}}>Iniciar</Text>
+                                            <Icon name='angle-right' size={18} style={{ marginLeft: '3%', color: '#FFF' }}/>
+                                        </View>                                        
+                                    </TouchableOpacity>
+                                </View>
+                           </View>                                                        
                         :
                         <View style={{ marginTop: 15, height: '90%'}}>
                             <View style={[style.containerLoad, style.horizontal]}>
                                 <ActivityIndicator size="large" color="#FFF" />                                                    
                             </View>
                         </View>
-                    }
-                </View>                
+                    }              
             </Modal>
         </View>        
     );
