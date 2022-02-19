@@ -92,9 +92,9 @@ export default function newActivityQuestionMain({ navigation }) {
                         </View> 
                         <Text style={style.titles}>Senha</Text>   
                         <View style={{alignItems: 'center'}}>
-                            <TextInput style={style.inputs} secureTextEntry autoCapitalize='none' maxLength={10} onChangeText={(value) => setPassword(value)} placeholderTextColor='#008000' placeholder='****' /> 
+                            <TextInput style={style.inputs} secureTextEntry autoCapitalize='none' maxLength={10} onChangeText={(value) => setPassword(value)} placeholderTextColor='#008000' /> 
                         </View> 
-                        <Text style={style.titles}>Quantidade de Questões</Text>   
+                        <Text style={style.titles}>Quantidade de Questões *</Text>   
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} onChangeText={(value) => setItens(value)} maxLength={10} keyboardType='numeric' placeholderTextColor='#008000'/> 
                         </View>     

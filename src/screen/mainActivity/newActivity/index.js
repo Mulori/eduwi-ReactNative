@@ -107,6 +107,6 @@ const style = StyleSheet.create({
         marginLeft: 40,
         marginRight: 40,
         borderRadius: 25,
-        marginTop: 15
+        marginTop: '1%'
     }
 })
