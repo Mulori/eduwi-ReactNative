@@ -9,6 +9,7 @@ import searchActivity from '../mainActivity/searchActivity';
 import myActivity from '../mainActivity/myActivity';
 import mainSearchActivity from '../mainActivity/searchActivity/mainSearchActivity';
 import passActivity from '../mainActivity/passActivity';
+import responseQuestion from '../mainActivity/response/questions';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,8 @@ export default function Home() {
             <Stack.Screen name='searchActivity' options={{ headerShown: false }} component={searchActivity} />
             <Stack.Screen name='myActivity' options={{ headerShown: false }} component={myActivity} />
             <Stack.Screen name='mainSearchActivity' options={{ headerShown: false }} component={mainSearchActivity} />            
-            <Stack.Screen name='passActivity' options={{ headerShown: false }} component={passActivity} />            
+            <Stack.Screen name='passActivity' options={{ headerShown: false }} component={passActivity} />   
+            <Stack.Screen name='responseQuestion' options={{ headerShown: false }} component={responseQuestion} />           
         </Stack.Navigator>   
     );
 }

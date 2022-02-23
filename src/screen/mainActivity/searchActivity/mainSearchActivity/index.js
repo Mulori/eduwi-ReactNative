@@ -15,8 +15,8 @@ export default function mainSearchActivity({ navigation, route }) {
         }
     }, [])
 
-    function VerifyPassword(){
-             
+    function Start(){
+        navigation.navigate('responseQuestion', { data: activity})
     }
 
     return(
@@ -37,7 +37,7 @@ export default function mainSearchActivity({ navigation, route }) {
                 </View>  
                 <View style={{ alignItems: 'center'}}>
                     <TouchableOpacity 
-                    onPress={VerifyPassword}
+                    onPress={Start}
                     style={{ padding: 10, backgroundColor: '#20683c', width: '50%', alignItems: 'center', marginTop: '13%', borderRadius: 20}}>
                         <View style={{ flexDirection: 'row'}}>
                             <Text style={{color: '#FFF', fontWeight: 'bold'}}>Iniciar</Text>
