@@ -72,6 +72,14 @@ export default function MainActivity({ navigation }) {
                 break;          
         }
     }
+
+    function Enter(item){
+        if(item.with_password == 1){
+            navigation.navigate('passActivity', { activity: item})
+        }else{
+            navigation.navigate('mainSearchActivity', { activity: item})
+        }
+    }
     
 
     return(
@@ -94,31 +102,30 @@ export default function MainActivity({ navigation }) {
             >
                {!listActivitys ? null : 
                     listActivitys.map((item, key) => 
-                    <TouchableOpacity key={key} style={{ 
+                    <TouchableOpacity key={key} onPress={() => {Enter(item)}} style={{ 
                         flexGrow: 1, 
                         flexBasis: 0, 
-                        backgroundColor: '#' + Math.floor(Math.random() * 0x1000000).toString(16).padStart(6, '0'),                        
+                        backgroundColor: '#7B68EE',                        
                         margin: 5,
-                        padding: 18,
-                        borderRadius: 15,
+                        borderRadius: 15,                        
+                        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+                        textShadowOffset: {width: -1, height: 1},
+                        textShadowRadius: 10,
                         }}>
-                        <Text style={{ 
-                        color: '#FFF', 
-                        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-                        textShadowOffset: {width: -1, height: 1},
-                        textShadowRadius: 10,
-                        fontSize: 15, 
-                        fontWeight: 'bold', 
-                        borderColor: '#000', 
-                        fontStyle: 'italic'
-                        }}>{item.title}</Text>
-                        <Text style={{ 
-                        color: '#FFF',
-                        fontSize: 10,
-                        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-                        textShadowOffset: {width: -1, height: 1},
-                        textShadowRadius: 10,
-                        }}>Autor: {item.name}</Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{ backgroundColor: '#7B68EE', width:'85%', borderBottomStartRadius: 15, borderTopLeftRadius: 15, padding: 15}}>
+                                <Text style={{color: '#FFF', fontSize: 15, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text>     
+                            </View>
+                            <View style={{ backgroundColor: item.with_password == 0 ? 'green' : 'red' ,  width:'15%', borderBottomEndRadius: 15, borderTopEndRadius: 15, padding: 15}}>
+                                {
+                                    item.with_password == 0
+                                    ? <Icon name='lock-open' size={15} style={{ color: '#FFF', marginLeft: '2%'}} />
+                                    : <Icon name='lock' size={15} style={{ color: '#FFF',marginLeft: '2%'}}/>
+                                }
+                            </View>
+                        </View>
+                        
+                        
                     </TouchableOpacity>             
                )}
             </ScrollView>         
