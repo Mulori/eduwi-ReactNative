@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, Button, StyleSheet, StatusBar, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import * as Animatable from 'react-native-animatable';
+import VG from '../../../../components/variables/VG';
+import firestore from '@react-native-firebase/firestore';
 
 export default function mainSearchActivity({ navigation, route }) {
     const { activity } = route.params;
@@ -15,8 +17,22 @@ export default function mainSearchActivity({ navigation, route }) {
         }
     }, [])
 
+    function DeleteActivityTemp(){
+        firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
+            });
+
+            navigation.navigate('responseQuestion', { data: activity})
+        })
+        .catch(() => {
+            Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
+        }); 
+    }
+
     function Start(){
-        navigation.navigate('responseQuestion', { data: activity})
+        DeleteActivityTemp();
     }
 
     return(

@@ -15,6 +15,7 @@ export default function passActivity({ navigation, route }) {
             Alert.alert("Atenção", "Informe a senha.")
             return;
         }else{
+            console.log(activity.password)
             if(md5(passwordInformed) !== activity.password){
                 Alert.alert("Atenção", "Senha incorreta.")
                 return;
