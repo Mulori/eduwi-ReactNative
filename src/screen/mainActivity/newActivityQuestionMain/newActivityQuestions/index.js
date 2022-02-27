@@ -46,6 +46,7 @@ export default function newActivityQuestions({ navigation, route }) {
                         answer_tree: obj_f.responseTree,
                         answer_four: obj_f.responseFour,
                         right_answer: obj_f.question_correcty,
+                        question: obj_f.question
                     }
 
                     ActivityServices.ActivityQuestionCreate(data_answer, VG.user_uid)
@@ -126,7 +127,7 @@ export default function newActivityQuestions({ navigation, route }) {
                    <Text>Questão: {i + 1}</Text>
                    <Text style={{marginTop: 5, fontWeight: 'bold'}}>Pergunta:</Text>   
                    <View style={{backgroundColor: 'black', borderRadius: 15, margin: 5}}>
-                       <TextInput style={style.inputs} multiline placeholder='Digite a questão desejada' onChangeText={(value) => setDoubt(value)}/> 
+                       <TextInput style={style.inputs} multiline placeholder='Digite a questão' onChangeText={(value) => setDoubt(value)}/> 
                    </View> 
                    <Text style={{marginTop: 5, fontWeight: 'bold'}}>Respostas:</Text>  
                    <View>
