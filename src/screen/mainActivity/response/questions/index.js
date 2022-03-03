@@ -125,13 +125,12 @@ function ListResponse(props){
             <ScrollView>
                 <View style={{ alignItems: 'center'}}>
                     <TouchableOpacity onPress={() => {
+                        setIcons('one');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
                         .update({
                             response: 'one',
                         })
-                        .then(() => {
-                            setIcons('one');
-                        })
+                        .then()
                         .catch((erro) => {
                             console.log(erro)
                             Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
@@ -146,13 +145,12 @@ function ListResponse(props){
                         </Text>      
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
+                        setIcons('two');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
                         .update({
                             response: 'two',
                         })
-                        .then(() => {
-                            setIcons('two');
-                        })
+                        .then()
                         .catch(() => {
                             Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
                         }) 
@@ -165,13 +163,12 @@ function ListResponse(props){
                         </Text>                    
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
+                        setIcons('tree');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
                         .update({
                             response: 'tree',
                         })
-                        .then(() => {
-                            setIcons('tree');
-                        })
+                        .then()
                         .catch(() => {
                             Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
                         }) 
@@ -184,13 +181,12 @@ function ListResponse(props){
                         </Text>                     
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
+                        setIcons('four');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
                         .update({
                             response: 'four',
                         })
-                        .then(() => {
-                            setIcons('four');
-                        })
+                        .then()
                         .catch(() => {
                             Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
                         }) 
@@ -250,15 +246,65 @@ class RenderActivity extends React.Component {
         </View>
       );
     };
+
+    
+
     render() {
       const { data, user } = this.props;
-      
       function done(){
-        Alert.alert('OK', 'OK')
+        firestore().collection('user_activity_' + data[0].activity_id + '_response_' + VG.user_uid).get()
+        .then(querySnapshot => {
+            var bloqueia_post = false;
+            querySnapshot.forEach(documentSnapshot => {
+                const valid = documentSnapshot.data()
+                if(valid.response == 'null'){
+                    Alert.alert('Atenção', 'Responda todas as questões.');
+                    bloqueia_post = true;
+                    return;
+                }
+            });   
+
+            console.log(bloqueia_post)
+            if(bloqueia_post){
+                return;
+            }
+
+            APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
+            .then(() => {
+                var index = 0;
+                querySnapshot.forEach(documentSnapshot => {
+                    const obj_f = documentSnapshot.data()
+
+                    index++
+
+                    let json = {
+                        activity_id: parseInt(data[0].activity_id),
+                        number_question: index,
+                        answer: obj_f.response
+                    }
+
+                    console.log(json)
+    
+                    APIActivity.Post('/activity/question/users/response', VG.user_uid, json)
+                    .then()
+                    .catch((error) => {
+                        console.log(error);
+                        Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{text: 'Ok',style: 'destructive', }]);
+                    })                     
+                }); 
+            })
+            .catch((error) => {
+                console.log(error);
+                Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{text: 'Ok',style: 'destructive', }]);
+            })                  
+        })
+        .catch(() => {
+            Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
+        });  
       }
 
-      function next(){
-        Alert.alert('OK', 'OK')
+      function _renderNextButton(){
+
       }
 
       return (
@@ -266,8 +312,8 @@ class RenderActivity extends React.Component {
           data={data}
           renderItem={this._renderSlides}
           onDone={done}
-          renderDoneButton={this._renderDoneButton}
           renderNextButton={this._renderNextButton}
+          renderDoneButton={this._renderDoneButton}
         />
       );
     }
