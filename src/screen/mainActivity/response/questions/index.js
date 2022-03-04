@@ -5,6 +5,7 @@ import VG from '../../../../components/variables/VG';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
+import {NavigationActions, StackActions} from '@react-navigation/native';
 
 export default function responseQuestion({ navigation, route }) {
     const { data } = route.params;
@@ -30,7 +31,7 @@ export default function responseQuestion({ navigation, route }) {
     return(
         <View style={style.container}>
             <StatusBar barStyle='dark-content' backgroundColor='#fff' />   
-            <RenderActivity data={listQuestion} user={VG.user_uid}/>    
+            <RenderActivity data={listQuestion} user={VG.user_uid} navi={navigation}/>    
             <Modal visible={modalVisible}>
                 <View style={[style.containerLoad, style.horizontal]}>
                     <ActivityIndicator size="large" color="green" />                                                    
@@ -101,12 +102,13 @@ const style = StyleSheet.create({
         fontSize: 15,
     },
     buttonCircle: {
-        width: 40,
+        width: 110,
         height: 40,
         backgroundColor: 'green',
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'row'
     },
 })
 
@@ -206,8 +208,7 @@ function ListResponse(props){
 
 class RenderActivity extends React.Component {    
 
-    _renderSlides = ({item}) => {          
-
+    _renderSlides = ({item}) => {   
 
         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
         .set({
@@ -227,22 +228,24 @@ class RenderActivity extends React.Component {
     _renderNextButton = () => {
       return (
         <View style={style.buttonCircle}>
-          <Icon
-            name="arrow-forward-sharp"
-            color="rgba(255, 255, 255, .9)"
-            size={24}
-          />
+            <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15}}>Próxima</Text> 
+            <Icon
+                name="arrow-forward-sharp"
+                color="rgba(255, 255, 255, .9)"
+                size={24}
+            />
         </View>
       );
     };
     _renderDoneButton = () => {
       return (
         <View style={style.buttonCircle}>
-          <Icon
-            name="md-checkmark"
-            color="rgba(255, 255, 255, .9)"
-            size={24}
-          />
+            <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15}}>Finalizar</Text> 
+            <Icon
+                name="md-checkmark"
+                color="rgba(255, 255, 255, .9)"
+                size={24}
+            />
         </View>
       );
     };
@@ -250,11 +253,12 @@ class RenderActivity extends React.Component {
     
 
     render() {
-      const { data, user } = this.props;
+      const { data, user, navi } = this.props;
       function done(){
         firestore().collection('user_activity_' + data[0].activity_id + '_response_' + VG.user_uid).get()
         .then(querySnapshot => {
             var bloqueia_post = false;
+            var sucess = true;
             querySnapshot.forEach(documentSnapshot => {
                 const valid = documentSnapshot.data()
                 if(valid.response == 'null'){
@@ -287,11 +291,16 @@ class RenderActivity extends React.Component {
     
                     APIActivity.Post('/activity/question/users/response', VG.user_uid, json)
                     .then()
-                    .catch((error) => {
-                        console.log(error);
+                    .catch(() => {
+                        sucess = false;
                         Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{text: 'Ok',style: 'destructive', }]);
                     })                     
                 }); 
+
+                if (sucess) {
+                    navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
+                }
+                
             })
             .catch((error) => {
                 console.log(error);
@@ -301,10 +310,6 @@ class RenderActivity extends React.Component {
         .catch(() => {
             Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
         });  
-      }
-
-      function _renderNextButton(){
-
       }
 
       return (

@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, Button, StyleSheet, StatusBar, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import * as Animatable from 'react-native-animatable';
 import VG from '../../../../components/variables/VG';
 import firestore from '@react-native-firebase/firestore';
+import {StackActions} from '@react-navigation/native';
 
 export default function mainSearchActivity({ navigation, route }) {
     const { activity } = route.params;
     const [tipo, setTipo] = useState('');
+    const [isVisibleButton, setIsVisibleButton] = useState(true);
 
-    useEffect(() => {
+    useEffect(() => {        
         switch(activity.type_activity) { 
             case 'questions':             
                 setTipo('Questões')
@@ -23,8 +24,8 @@ export default function mainSearchActivity({ navigation, route }) {
             querySnapshot.forEach(documentSnapshot => {
                 firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
             });
-
-            navigation.navigate('responseQuestion', { data: activity})
+            setIsVisibleButton(false);
+            navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));
         })
         .catch(() => {
             Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
@@ -59,7 +60,7 @@ export default function mainSearchActivity({ navigation, route }) {
                             <Text style={{color: '#FFF', fontWeight: 'bold'}}>Iniciar</Text>
                             <Icon name='angle-right' size={18} style={{ marginLeft: '3%', color: '#FFF' }}/>
                         </View>                                        
-                    </TouchableOpacity>
+                    </TouchableOpacity>               
                 </View>
             </View>      
         </View>        
