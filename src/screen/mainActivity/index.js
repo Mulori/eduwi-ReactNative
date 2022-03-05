@@ -67,17 +67,21 @@ export default function MainActivity({ navigation }) {
                 setModalVisible(false)
                 break;
             
-            case 4:
+            case 5:
                 auth().signOut();
                 break;          
         }
     }
 
     function Enter(item){
-        if(item.with_password == 1){
-            navigation.navigate('passActivity', { activity: item})
+        if(item.author_uid == VG.user_uid){
+            navigation.navigate('usersActivity', { activity: item})
         }else{
-            navigation.navigate('mainSearchActivity', { activity: item})
+            if(item.with_password == 1){
+                navigation.navigate('passActivity', { activity: item})
+            }else{
+                navigation.navigate('mainSearchActivity', { activity: item})
+            }
         }
     }
     
