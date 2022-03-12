@@ -250,8 +250,6 @@ class RenderActivity extends React.Component {
       );
     };
 
-    
-
     render() {
       const { data, user, navi } = this.props;
       function done(){
@@ -259,6 +257,10 @@ class RenderActivity extends React.Component {
         .then(querySnapshot => {
             var bloqueia_post = false;
             var sucess = true;
+            var index = 0;
+            var activity = {};
+            var activityArray = [];
+
             querySnapshot.forEach(documentSnapshot => {
                 const valid = documentSnapshot.data()
                 if(valid.response == 'null'){
@@ -266,6 +268,14 @@ class RenderActivity extends React.Component {
                     bloqueia_post = true;
                     return;
                 }
+
+                index++
+                
+                activity.activity_id = parseInt(data[0].activity_id);
+                activity.number_question = index;
+                activity.answer = valid.response;
+                activityArray.push({...activity});             
+
             });   
 
             console.log(bloqueia_post)
@@ -273,42 +283,38 @@ class RenderActivity extends React.Component {
                 return;
             }
 
+            console.log(JSON.stringify(activityArray))
+
             APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
-            .then(() => {
-                var index = 0;
-                querySnapshot.forEach(documentSnapshot => {
-                    const obj_f = documentSnapshot.data()
+            .then(() => {    
+                APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
+                .then()
+                .catch((erro) => {
+                    sucess = false;
+                    console.log(erro)
+                    Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{text: 'Ok',style: 'destructive', }]);
+                })  
 
-                    index++
-
-                    let json = {
-                        activity_id: parseInt(data[0].activity_id),
-                        number_question: index,
-                        answer: obj_f.response
-                    }
-
-                    console.log(json)
-    
-                    APIActivity.Post('/activity/question/users/response', VG.user_uid, json)
-                    .then()
-                    .catch(() => {
-                        sucess = false;
-                        Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{text: 'Ok',style: 'destructive', }]);
-                    })                     
-                }); 
+                APIActivity.Put('/activity/' + data[0].activity_id + '/value', VG.user_uid, {})
+                .then((value) => {
+                    console.log(value.data)
+                })
+                .catch(() => {
+                    sucess = false;
+                    Alert.alert('Erro', 'Ocorreu um problema ao atualizar sua nota da atividade', [{text: 'Ok', style: 'destructive', }]);
+                }) 
 
                 if (sucess) {
                     navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
-                }
-                
+                }                
             })
             .catch((error) => {
                 console.log(error);
-                Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{text: 'Ok',style: 'destructive', }]);
+                Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{text: 'Ok',style: 'destructive', }]);
             })                  
         })
         .catch(() => {
-            Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
+            Alert.alert('Erro', 'Ocorreu um erro ao realizara leitura das respostas temporarias.');
         });  
       }
 

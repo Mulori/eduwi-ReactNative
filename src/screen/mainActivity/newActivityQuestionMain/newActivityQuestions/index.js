@@ -79,7 +79,7 @@ export default function newActivityQuestions({ navigation, route }) {
         const [ResponseTwo, setResponseTwo] = useState(null);
         const [ResponseTree, setResponseTree] = useState(null);
         const [ResponseFour, setResponseFour] = useState(null);
-        const [checked, setChecked] = React.useState('first');  
+        const [checked, setChecked] = React.useState('one');  
         
         function Finish(value, Doubt, ResponseOne, ResponseTwo, ResponseTree, ResponseFour, checked){
             
@@ -135,8 +135,8 @@ export default function newActivityQuestions({ navigation, route }) {
                            <TextInput style={style.inputsResponse} multiline placeholder='Insira uma resposta' onChangeText={(value) => setResponseOne(value)}/>
                            <RadioButton
                                value="one"
-                               status={ checked === 'first' ? 'checked' : 'unchecked' }
-                               onPress={() => setChecked('first')}
+                               status={ checked === 'one' ? 'checked' : 'unchecked' }
+                               onPress={() => setChecked('one')}
                                style={style.radioQuestion}
                            />
                        </View>
