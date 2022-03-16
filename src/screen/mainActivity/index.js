@@ -20,6 +20,7 @@ export default function MainActivity({ navigation }) {
 
     const onRefresh = React.useCallback(() => {
         GetActvity();
+        configMenuMain();
         wait(2000).then(() => setRefreshing(false));
     }, []);
 

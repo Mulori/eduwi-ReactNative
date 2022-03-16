@@ -295,15 +295,6 @@ class RenderActivity extends React.Component {
                     Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{text: 'Ok',style: 'destructive', }]);
                 })  
 
-                APIActivity.Put('/activity/' + data[0].activity_id + '/value', VG.user_uid, {})
-                .then((value) => {
-                    console.log(value.data)
-                })
-                .catch(() => {
-                    sucess = false;
-                    Alert.alert('Erro', 'Ocorreu um problema ao atualizar sua nota da atividade', [{text: 'Ok', style: 'destructive', }]);
-                }) 
-
                 if (sucess) {
                     navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
                 }                
