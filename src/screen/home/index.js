@@ -12,6 +12,7 @@ import passActivity from '../mainActivity/passActivity';
 import responseQuestion from '../mainActivity/response/questions';
 import PageSucess from '../../screen/mainActivity/response/sucess';
 import usersActivity from '../../screen/mainActivity/usersActivity';
+import QuestionsActivity from '../mainActivity/myActivity/questionsActivity';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +30,8 @@ export default function Home() {
             <Stack.Screen name='passActivity' options={{ headerShown: false }} component={passActivity} />   
             <Stack.Screen name='responseQuestion' options={{ headerShown: false }} component={responseQuestion} />    
             <Stack.Screen name='pageSucess' options={{ headerShown: false }} component={PageSucess} />         
-            <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={usersActivity} />    
+            <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={usersActivity} />
+            <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
         </Stack.Navigator>   
     );
 }

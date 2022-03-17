@@ -5,6 +5,7 @@ import activityServices from '../../../services/activityService/activityService'
 import VG from '../../../components/variables/VG';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LottieConfig from '../../../components/lotties/config';
+import { TextInput } from 'react-native-paper';
 
 export default function usersActivity({ navigation, route }) {
     const { activity } =  route.params;
@@ -86,18 +87,32 @@ export default function usersActivity({ navigation, route }) {
                             </View>            
                         </View>
                         <View>
-                            <TouchableOpacity style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center'}}>
-                                <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Alterar Titulo</Text>
-                            </TouchableOpacity>
+                            <View style={{ flexDirection: 'row'}}>
+                                <View style={{ width: '70%', alignItems: 'center'}}>
+                                   <TextInput mode='outlined' label={activity.title} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+                                </View>
+                                <View style={{ width: '30%', marginTop: 5}}>
+                                    <TouchableOpacity style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15}}>
+                                        <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Alterar</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            
                             {
                                 activity.type_activity == 'questions' ? 
-                                <TouchableOpacity style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center'}}>
+                                <TouchableOpacity 
+                                onPress={() => {
+                                    setModalMenu(false);
+                                    navigation.navigate('QuestionsActivity', { data: activity});
+                                }}
+                                style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15}}>
                                     <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Visualizar Questões</Text>
                                 </TouchableOpacity>
                                 :
                                 null
-                            }                            
-                            <TouchableOpacity style={{ padding: 15, margin: 5, backgroundColor: 'red', alignItems: 'center'}}>
+                            }        
+
+                            <TouchableOpacity style={{ padding: 15, margin: 5, backgroundColor: 'red', alignItems: 'center', borderRadius: 15}}>
                                 <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Encerrar</Text>
                             </TouchableOpacity>                            
                         </View>
