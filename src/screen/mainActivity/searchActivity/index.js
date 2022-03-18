@@ -32,13 +32,15 @@ export default function searchActivity({ navigation }) {
             setErro(false);
             SetModal(false);
 
-            if(response.data[0].with_password == 1){
-                navigation.navigate('passActivity', { activity: response.data[0]})
+            if(response.data[0].author_uid == VG.user_uid){
+                navigation.navigate('usersActivity', { activity: response.data[0]})
             }else{
-                navigation.navigate('mainSearchActivity', { activity: response.data[0]})
-            }
-
-           
+                if(response.data[0].with_password == 1){
+                    navigation.navigate('passActivity', { activity: response.data[0]})
+                }else{
+                    navigation.navigate('mainSearchActivity', { activity: response.data[0]})
+                }
+            }     
         })
         .catch((error) => {            
             setColorError('orange')
