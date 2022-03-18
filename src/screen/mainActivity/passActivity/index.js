@@ -3,8 +3,6 @@ import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ImageBa
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import md5 from 'md5';
 
-
-
 export default function passActivity({ navigation, route }) {
     const { activity } = route.params;
     const [passwordInformed, setPasswordInformed] = useState(null);
@@ -15,13 +13,12 @@ export default function passActivity({ navigation, route }) {
             Alert.alert("Atenção", "Informe a senha.")
             return;
         }else{
-            console.log(activity.password)
             if(md5(passwordInformed) !== activity.password){
                 Alert.alert("Atenção", "Senha incorreta.")
                 return;
             }
 
-            navigation.dispatch(StackActions.replace('mainSearchActivity', { activity: activity}));
+            navigation.dispatch(StackActions.replace('mainSearchActivity', { activity: activity}));            
         }
     }
 
