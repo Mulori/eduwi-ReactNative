@@ -13,7 +13,8 @@ export default function usersActivity({ navigation, route }) {
     const [data, setData] = useState(null);
     const [modalMenu, setModalMenu] = useState(false);
     const [code, setCode] = useState('');
-    
+    const [title, setTitle] = useState(null);    
+    const [pass, setPass] = useState(null);
 
     function GetUsers(){
         activityServices.Get('/activity/' + activity.id + '/users/concluded', VG.user_uid)
@@ -24,6 +25,37 @@ export default function usersActivity({ navigation, route }) {
         .catch((error) => {
             console.log(error);
         })         
+    }
+
+    function AlterarTitle(){
+        if(!title){
+            Alert.alert('Atenção', 'Informe um titulo.');
+            return;
+        }
+
+        activityServices.Put('/activity/' + activity.id + '/title', VG.user_uid, { title: title.trim()})
+        .then((response) => {
+            navigation.pop();   
+        })
+        .catch((error) => {
+            Alert.alert(error)
+        })  
+    }
+
+    function AlterarPass(){
+        if(!pass){
+            setPass('');
+        }else{
+            setPass(pass.trim());
+        }
+
+        activityServices.Put('/activity/' + activity.id + '/password', VG.user_uid, { password: pass})
+        .then((response) => {
+            navigation.pop();   
+        })
+        .catch((error) => {
+            Alert.alert(error)
+        })  
     }
 
     useEffect(() => {
@@ -97,15 +129,28 @@ export default function usersActivity({ navigation, route }) {
                         <View>
                             <View style={{ flexDirection: 'row'}}>
                                 <View style={{ width: '70%', alignItems: 'center'}}>
-                                   <TextInput mode='outlined' label={activity.title} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+                                   <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={activity.title} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
                                 </View>
                                 <View style={{ width: '30%', marginTop: 5}}>
-                                    <TouchableOpacity style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15}}>
+                                    <TouchableOpacity 
+                                    onPress={AlterarTitle}
+                                    style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15}}>
                                         <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Alterar</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            
+                            <View style={{ flexDirection: 'row'}}>
+                                <View style={{ width: '70%', alignItems: 'center'}}>
+                                   <TextInput mode='outlined' onChangeText={(value) => setPass(value)} placeholder='Senha' secureTextEntry style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+                                </View>
+                                <View style={{ width: '30%', marginTop: 5}}>
+                                    <TouchableOpacity 
+                                    onPress={AlterarPass}
+                                    style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15}}>
+                                        <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Alterar</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                             {
                                 activity.type_activity == 'questions' ? 
                                 <TouchableOpacity 
