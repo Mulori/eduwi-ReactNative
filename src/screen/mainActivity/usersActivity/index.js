@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, StatusBar, FlatList, Modal, Alert } from 'react-native';
-import * as Animatable from 'react-native-animatable';
 import activityServices from '../../../services/activityService/activityService';
 import VG from '../../../components/variables/VG';
 import Icon from 'react-native-vector-icons/Ionicons';

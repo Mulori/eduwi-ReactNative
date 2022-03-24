@@ -14,6 +14,7 @@ import PageSucess from '../../screen/mainActivity/response/sucess';
 import usersActivity from '../../screen/mainActivity/usersActivity';
 import QuestionsActivity from '../mainActivity/myActivity/questionsActivity';
 import QuestionsUsers from '../../screen/mainActivity/response/questionsUsers';
+import myProfile from '../profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ export default function Home() {
             <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={usersActivity} />
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />    
+            <Stack.Screen name='myProfile' options={{ headerShown: false }} component={myProfile} />    
         </Stack.Navigator>   
     );
 }
