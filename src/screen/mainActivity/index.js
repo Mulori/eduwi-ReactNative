@@ -67,7 +67,10 @@ export default function MainActivity({ navigation }) {
                 navigation.navigate('searchActivity')
                 setModalVisible(false)
                 break;
-            
+            case 4:             
+                navigation.navigate('myProfile')
+                setModalVisible(false)
+                break;
             case 5:
                 auth().signOut();
                 break;          
