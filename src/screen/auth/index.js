@@ -9,6 +9,7 @@ import Home from '../home';
 
 import Register from '../register';
 import Login from '../login';
+import Main from '../main';
 import Welcome from '../welcome';
 import VG from '../../components/variables/VG';
 

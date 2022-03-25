@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, Modal, StyleSheet, StatusBar, FlatList, RefreshControl, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, Modal, StyleSheet, StatusBar, FlatList, ImageBackground, RefreshControl, ScrollView } from 'react-native';
 import mainservices from '../../services/mainService/mainService';
 import activityServices from '../../services/activityService/activityService';
 import WindMill from '../../components/lotties/WindMill';
@@ -20,12 +20,12 @@ export default function MainActivity({ navigation }) {
 
     const onRefresh = React.useCallback(() => {
         GetActvity();
-        configMenuMain();
+        //configMenuMain();
         wait(2000).then(() => setRefreshing(false));
     }, []);
 
     useEffect(() => {
-        configMenuMain();
+        //configMenuMain();
         GetActvity();
     }, [])
 
@@ -87,18 +87,15 @@ export default function MainActivity({ navigation }) {
                 navigation.navigate('mainSearchActivity', { activity: item})
             }
         }
-    }
-    
+    }   
 
     return(
         <View style={style.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#FFF' />
-            <Animatable.View animation="jello" duration={2000} style={{ backgroundColor: '#FFF', padding: 12, flexDirection: 'row' }}>
-                <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#000000'}}>Atividades Populares</Text>
-                <TouchableOpacity style={style.searchCommunity} onPress={(() => setModalMenu(true))}>
-                    <Icon name="dice-six" size={29} style={{ color : '#000', }} />
-                </TouchableOpacity>
-            </Animatable.View>
+            <StatusBar barStyle='dark-content' backgroundColor='#caedff' />
+            <ImageBackground  
+                source={require('../../assets/image/paisagem_background.png')} 
+                style={{width: '100%', height: '100%', position: 'absolute'}}  
+            />            
 
             <ScrollView 
             refreshControl={
@@ -113,18 +110,18 @@ export default function MainActivity({ navigation }) {
                     <TouchableOpacity key={key} onPress={() => {Enter(item)}} style={{ 
                         flexGrow: 1, 
                         flexBasis: 0, 
-                        backgroundColor: '#7B68EE',                        
+                        backgroundColor: 'rgba(0,0,0,0.1)',                     
                         margin: 5,
                         borderRadius: 15,                        
-                        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+                        textShadowColor: 'rgba(0, 0, 0, 0.90)',
                         textShadowOffset: {width: -1, height: 1},
                         textShadowRadius: 10,
                         }}>
                         <View style={{flexDirection: 'row'}}>
-                            <View style={{ backgroundColor: '#7B68EE', width:'85%', borderBottomStartRadius: 15, borderTopLeftRadius: 15, padding: 15}}>
+                            <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', width:'86%', borderBottomStartRadius: 15, borderTopLeftRadius: 15, padding: 15}}>
                                 <Text style={{color: '#FFF', fontSize: 15, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text>     
                             </View>
-                            <View style={{ backgroundColor: item.with_password == 0 ? 'green' : 'red' ,  width:'15%', borderBottomEndRadius: 15, borderTopEndRadius: 15, padding: 15}}>
+                            <View style={{ backgroundColor: 'rgba(0,0,0,0.9)',  width:'14%', borderBottomEndRadius: 15, borderTopEndRadius: 15, padding: 15}}>
                                 {
                                     item.with_password == 0
                                     ? <Icon name='lock-open' size={15} style={{ color: '#FFF', marginLeft: '2%'}} />
