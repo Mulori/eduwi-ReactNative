@@ -15,13 +15,15 @@ import usersActivity from '../../screen/mainActivity/usersActivity';
 import QuestionsActivity from '../mainActivity/myActivity/questionsActivity';
 import QuestionsUsers from '../../screen/mainActivity/response/questionsUsers';
 import myProfile from '../profile';
+import Main from '../main';
 
 const Stack = createNativeStackNavigator();
 
 export default function Home() {
 
     return (    
-        <Stack.Navigator initialRouteName="mainActivity">
+        <Stack.Navigator initialRouteName="Main">
+            <Stack.Screen name='Main' options={{ headerShown: false }} component={Main} />  
             <Stack.Screen name='mainActivity' options={{ headerShown: false }} component={MainActivity} />
             <Stack.Screen name='newActivity' options={{ headerShown: false }} component={newActivity} />
             <Stack.Screen name='newActivityQuestionMain' options={{ headerShown: false }} component={newActivityQuestionMain} />
@@ -35,7 +37,7 @@ export default function Home() {
             <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={usersActivity} />
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />    
-            <Stack.Screen name='myProfile' options={{ headerShown: false }} component={myProfile} />    
+            <Stack.Screen name='myProfile' options={{ headerShown: false }} component={myProfile} />
         </Stack.Navigator>   
     );
 }
