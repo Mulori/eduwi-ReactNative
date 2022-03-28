@@ -11,8 +11,7 @@ export default function myProfile({ navigation }) {
     function GetUser(){
         activityServices.Get("/users", VG.user_uid)
         .then((response) => {
-            setData(response.data);    
-            console.log(response.data)
+            setData(response.data);                
         })
         .catch((error) => {
             console.log(error);
@@ -31,9 +30,9 @@ export default function myProfile({ navigation }) {
                 style={{width: '100%', height: '100%', position: 'absolute'}}  
             />
             <View style={{ alignItems: 'center', bottom: -350}}>
-                <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={data.name} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
-                <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={data.last_name} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
-                <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={data.email} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+                    <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={!data ? null : data.name} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+                    <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={!data ? null : data.last_name} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+                    <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={!data ? null : data.email} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
             </View>
         </View>  
     );
