@@ -21,6 +21,10 @@ export default function Main({ navigation }){
         configMenuMain();
     }, [])
 
+    setTimeout(() => {
+       GetUser();
+    }, 10000);
+
     function configMenuMain(){
         mainservices.GetConfigMenu(VG.user_uid)
         .then((response) => {
@@ -71,9 +75,9 @@ export default function Main({ navigation }){
 
     return(
         <View style={style.containerMaster}>
-            <StatusBar backgroundColor='#38b6ff' barStyle='ligth-content' />
+            <StatusBar backgroundColor='#1b9cf0' barStyle='ligth-content' />
             <ImageBackground  
-                source={require('../../assets/image/main_back.png')} 
+                source={require('../../assets/image/carnaval_edwi.jpg')} 
                 style={{width: '100%', height: '100%', position: 'absolute'}}  
             />
             <Animatable.View animation='bounceInLeft' duration={2000} style={style.containerChild}> 
@@ -108,7 +112,7 @@ export default function Main({ navigation }){
              <Modal visible={modalVisible} style={style.modalMenu} animationType="slide" >
                 <View style={{backgroundColor: '#FFF', padding: 12, flexDirection: 'row'}}>
                     <TouchableOpacity onPress={() => {setModalMenu(false)}}>
-                        <Icon name="menu" size={26} style={{ color : '#000000'}} />
+                        <Icon name="arrow-down-left" size={26} style={{ color : '#000000'}} />
                     </TouchableOpacity>                    
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000000', marginLeft: 10}}>Voltar</Text>
                 </View>
@@ -156,11 +160,13 @@ const style = StyleSheet.create({
         backgroundColor: '#7ed957',
         padding: 15,
         borderRadius: 15,
-        width: '80%',
+        width: '50%',
+        height: '15%',
+        justifyContent: 'center',
         alignItems: 'center',
         left: '10%', 
         right: '10%',
-        bottom: '15%',       
+        bottom: '22%',       
         borderWidth: 2,
         borderColor: '#ff5757',
     },
