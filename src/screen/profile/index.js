@@ -24,15 +24,46 @@ export default function myProfile({ navigation }) {
 
     return(
         <View style={style.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#fff0e6' />
-            <ImageBackground  
-                source={require('../../assets/image/profile.png')} 
-                style={{width: '100%', height: '100%', position: 'absolute'}}  
-            />
-            <View style={{ alignItems: 'center', bottom: -350}}>
-                    <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={!data ? null : data.name} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
-                    <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={!data ? null : data.last_name} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
-                    <TextInput mode='outlined' onChangeText={(value) => setTitle(value)} label={!data ? null : data.email} style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+            <StatusBar barStyle='light-content' backgroundColor='#3CB371' />
+            <View style={{ alignItems: 'center'}}>
+                    <TextInput 
+                    mode='outlined' 
+                    outlineColor='#3CB371'
+                    onChangeText={(value) => setTitle(value)} 
+                    value={!data ? null : data.name} 
+                    label='Nome' style={{ 
+                        width: '90%', 
+                        fontWeight: 'bold', 
+                        backgroundColor: '#FFF', 
+                        borderColor: '#4e71ff', 
+                        marginTop: 10
+                    }}/>
+                    <TextInput 
+                    mode='outlined' 
+                    outlineColor='#3CB371'
+                    onChangeText={(value) => setTitle(value)} 
+                    value={!data ? null : data.last_name} 
+                    label='Sobrenome' 
+                    style={{ 
+                        width: '90%', 
+                        fontWeight: 'bold', 
+                        backgroundColor: '#FFF', 
+                        borderColor: '#4e71ff', 
+                        marginTop: 10
+                    }}/>
+                    <TextInput 
+                    mode='outlined' 
+                    outlineColor='#3CB371'
+                    onChangeText={(value) => setTitle(value)} 
+                    value={!data ? null : data.email} 
+                    label='E-mail' 
+                    style={{ 
+                        width: '90%', 
+                        fontWeight: 'bold', 
+                        backgroundColor: '#FFF', 
+                        borderColor: '#4e71ff', 
+                        marginTop: 10
+                    }}/>
             </View>
         </View>  
     );

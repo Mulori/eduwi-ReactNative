@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, StatusBar, FlatList, Modal, Alert } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, StatusBar, FlatList, Modal, Alert, Linking } from 'react-native';
 import activityServices from '../../../services/activityService/activityService';
 import VG from '../../../components/variables/VG';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LottieConfig from '../../../components/lotties/config';
 import { TextInput } from 'react-native-paper';
 import { Buffer } from 'buffer'
+import Share  from 'react-native-share';
+
 
 export default function usersActivity({ navigation, route }) {
     const { activity } =  route.params;
@@ -14,6 +16,20 @@ export default function usersActivity({ navigation, route }) {
     const [code, setCode] = useState('');
     const [title, setTitle] = useState(null);    
     const [pass, setPass] = useState(null);
+
+    const openShared = async () => {
+        const shareOption = {
+            message: "EDUWI - Você acaba de receber o código de uma atividade: " + code + ""
+        }
+
+        try{
+            const send = await Share.open(shareOption);
+        }
+        catch{
+
+        }
+    }
+
 
     function GetUsers(){
         activityServices.Get('/activity/' + activity.id + '/users/concluded', VG.user_uid)
@@ -69,7 +85,9 @@ export default function usersActivity({ navigation, route }) {
             <View style={{ backgroundColor: '#582770', padding: 10, alignItems: 'center', borderRadius: 15, borderBottomWidth: 1, borderBottomColor: '#FFF', flexDirection: 'row'}}>
                 <View style={{ width: '90%'}}>
                     <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 19}}>{title}</Text>  
-                    <Text style={{ color: '#FFF', fontSize: 15}}>Código: {code}</Text>  
+                    <TouchableOpacity onPress={() => openShared(data, code)} >
+                        <Text style={{ color: '#FFF', fontSize: 15}}>Código: {code}</Text>  
+                    </TouchableOpacity>                    
                 </View>
                 <View style={{ width: '10%'}}>
                     <TouchableOpacity onPress={() => {setModalMenu(true)}}>
