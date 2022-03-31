@@ -41,7 +41,7 @@ export default function myActivity({ navigation }) {
                 {!data ? null : 
                         data.map((item, key) => 
                         <TouchableOpacity key={key} onPress={() => {navigation.navigate('usersActivity', { activity: item})}}>
-                            <View style={{ backgroundColor: '#f5f5f5', padding: 15, borderBottomWidth: 0.5, marginTop: 3}}>
+                            <View style={{ backgroundColor: '#d2d2d2', padding: 10, margin: 8}}>
                                 <Text style={{color: '#000', fontSize: 17, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text> 
                                 <Text style={{color: '#000', fontSize: 13, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>Membros: {item.number_members}</Text>     
                                 <Text style={{color: '#000', fontSize: 13, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>Tipo: {ConvertNameActivity(item.type_activity)}</Text> 

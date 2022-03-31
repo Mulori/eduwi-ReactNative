@@ -37,7 +37,9 @@ export default function Home() {
             <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={usersActivity} />
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />    
-            <Stack.Screen name='myProfile' options={{ headerShown: false }} component={myProfile} />
+            <Stack.Screen name='myProfile' options={{ 
+                headerTitle: 'Meu Perfil'
+             }} component={myProfile} />
         </Stack.Navigator>   
     );
 }
