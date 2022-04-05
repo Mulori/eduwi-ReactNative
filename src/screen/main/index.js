@@ -9,6 +9,8 @@ import mainservices from '../../services/mainService/mainService';
 import userService from '../../services/userService/userService';
 import VG from '../../components/variables/VG';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import LottieMonster from '../../components/lotties/monster';
+
 
 
 export default function Main({ navigation }){
@@ -75,15 +77,15 @@ export default function Main({ navigation }){
 
     return(
         <View style={style.containerMaster}>
-            <StatusBar backgroundColor='#1b9cf0' barStyle='ligth-content' />
+            <StatusBar backgroundColor='#486d6e' barStyle='ligth-content' />
             <ImageBackground  
-                source={require('../../assets/image/carnaval_edwi.jpg')} 
+                source={require('../../assets/image/back_main.png')} 
                 style={{width: '100%', height: '100%', position: 'absolute'}}  
             />
             <Animatable.View animation='bounceInLeft' duration={2000} style={style.containerChild}> 
                 <View style={style.containerHeader}>
-                    <View style={{ width: '90%'}}>                        
-                        <View style={style.containerScore}>
+                    <View style={{ width: '90%'}}>          
+                        <View style={style.containerScore}>      
                             <ImageBackground  
                                 source={require('../../assets/image/cifrao.png')} 
                                 style={{width: 20, height: 20}}  
@@ -95,24 +97,76 @@ export default function Main({ navigation }){
                                     <IconFoundation name='refresh' size={20} style={{ color: '#FFF'}}/>
                                 </TouchableOpacity>
                             </View>
-                           
                         </View>
                     </View>
                     <View style={{ width: '20%', top: -5}}>
                         <TouchableOpacity onPress={(() => setModalMenu(true))}>
-                            <Icon name="menu" size={30} style={{ color : '#000', }} />
+                            <Icon name="menu" size={30} style={{ color : 'rgba(0,0,0,0.4)', }} />
                         </TouchableOpacity>
                     </View>                    
                 </View>
-                <TouchableOpacity style={style.buttonGame} onPress={() => {navigation.navigate('mainActivity')}}>
-                    <Text style={style.textButtonGame}>JOGAR</Text>
-                </TouchableOpacity>
+                <View
+                    style={{
+                        alignItems: 'center',
+                        width: '70%',
+                        height: '7%',
+                        marginTop: '100%',
+                        backgroundColor: '#294444',
+                        borderBottomEndRadius: 15,
+                        borderTopEndRadius: 15,
+                        borderTopLeftRadius: 20,
+                        borderBottomStartRadius: 20,
+                    }}
+                >
+                    <View style={{ flexDirection: 'row'}}>
+                        <View style={{ width: '20%', justifyContent: 'center'}}>
+                            <IconFont5 name='globe-americas' style={{ color: '#FFF', marginLeft: 10}} size={35} />             
+                        </View>
+                        <View style={{ width: '80%', justifyContent: 'center'}}>
+                            <TouchableOpacity style={style.buttonGame} onPress={() => {navigation.navigate('mainActivity')}}>
+                                <View>                            
+                                    <Text style={style.textButtonGame}>EXPLORAR</Text>
+                                </View>                        
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        alignItems: 'center',
+                        width: '70%',
+                        height: '7%',
+                        marginTop: '10%',
+                        backgroundColor: '#294444',
+                        borderBottomEndRadius: 15,
+                        borderTopEndRadius: 15,
+                        borderTopLeftRadius: 20,
+                        borderBottomStartRadius: 20,
+                    }}
+                >
+                    <View style={{ flexDirection: 'row'}}>
+                        <View style={{ width: '20%', justifyContent: 'center'}}>
+                            <IconFont5 name='gamepad' style={{ color: '#FFF', marginLeft: 5}} size={35} />             
+                        </View>
+                        <View style={{ width: '80%', justifyContent: 'center'}}>
+                            <TouchableOpacity style={style.buttonGame} onPress={() => {navigation.navigate('Game')}}>
+                                <View>                            
+                                    <Text style={style.textButtonGame}>GAMIFICAÇÃO</Text>
+                                </View>                        
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+                <Text style={{ color: '#FFF', marginTop: 35}}>Escolha uma das opções acima e divirta-se!</Text>
+               
             </Animatable.View>    
 
              <Modal visible={modalVisible} style={style.modalMenu} animationType="slide" >
                 <View style={{backgroundColor: '#FFF', padding: 12, flexDirection: 'row'}}>
                     <TouchableOpacity onPress={() => {setModalMenu(false)}}>
-                        <Icon name="arrow-down-left" size={26} style={{ color : '#000000'}} />
+                        <Icon name="arrow-down-left" size={26} style={{ color : '#000'}} />
                     </TouchableOpacity>                    
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000000', marginLeft: 10}}>Voltar</Text>
                 </View>
@@ -134,7 +188,7 @@ export default function Main({ navigation }){
 
 const style = StyleSheet.create({
     containerMaster:{
-        flex: 1
+        flex: 1,
     },
     containerChild:{
         alignItems: 'center',
@@ -151,31 +205,29 @@ const style = StyleSheet.create({
         marginRight: 20,
         width: '40%',
         flexDirection: 'row',
-        backgroundColor: 'rgba(0,0,0,0.1)',
+        backgroundColor: 'rgba(0,0,0,0.4)',
         borderRadius: 10,
-        marginLeft: '30%',
     },
     buttonGame:{
-        position: 'absolute',
-        backgroundColor: '#7ed957',
-        padding: 15,
-        borderRadius: 15,
-        width: '50%',
-        height: '15%',
+        backgroundColor: '#FFF',
+        borderBottomEndRadius: 15,
+        borderTopEndRadius: 15,
+        width: '100%',
+        height: '100%',
         justifyContent: 'center',
-        alignItems: 'center',
-        left: '10%', 
-        right: '10%',
-        bottom: '22%',       
-        borderWidth: 2,
+        alignItems: 'center',   
         borderColor: '#ff5757',
     },
     textButtonGame:{
-        color: '#FFF',
+        color: '#486d6e',
         fontWeight: 'bold',
         fontSize: 20
     },
     modalMenu: {
         position: 'absolute'
+    },
+    title:{
+        fontSize: 50,
+        textAlign: 'center',
     },
 })
