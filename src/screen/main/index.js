@@ -79,12 +79,12 @@ export default function Main({ navigation }){
         <View style={style.containerMaster}>
             <StatusBar backgroundColor='#486d6e' barStyle='ligth-content' />
             <ImageBackground  
-                source={require('../../assets/image/back_main.png')} 
+                source={require('../../assets/image/back_main_two.png')} 
                 style={{width: '100%', height: '100%', position: 'absolute'}}  
             />
             <Animatable.View animation='bounceInLeft' duration={2000} style={style.containerChild}> 
                 <View style={style.containerHeader}>
-                    <View style={{ width: '90%'}}>          
+                    <View style={{ width: '100%'}}>          
                         <View style={style.containerScore}>      
                             <ImageBackground  
                                 source={require('../../assets/image/cifrao.png')} 
@@ -98,19 +98,16 @@ export default function Main({ navigation }){
                                 </TouchableOpacity>
                             </View>
                         </View>
-                    </View>
-                    <View style={{ width: '20%', top: -5}}>
-                        <TouchableOpacity onPress={(() => setModalMenu(true))}>
-                            <Icon name="menu" size={30} style={{ color : 'rgba(0,0,0,0.4)', }} />
-                        </TouchableOpacity>
-                    </View>                    
+                    </View>                  
                 </View>
+
+
                 <View
                     style={{
                         alignItems: 'center',
                         width: '70%',
                         height: '7%',
-                        marginTop: '100%',
+                        marginTop: '95%',
                         backgroundColor: '#294444',
                         borderBottomEndRadius: 15,
                         borderTopEndRadius: 15,
@@ -137,7 +134,34 @@ export default function Main({ navigation }){
                         alignItems: 'center',
                         width: '70%',
                         height: '7%',
-                        marginTop: '10%',
+                        marginTop: '5%',
+                        backgroundColor: '#294444',
+                        borderBottomEndRadius: 15,
+                        borderTopEndRadius: 15,
+                        borderTopLeftRadius: 20,
+                        borderBottomStartRadius: 20,
+                    }}
+                >
+                    <View style={{ flexDirection: 'row'}}>
+                        <View style={{ width: '20%', justifyContent: 'center'}}>
+                            <IconFont5 name='bars' style={{ color: '#FFF', marginLeft: 12}} size={35} />             
+                        </View>
+                        <View style={{ width: '80%', justifyContent: 'center'}}>
+                            <TouchableOpacity style={style.buttonGame} onPress={(() => setModalMenu(true))}>
+                                <View>                            
+                                    <Text style={style.textButtonGame}>MENU</Text>
+                                </View>                        
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        alignItems: 'center',
+                        width: '70%',
+                        height: '7%',
+                        marginTop: '5%',
                         backgroundColor: '#294444',
                         borderBottomEndRadius: 15,
                         borderTopEndRadius: 15,
