@@ -17,6 +17,7 @@ import QuestionsUsers from '../../screen/mainActivity/response/questionsUsers';
 import myProfile from '../profile';
 import Main from '../main';
 import Game from '../game';
+import GameDetail from '../game/gameDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,7 +40,8 @@ export default function Home() {
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />    
             <Stack.Screen name='myProfile' options={{ headerTitle: 'Meu Perfil' }} component={myProfile} />
-             <Stack.Screen name='Game' options={{ headerTitle: 'Gamificação' }} component={Game} />
+            <Stack.Screen name='Game' options={{ headerTitle: 'Gamificação - Loja' }} component={Game} />
+            <Stack.Screen name='GameDetail' options={{ headerTitle: 'Gamificação - Item' }} component={GameDetail} />
         </Stack.Navigator>   
     );
 }
