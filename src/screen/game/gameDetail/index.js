@@ -28,8 +28,25 @@ export default function GameDetail({ navigation, route }) {
     function Buy(){
         Alert.alert("Atenção", "Deseja adquirir este recompensa?",  
             [{  text: "Sim",
-            
-            },
+                onPress: () => {
+
+                    const data = {
+                        reward_id: item.id,
+                        amount: count,
+                    }
+
+                    console.log(data)
+
+                    mainservices.Post('/reward', VG.user_uid, data)
+                    .then((response) => {
+                        GetUser();
+                        Alert.alert('Adquirido', 'Compra realizada com sucesso!')   
+                    })
+                    .catch((error) => {
+                        Alert.alert('Atenção', 'Você não tem moedas suficiente para realizar esta compra!')   
+                    })  
+                },
+            },  
                 {
                 text: "Não",
                 },
@@ -97,11 +114,9 @@ export default function GameDetail({ navigation, route }) {
                             <TouchableOpacity onPress={More}>
                                 <IconAntDesign name='plussquare' size={50}/>
                             </TouchableOpacity>
-                        </View>
-                        
+                        </View>                        
                     </View>
-                </Animatable.View>
-                
+                </Animatable.View>                
             </View>
         </View>  
     );
