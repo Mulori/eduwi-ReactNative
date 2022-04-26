@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, StatusBar, Alert, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, StatusBar, Alert, ScrollView, ActivityIndicator, Modal, ImageBackground, FlatList } from 'react-native';
 import APIActivity from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
+import MainServices from '../../../../services/mainService/mainService';
+import * as Animatable from 'react-native-animatable';
 import {NavigationActions, StackActions} from '@react-navigation/native';
 
 
@@ -12,6 +14,17 @@ export default function responseQuestion({ navigation, route }) {
     const { data } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [listQuestion, setListQuestions] = useState([]);
+    const [dataReward, setDataReward] = useState(null);
+
+    function GetReward(){
+        MainServices.Get("/reward/users", VG.user_uid)
+        .then((response) => {
+            setDataReward(response.data);    
+        })
+        .catch((error) => {
+            console.log(error);
+        })         
+    }
 
     useEffect(() => {
 
@@ -20,6 +33,7 @@ export default function responseQuestion({ navigation, route }) {
         APIActivity.Get('/activity/' + data.id + '/response', VG.user_uid)
         .then((questions) => {
             setListQuestions(questions.data);
+            GetReward();
             setModalVisible(false);
         })
         .catch(() => {
@@ -32,6 +46,39 @@ export default function responseQuestion({ navigation, route }) {
     return(
         <View style={style.container}>
             <StatusBar barStyle='dark-content' backgroundColor='#fff' />   
+            <View>
+                {
+                !dataReward ? null :
+                    dataReward.length == 0 ? null :
+                    <View>
+                        <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 15}}>Recompensas Disponíveis</Text>
+                        <FlatList 
+                            data={dataReward} 
+                            horizontal
+                            style={{ marginLeft: 20, marginTop: 5}}
+                            keyExtractor={item => item.id} 
+                            renderItem={({ item }) => {
+                                const image = { uri: item.picture };
+
+                                return (                             
+                                    <TouchableOpacity key={item.id} style={{backgroundColor: '#3CB371', borderRadius: 15, padding: 10, margin: 5, }}>
+                                        <View style={style.containerImage}>      
+                                            <ImageBackground  
+                                                source={image} 
+                                                style={{width: 40, height: 40, borderRadius: 50}}  
+                                            />                        
+                                        </View>  
+                                        <Text style={{fontWeight: 'bold', fontSize: 10, color: '#FFF'}}>{item.name}</Text>
+                                        <View style={style.containerValue}>                      
+                                            <Text style={{color: '#FFF', fontWeight: 'bold', marginLeft: 5, fontSize: 10,}}>Quantidade: {item.amount}</Text>  
+                                        </View>                                 
+                                    </TouchableOpacity>      
+                                );
+                            }}
+                        />   
+                    </View>
+                }
+            </View>
             <RenderActivity data={listQuestion} user={VG.user_uid} navi={navigation}/>    
             <Modal visible={modalVisible}>
                 <View style={[style.containerLoad, style.horizontal]}>
@@ -111,6 +158,13 @@ const style = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row'
     },
+    containerImage: {
+        borderRadius: 20,
+        alignItems: 'center',
+    },
+    containerValue: {
+        alignItems: 'center',
+    }, 
 })
 
 function ListResponse(props){
@@ -118,7 +172,7 @@ function ListResponse(props){
     const [item, setItem] = useState(props.item);
 
     return(
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1, marginTop: 15}}>            
             <View style={{width: '90%'}}>
                 <Text style={style.number_question}>Questão: {item.number_question}</Text>
             </View>                
