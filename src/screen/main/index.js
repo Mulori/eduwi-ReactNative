@@ -92,7 +92,7 @@ export default function Main({ navigation }){
                             />                        
                             <Text style={{color: '#FFF', fontWeight: 'bold', marginLeft: 5}}>{!user ? '0' : user.score}</Text>                        
                             
-                            <View style={{ alignItems: 'flex-end', width: '50%'}}>
+                            <View style={{ alignItems: 'flex-end', width: '40%'}}>
                                 <TouchableOpacity onPress={GetUser}>
                                     <IconFoundation name='refresh' size={20} style={{ color: '#FFF'}}/>
                                 </TouchableOpacity>

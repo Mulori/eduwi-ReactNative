@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, Button, StyleSheet, StatusBar, ImageBackground } from 'react-native';
+import { View, TouchableOpacity, Text, Alert, StyleSheet, StatusBar, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import VG from '../../../../components/variables/VG';
 import firestore from '@react-native-firebase/firestore';
 import {StackActions} from '@react-navigation/native';
+import MainServices from '../../../../services/mainService/mainService';
 
 export default function mainSearchActivity({ navigation, route }) {
     const { activity } = route.params;
     const [tipo, setTipo] = useState('');
-    const [isVisibleButton, setIsVisibleButton] = useState(true);
+    const [isVisibleButton, setIsVisibleButton] = useState(null);
+    const [data, setData] = useState('');
 
     useEffect(() => {        
         switch(activity.type_activity) { 
@@ -19,13 +21,34 @@ export default function mainSearchActivity({ navigation, route }) {
     }, [])
 
     function DeleteActivityTemp(){
+        // setIsVisibleButton(true)
+
+        // MainServices.Get("/activity/" + activity.id + "/done", VG.user_uid)
+        // .then((response) => {
+        //     setData(response.data)
+        //     if(data.length > 2){
+        //         setIsVisibleButton(true);
+        //         Alert.alert('Atividade Realizada', 'Você já realizou está atividade!');
+        //     } else{
+        //         setIsVisibleButton(false);
+        //     }
+            
+        // })
+        // .catch((error) => { }) 
+
         firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).get()
         .then(querySnapshot => {
             querySnapshot.forEach(documentSnapshot => {
                 firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
             });
-            setIsVisibleButton(false);
-            navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));
+
+            // if(!isVisibleButton){
+                navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));
+            // }   
+            // else
+            // {
+            //     navigation.pop();
+            // }         
         })
         .catch(() => {
             Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
@@ -54,13 +77,13 @@ export default function mainSearchActivity({ navigation, route }) {
                 </View>  
                 <View style={{ alignItems: 'center'}}>
                     <TouchableOpacity 
-                    onPress={Start}
-                    style={{ padding: 10, backgroundColor: '#20683c', width: '50%', alignItems: 'center', marginTop: '13%', borderRadius: 20}}>
-                        <View style={{ flexDirection: 'row'}}>
-                            <Text style={{color: '#FFF', fontWeight: 'bold'}}>Iniciar</Text>
-                            <Icon name='angle-right' size={18} style={{ marginLeft: '3%', color: '#FFF' }}/>
-                        </View>                                        
-                    </TouchableOpacity>               
+                        onPress={Start}
+                        style={{ padding: 10, backgroundColor: '#20683c', width: '50%', alignItems: 'center', marginTop: '13%', borderRadius: 20}}>
+                            <View style={{ flexDirection: 'row'}}>
+                                <Text style={{color: '#FFF', fontWeight: 'bold'}}>Iniciar</Text>
+                                <Icon name='angle-right' size={18} style={{ marginLeft: '3%', color: '#FFF' }}/>
+                            </View>                                        
+                    </TouchableOpacity>                                  
                 </View>
             </View>      
         </View>        
