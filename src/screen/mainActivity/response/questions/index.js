@@ -16,6 +16,40 @@ export default function responseQuestion({ navigation, route }) {
     const [listQuestion, setListQuestions] = useState([]);
     const [dataReward, setDataReward] = useState(null);
 
+    function Reward(item){
+        switch(item[0].type){
+            case 6: //Espie uma resposta
+                
+                break;
+            case 7: //Dica de resposta
+                
+                break;
+        }
+    }
+
+    function UseReward(item){
+        console.log(item.id_amount)
+        Alert.alert(item.name, "Deseja utilizar está recompensa?",  
+            [{  text: "Sim",
+                onPress: () => {
+                    MainServices.Post("/reward/" + item.id_amount + "/use", VG.user_uid, null)
+                    .then((response) => {
+                        GetReward();
+                        Reward(response.data)  
+                    })
+                    .catch((error) => {
+                        Alert.alert('Atenção', error)   
+                    })  
+                },
+            },  
+                {
+                text: "Não",
+                },
+            ]
+        );
+    }
+
+
     function GetReward(){
         MainServices.Get("/reward/users", VG.user_uid)
         .then((response) => {
@@ -51,26 +85,30 @@ export default function responseQuestion({ navigation, route }) {
                 !dataReward ? null :
                     dataReward.length == 0 ? null :
                     <View>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 15}}>Recompensas Disponíveis</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 0}}>Recompensas Disponíveis</Text>
                         <FlatList 
                             data={dataReward} 
                             horizontal
-                            style={{ marginLeft: 20, marginTop: 5}}
+                            style={{ marginLeft: 20, marginTop: 0}}
                             keyExtractor={item => item.id} 
                             renderItem={({ item }) => {
                                 const image = { uri: item.picture };
 
                                 return (                             
-                                    <TouchableOpacity key={item.id} style={{backgroundColor: '#3CB371', borderRadius: 15, padding: 10, margin: 5, }}>
+                                    <TouchableOpacity 
+                                    key={item.id} 
+                                    style={{backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
+                                    onPress={() => UseReward(item)}
+                                    >
                                         <View style={style.containerImage}>      
                                             <ImageBackground  
                                                 source={image} 
                                                 style={{width: 40, height: 40, borderRadius: 50}}  
                                             />                        
                                         </View>  
-                                        <Text style={{fontWeight: 'bold', fontSize: 10, color: '#FFF'}}>{item.name}</Text>
+                                        <Text style={{fontWeight: 'bold', fontSize: 10, color: '#000'}}>{item.name}</Text>
                                         <View style={style.containerValue}>                      
-                                            <Text style={{color: '#FFF', fontWeight: 'bold', marginLeft: 5, fontSize: 10,}}>Quantidade: {item.amount}</Text>  
+                                            <Text style={{color: '#000', marginLeft: 5, fontSize: 10,}}>Quantidade: {item.amount}</Text>  
                                         </View>                                 
                                     </TouchableOpacity>      
                                 );
