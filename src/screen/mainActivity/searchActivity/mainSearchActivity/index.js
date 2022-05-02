@@ -21,38 +21,30 @@ export default function mainSearchActivity({ navigation, route }) {
     }, [])
 
     function DeleteActivityTemp(){
-        // setIsVisibleButton(true)
+        setIsVisibleButton(true)
 
-        // MainServices.Get("/activity/" + activity.id + "/done", VG.user_uid)
-        // .then((response) => {
-        //     setData(response.data)
-        //     if(data.length > 2){
-        //         setIsVisibleButton(true);
-        //         Alert.alert('Atividade Realizada', 'Você já realizou está atividade!');
-        //     } else{
-        //         setIsVisibleButton(false);
-        //     }
+        MainServices.Get("/activity/" + activity.id + "/done", VG.user_uid)
+        .then((response) => {
+            if(response.data.length === 0){
+                firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(documentSnapshot => {
+                        firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
+                    });
+
+                    navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));       
+                })
+                .catch(() => {
+                    Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
+                }); 
+            } else{
+                Alert.alert('Atividade Realizada', 'Você já realizou está atividade!');
+                navigation.pop();
+                return;
+            }
             
-        // })
-        // .catch((error) => { }) 
-
-        firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(documentSnapshot => {
-                firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
-            });
-
-            // if(!isVisibleButton){
-                navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));
-            // }   
-            // else
-            // {
-            //     navigation.pop();
-            // }         
         })
-        .catch(() => {
-            Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
-        }); 
+        .catch((error) => { }) 
     }
 
     function Start(){
