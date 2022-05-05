@@ -6,36 +6,77 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 import MainServices from '../../../../services/mainService/mainService';
-import * as Animatable from 'react-native-animatable';
 import {NavigationActions, StackActions} from '@react-navigation/native';
-
 
 export default function responseQuestion({ navigation, route }) {
     const { data } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [listQuestion, setListQuestions] = useState([]);
     const [dataReward, setDataReward] = useState(null);
+    const [ModalMenuVisible, setModalMenuVisible] = useState(false);
+    const [Type, setType] = useState(0);
 
-    function Reward(item){
-        switch(item[0].type){
+    function Rewarding(number_question, type){
+
+        switch(type){
             case 6: //Espie uma resposta
-                
+                switch(listQuestion[number_question - 1].right_answer){
+                    case 'one':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_one)
+                        break;
+                    case 'two':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_two)
+                        break;
+                    case 'tree':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_tree)
+                        break;
+                    case 'four':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_four)
+                        break;
+                }
+
                 break;
             case 7: //Dica de resposta
+
+                switch(listQuestion[number_question - 1].right_answer){
+                    case 'one':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_one.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_one.split(' ')[2]  )
+                        break;
+                    case 'two':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_two.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_two.split(' ')[2]  )
+                        break;
+                    case 'tree':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_tree.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_tree.split(' ')[2]  )
+                        break;
+                    case 'four':
+                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_four.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_four.split(' ')[2]  )
+                        break;
+                }
                 
                 break;
         }
     }
 
+    function Reward(item){
+        switch(item[0].type){
+            case 6: //Espie uma resposta
+                setType(6);
+                setModalMenuVisible(true);            
+            case 7: //Dica de resposta
+                setType(7);
+                setModalMenuVisible(true); 
+                break;
+        }
+    }
+
     function UseReward(item){
-        console.log(item.id_amount)
         Alert.alert(item.name, "Deseja utilizar está recompensa?",  
             [{  text: "Sim",
                 onPress: () => {
                     MainServices.Post("/reward/" + item.id_amount + "/use", VG.user_uid, null)
                     .then((response) => {
                         GetReward();
-                        Reward(response.data)  
+                        Reward(response.data);  
                     })
                     .catch((error) => {
                         Alert.alert('Atenção', error)   
@@ -81,6 +122,32 @@ export default function responseQuestion({ navigation, route }) {
         <View style={style.container}>
             <StatusBar barStyle='dark-content' backgroundColor='#fff' />   
             <View>
+                <View>
+                    <Modal
+                        visible={ModalMenuVisible}
+                        style={{ margin: 50 }}
+                    >
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={{ fontSize: 18 }}>Selecione uma questão</Text>
+                            <FlatList
+                                data={listQuestion}
+                                style={{  width: '100%', margin: 15 }}
+                                renderItem={({ item }) => {return(
+                                    <TouchableOpacity 
+                                    key={item} 
+                                    style={{ backgroundColor: '#878286', padding: 15, margin: 5}}
+                                    onPress={() => {
+                                        setModalMenuVisible(false);
+                                        Rewarding(item.number_question, Type)
+                                    }}
+                                    >
+                                        <Text style={{ color: '#FFF', fontWeight: 'bold' }}>{item.number_question} - {item.question}</Text>
+                                    </TouchableOpacity>
+                                )}}
+                            />
+                        </View>                        
+                    </Modal>
+                </View>
                 {
                 !dataReward ? null :
                     dataReward.length == 0 ? null :
