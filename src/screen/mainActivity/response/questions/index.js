@@ -17,21 +17,20 @@ export default function responseQuestion({ navigation, route }) {
     const [Type, setType] = useState(0);
 
     function Rewarding(number_question, type){
-
         switch(type){
             case 6: //Espie uma resposta
                 switch(listQuestion[number_question - 1].right_answer){
                     case 'one':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_one)
+                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_one)
                         break;
                     case 'two':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_two)
+                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_two)
                         break;
                     case 'tree':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_tree)
+                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_tree)
                         break;
                     case 'four':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_four)
+                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_four)
                         break;
                 }
 
@@ -40,32 +39,75 @@ export default function responseQuestion({ navigation, route }) {
 
                 switch(listQuestion[number_question - 1].right_answer){
                     case 'one':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_one.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_one.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_one.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_one.split(' ')[2]  )
                         break;
                     case 'two':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_two.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_two.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_two.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_two.split(' ')[2]  )
                         break;
                     case 'tree':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_tree.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_tree.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_tree.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_tree.split(' ')[2]  )
                         break;
                     case 'four':
-                        Alert.alert('Questão ' + number_question, listQuestion[number_question - 1].answer_four.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_four.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_four.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_four.split(' ')[2]  )
                         break;
                 }
                 
+                break;
+            case 5: //Gabarite uma atividade
+
+                console.log(listQuestion)
+
+                var sucess = true;
+                var index = 0;
+                var activity = {};
+                var activityArray = [];
+
+                listQuestion.forEach(item => {
+                    index++                    
+                    activity.activity_id = parseInt(listQuestion[0].activity_id);
+                    activity.number_question = index;
+                    activity.answer = item.right_answer;
+                    activityArray.push({...activity});    
+                });   
+
+                console.log(JSON.stringify(activityArray))
+
+                APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: listQuestion[0].activity_id }) //Faz a postagem do cabeçalho da atividade
+                .then(() => {    
+                    APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
+                    .then()
+                    .catch((erro) => {
+                        sucess = false;
+                        console.log(erro)
+                        Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{text: 'Ok',style: 'destructive', }]);
+                    })  
+
+                    if (sucess) {
+                        navigation.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
+                    }                
+                })
+                .catch((error) => {
+                    console.log(error);
+                    Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{text: 'Ok',style: 'destructive', }]);
+                }) 
+
                 break;
         }
     }
 
     function Reward(item){
-        switch(item[0].type){
-            case 6: //Espie uma resposta
-                setType(6);
-                setModalMenuVisible(true);            
-            case 7: //Dica de resposta
-                setType(7);
-                setModalMenuVisible(true); 
-                break;
+        if(item[0].type.toString() == '6'){ //Espie uma resposta
+            setType(6);
+            setModalMenuVisible(true); 
+        }
+
+        if(item[0].type.toString() == '7'){ //Dica de resposta
+            setType(7);
+            setModalMenuVisible(true); 
+        }
+
+        if(item[0].type.toString() == '5'){ //Gabarite uma atividade
+            Rewarding(item.number_question, 5)
         }
     }
 
@@ -137,6 +179,7 @@ export default function responseQuestion({ navigation, route }) {
                                     key={item} 
                                     style={{ backgroundColor: '#878286', padding: 15, margin: 5}}
                                     onPress={() => {
+                                        console.log(item);
                                         setModalMenuVisible(false);
                                         Rewarding(item.number_question, Type)
                                     }}
