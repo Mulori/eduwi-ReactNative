@@ -1,29 +1,26 @@
 import React from 'react';
 import { ImageBackground, View, StyleSheet, StatusBar, TouchableOpacity, Text } from 'react-native';
-import LottieMonster from '../../components/lotties/monster';
-
+import * as Animatable from 'react-native-animatable';
 
 export default function Welcome({ navigation }) {
 
     return (    
         <View style={style.container}>
-            <StatusBar backgroundColor='#486d6e' />            
+            <StatusBar backgroundColor='#1b3d1c' />            
             <ImageBackground  
-                source={require('../../assets/image/background-welcome.png')} 
+                source={require('../../assets/image/welcome.png')} 
                 style={{width: '100%', height: '100%', position: 'absolute'}}  
             />
-            <LottieMonster />
-            <Text style={style.title}>EDUWI</Text>
-            <View style={style.containerSignin}>
+            <Animatable.View animation='bounceInLeft' duration={2000} style={style.containerSignin}>
                 <TouchableOpacity onPress={() => {navigation.navigate('Login');}} style={style.backsignin}>
                     <Text style={style.text}>Já possuo uma conta</Text>                
                 </TouchableOpacity>
-            </View>
-            <View style={style.containerSignUp}>
+            </Animatable.View>
+            <Animatable.View animation='bounceInRight' duration={2000} style={style.containerSignUp}>
                 <TouchableOpacity onPress={() => {navigation.navigate('Register');}} style={style.backsignup}>
                     <Text style={style.text}>Criar minha conta</Text>                
                 </TouchableOpacity>
-            </View>
+            </Animatable.View>
         </View>    
     );
 }
@@ -34,15 +31,15 @@ const style = StyleSheet.create({
         backgroundColor: '#f3f3f8',
     },
     backsignin: {
-        backgroundColor: '#fae5d9',
+        backgroundColor: '#5e17eb',
         width: '60%',
-        marginTop: '80%',
+        marginTop: '5%',
         padding: 10,
         borderBottomEndRadius: 15,
         borderTopEndRadius: 15,
     },
     backsignup: {
-        backgroundColor: '#d2583a',
+        backgroundColor: '#f97d25',
         width: '60%',
         marginTop: 30,
         padding: 10,
@@ -53,6 +50,8 @@ const style = StyleSheet.create({
         fontSize: 18,
         paddingLeft:5,
         paddingEnd: 5,
+        color: '#FFF',
+        fontWeight: 'bold',
     },
     containerSignUp:{
         alignItems: 'flex-end'

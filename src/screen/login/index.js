@@ -87,7 +87,7 @@ export default function Login({ navigation }) {
 
     return (    
         <View style={style.container}>
-            <StatusBar backgroundColor='#fae5d9' barStyle='dark-content'/>
+            <StatusBar backgroundColor='#5e17eb' barStyle='light-content'/>
             <LottieCrashHead />            
             <Text style={style.title}>Entrar</Text>            
             <View style={style.containerForm}>                
@@ -109,7 +109,7 @@ export default function Login({ navigation }) {
             </View>
             
             <TouchableOpacity style={style.containerBack} onPress={back}>
-                <Icon name="reply-all" size={20} />
+                <Icon name="reply-all" size={20} style={{ color: '#FFF', }}/>
                 <Text style={style.textBack}>Não possuo uma conta</Text>
             </TouchableOpacity>
             <Icon name="mail" size={20} style={style.iconEmail} />
@@ -146,7 +146,7 @@ export default function Login({ navigation }) {
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fae5d9',
+        backgroundColor: '#5e17eb',
     },
     inputHead:{
         backgroundColor: '#FFFFFF',
@@ -192,6 +192,7 @@ const style = StyleSheet.create({
         marginLeft: 20,
         fontWeight: 'bold',
         fontSize: 30,
+        color: '#FFF',
     },
     iconEmail:{
         position: 'absolute',
@@ -214,6 +215,7 @@ const style = StyleSheet.create({
         fontSize: 15,
         textAlign: 'left',
         marginLeft: 8,
+        color: '#FFF',
     },
     containerforgot:{
         paddingLeft: 20,
