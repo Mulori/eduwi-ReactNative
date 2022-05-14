@@ -80,6 +80,10 @@ export default function searchActivity({ navigation }) {
                 <View style={{ alignItems: 'center', width: '75%', marginTop: 35}}>
                     <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold'}}>Caso não tenha o código da atividade, solicite ao criador ou explore as atividades mais populares.</Text>
                 </View>
+                <ImageBackground  
+                    source={require('../../../assets/image/logomonstroseduwi.png')} 
+                    style={{width: 200, height: 200, marginTop: 30}}  
+                /> 
             </View>
 
             { !error ? null : 

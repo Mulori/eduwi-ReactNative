@@ -9,7 +9,6 @@ import mainservices from '../../services/mainService/mainService';
 import userService from '../../services/userService/userService';
 import VG from '../../components/variables/VG';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import LottieMonster from '../../components/lotties/monster';
 
 
 
@@ -77,11 +76,14 @@ export default function Main({ navigation }){
 
     return(
         <View style={style.containerMaster}>
-            <StatusBar backgroundColor='#486d6e' barStyle='ligth-content' />
-            <ImageBackground  
-                source={require('../../assets/image/back_main_two.png')} 
-                style={{width: '100%', height: '100%', position: 'absolute'}}  
-            />
+            <StatusBar backgroundColor='#FFF' barStyle='dark-content' />
+            <Animatable.View animation='bounceInDown' duration={2000}>
+                <ImageBackground  
+                    source={require('../../assets/image/logoEduwi.png')} 
+                    style={{width: 400, height: 350, position: 'absolute'}}  
+                />
+            </Animatable.View>
+                      
             <Animatable.View animation='bounceInLeft' duration={2000} style={style.containerChild}> 
                 <View style={style.containerHeader}>
                     <View style={{ width: '100%'}}>          
@@ -108,7 +110,7 @@ export default function Main({ navigation }){
                         width: '70%',
                         height: '7%',
                         marginTop: '95%',
-                        backgroundColor: '#294444',
+                        backgroundColor: '#f97d25',
                         borderBottomEndRadius: 15,
                         borderTopEndRadius: 15,
                         borderTopLeftRadius: 20,
@@ -135,7 +137,7 @@ export default function Main({ navigation }){
                         width: '70%',
                         height: '7%',
                         marginTop: '5%',
-                        backgroundColor: '#294444',
+                        backgroundColor: '#f97d25',
                         borderBottomEndRadius: 15,
                         borderTopEndRadius: 15,
                         borderTopLeftRadius: 20,
@@ -162,7 +164,7 @@ export default function Main({ navigation }){
                         width: '70%',
                         height: '7%',
                         marginTop: '5%',
-                        backgroundColor: '#294444',
+                        backgroundColor: '#f97d25',
                         borderBottomEndRadius: 15,
                         borderTopEndRadius: 15,
                         borderTopLeftRadius: 20,
@@ -170,7 +172,7 @@ export default function Main({ navigation }){
                     }}
                 >
                     <View style={{ flexDirection: 'row'}}>
-                        <View style={{ width: '20%', justifyContent: 'center'}}>
+                        <View style={{ width: '20%', justifyContent: 'center' }}>
                             <IconFont5 name='gamepad' style={{ color: '#FFF', marginLeft: 5}} size={35} />             
                         </View>
                         <View style={{ width: '80%', justifyContent: 'center'}}>
@@ -213,6 +215,7 @@ export default function Main({ navigation }){
 const style = StyleSheet.create({
     containerMaster:{
         flex: 1,
+        backgroundColor: '#FFF'
     },
     containerChild:{
         alignItems: 'center',
@@ -240,10 +243,11 @@ const style = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',   
-        borderColor: '#ff5757',
+        borderColor: '#9225ed',
+        borderWidth: 2
     },
     textButtonGame:{
-        color: '#486d6e',
+        color: '#9225ed',
         fontWeight: 'bold',
         fontSize: 20
     },
