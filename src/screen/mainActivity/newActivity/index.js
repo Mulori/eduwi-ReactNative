@@ -54,7 +54,7 @@ export default function newActivity({ navigation }) {
                             <LottieQuestion />
                             <Text style={{fontWeight: 'bold', color: '#FFF'}}>Questões</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{
+                        <TouchableOpacity onPress={() => navigation.navigate('Teste')} style={{
                             backgroundColor: '#D2691E',
                             padding: 15,
                             margin: 10,
