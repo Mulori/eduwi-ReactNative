@@ -1,47 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, ScrollView, StatusBar, Alert, TextInput } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import LottieCrashHeadActivity from '../../../components/lotties/crashHeadActivity'
 import Icon from 'react-native-vector-icons/Entypo';
-import * as Animatable from 'react-native-animatable';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
 import ColorPalette from 'react-native-color-palette'
 
 
-const ControlledColorPicker = () => {
-    let selectedColor = '';
-    return (
-      <ColorPalette
-        onChange={color => selectedColor = color}
-        value={selectedColor}
-        colors={['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9']}
-        title={"Selecione a cor principal da atividade:"}
-        icon={
-          <Icon name={'check'} size={25} color={'black'} />
-        // React-Native-Vector-Icons Example
-      }
-    />)
-  }
-
-export default function newActivityQuestionMain({ navigation, route }) {
-    const { types } = route.params;
-    const [activity, setActivity] = useState({})
+export default function newActivityCompleteSentence({ navigation }) {
     const [itens, setItens] = useState(0)
     const [title, setTitle] = useState(null);
     const [password, setPassword] = useState(null);
     const [error, setError] = useState(false);
     const [msgErro, setMsgErro] = useState(null);
-
-    useEffect(() => {
-        switch(types){
-            case 1:
-                setActivity({ bigTitle: 'Atividade de Questões', sType: 'Questões', placeholder: 'Ex: Perguntinhas', main_color: '#008000'})
-                break;  
-            case 2:
-                setActivity({ bigTitle: 'Atividade Complete a Frase', sType: 'Frases', placeholder: 'Ex: Complete os verbos', main_color: '#D2691E'})
-                break;  
-        }
-    }, [])
 
     function DeleteActivityTemp(){
         firestore()
@@ -52,11 +24,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
                 firestore().collection('user_activity_build_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
             });
 
-            if(types == 1){
-                navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password, type: types})
-            }else if(types == 2){
-                navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types})
-            }            
+            navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password})
         })
         .catch(() => {
             Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
@@ -92,35 +60,34 @@ export default function newActivityQuestionMain({ navigation, route }) {
             }            
         }
 
-        DeleteActivityTemp();       
+       // DeleteActivityTemp();       
     }
 
     return(
         <View style={{flex: 1}}>
-            <View style={{flex: 1, backgroundColor: activity.main_color,  alignItems: 'center', }}>
-                <StatusBar barStyle='light-content' backgroundColor={activity.main_color} />
+            <View style={style.container}>
+                <StatusBar barStyle='light-content' backgroundColor='#008000' />
                 <View style={style.view}>    
                     <ScrollView>
                         <LottieCrashHeadActivity />
-                        <Text style={{marginTop: '5%', fontSize: 25, fontWeight: 'bold', textAlign: 'center',  color: activity.main_color}}>{activity.bigTitle}</Text>   
-                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Nome da Atividade *</Text>   
+                        <Text style={style.title}>Atividade Complete a Frase</Text>   
+                        <Text style={style.titles}>Nome da Atividade *</Text>   
                         <View style={{alignItems: 'center'}}>
-                            <TextInput style={style.inputs} placeholderTextColor={activity.main_color} maxLength={40} onChangeText={(value) => setTitle(value)} placeholder={activity.placeholder} /> 
+                            <TextInput style={style.inputs} placeholderTextColor='#008000' maxLength={40} onChangeText={(value) => setTitle(value)} placeholder='Ex: Complete os verbos' /> 
                         </View> 
-                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Senha</Text>   
+                        <Text style={style.titles}>Senha</Text>   
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} secureTextEntry autoCapitalize='none' maxLength={10} onChangeText={(value) => setPassword(value)} placeholderTextColor='#008000' /> 
                         </View> 
-                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Quantidade de {activity.sType} *</Text>   
+                        <Text style={style.titles}>Quantidade de Questões *</Text>   
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} onChangeText={(value) => setItens(value)} maxLength={10} keyboardType='numeric' placeholderTextColor='#008000'/> 
                         </View>     
                         <View style={{alignItems: 'center', marginTop: 30}}>
                             <TouchableOpacity onPress={handlerNext} style={{
-                                backgroundColor: activity.main_color,
+                                backgroundColor: '#008000',
                                 width: '90%',
                                 alignItems: 'center',
-                                borderRadius: 13,
                                 padding: 15,
                             }}>
                                 <View style={{ flexDirection: 'row'}}>
@@ -138,10 +105,17 @@ export default function newActivityQuestionMain({ navigation, route }) {
                 </Animatable.View>
             }  
         </View>
+          
+           
     );
 }
 
 const style = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#008000'
+    },
     view:{
         backgroundColor: '#FFF',
         borderRadius: 20,
@@ -152,7 +126,21 @@ const style = StyleSheet.create({
     inputs:{
         borderBottomWidth: 1,
         width: '90%',
-        color: '#000000',
+        color: '#008000',
+    },
+    titles:{
+        marginLeft: '5%',
+        marginTop: '5%',
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#008000',
+    },
+    title:{
+        marginTop: '5%',
+        fontSize: 25,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#008000',
     },
     containerError:{
         position: 'absolute',

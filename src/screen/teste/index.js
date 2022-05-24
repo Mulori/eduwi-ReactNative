@@ -2,14 +2,17 @@ import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, TextInput, StyleSheet, CheckBox, FlatList, Alert } from 'react-native';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import * as Animatable from 'react-native-animatable';
+var pilha = [];
 
 export default function teste({ navigation }) {
     const [palavra, setPalavra] = useState('');
-    const [palavra_escolhida, setPalavra_escolhida] = useState(null);
+    const [palavra_escolhida, setPalavra_escolhida] = useState('');
     const [palavra_separada, setPalavra_separada] = useState(null);
     const [palavra_espaco, setPalavra_espaco] = useState(null);
-    var ocultadas = [];
-    var obj_ocultado = {}
+    
+    useEffect(() => {
+        pilha = [];
+    }, [])
 
     const GeraPalavra = () => {
         setPalavra_separada(palavra.split('??'));
@@ -18,11 +21,15 @@ export default function teste({ navigation }) {
 
     const oculta_palavra = (palav) => {
         console.log(palav)
-        obj_ocultado.palavra = palav;
-        ocultadas.push({...obj_ocultado});
+
+        setPalavra_escolhida(palav)
+        pilha.push(palav)
+
         setPalavra(palavra.replace(palav, '??'))
         
-        console.log(ocultadas)
+        console.log(pilha)
+
+        GeraPalavra();
     }
 
     return(
@@ -34,9 +41,9 @@ export default function teste({ navigation }) {
             numColumns={5} 
             renderItem={({ item }) => {
                 return (
-                    <Animatable.View animation='rubberBand' duration={2000}  key={item.id}>
+                    <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
                         {
-                            ocultadas.includes(item) ? null :
+                            palavra_escolhida.includes(item) ? null :
                             <TouchableOpacity onPress={() => oculta_palavra(item)} style={{ backgroundColor: '#400e28', padding: 10, margin: 5, borderRadius: 10 }} >
                                 <Text style={{ color: '#FFF'}}>
                                     {item}
@@ -59,9 +66,12 @@ export default function teste({ navigation }) {
                 )
             } 
             <View>
-                <TextInput value={palavra} style={{ backgroundColor: '#e7e4d5' }} onChangeText={(e) => setPalavra(e)} onChange={GeraPalavra}/>
+                <TextInput value={palavra} style={{ backgroundColor: '#e7e4d5' }} onChangeText={(e) => setPalavra(e)} />
                 <TouchableOpacity onPress={GeraPalavra} style={{ alignItems: 'center', backgroundColor: 'blue'}}>
                     <Text style={{ color: '#FFF', padding: 10}}>Gerar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Teste2', { routes: palavra_separada })} style={{ alignItems: 'center', backgroundColor: 'red'}}>
+                    <Text style={{ color: '#FFF', padding: 10}}>Avançar</Text>
                 </TouchableOpacity>
             </View>                 
         </View>

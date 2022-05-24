@@ -18,7 +18,11 @@ import myProfile from '../profile';
 import Main from '../main';
 import Game from '../game';
 import GameDetail from '../game/gameDetail';
+import newActivityCompleteSentence from '../mainActivity/newActivityCompleteSentence';
+import newActivitySentence from '../mainActivity/newActivityCompleteSentence/newActivitySentence';
+
 import Teste from '../teste/';
+import Teste2 from '../teste/teste2';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +47,11 @@ export default function Home() {
             <Stack.Screen name='myProfile' options={{ headerTitle: 'Meu Perfil' }} component={myProfile} />
             <Stack.Screen name='Game' options={{ headerTitle: 'Gamificação - Loja' }} component={Game} />
             <Stack.Screen name='GameDetail' options={{ headerTitle: 'Gamificação - Item' }} component={GameDetail} />
-            <Stack.Screen name='Teste' options={{ headerTitle: 'Teste' }} component={Teste} />            
+            <Stack.Screen name='newActivityCompleteSentence' options={{ headerShown: false }} component={newActivityCompleteSentence} />
+            <Stack.Screen name='newActivitySentence' options={{ headerShown: false }} component={newActivitySentence} />
+
+            <Stack.Screen name='Teste' options={{ headerTitle: 'Teste' }} component={Teste} />           
+            <Stack.Screen name='Teste2' options={{ headerTitle: 'Teste 2' }} component={Teste2} />     
         </Stack.Navigator>   
     );
 }
