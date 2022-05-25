@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, StatusBar, ScrollView, Alert } from 'react-native';
-import { RadioButton } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { View, TouchableOpacity, Text, StyleSheet, StatusBar, ScrollView, Alert, FlatList, AsyncStorage  } from 'react-native';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../../components/variables/VG';
 import ActivityServices from '../../../../services/activityService/activityService';
 import LottieFinishBlue from '../../../../components/lotties/finishBlue';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
-
+//import AsyncStorage from '@react-native-community/async-storage';
 
 export default function newActivitySentence({ navigation, route }) {    
     const { itens, title, pass, type } = route.params;
@@ -16,6 +15,7 @@ export default function newActivitySentence({ navigation, route }) {
     const [end, setEnd] = useState(false);
     var slide = [];
     const _questions = [];
+    var pilha = [];
 
     useEffect(() => {
         switch(type){
@@ -87,12 +87,11 @@ export default function newActivitySentence({ navigation, route }) {
         
     for(let i = 0; i < itens; i++){   
         const [showModal, setShowModal] = useState(true);
-        const [Doubt, setDoubt] = useState(null);
-        const [ResponseOne, setResponseOne] = useState(null);
-        const [ResponseTwo, setResponseTwo] = useState(null);
-        const [ResponseTree, setResponseTree] = useState(null);
-        const [ResponseFour, setResponseFour] = useState(null);
-        const [checked, setChecked] = React.useState('one');  
+        const [palavra, setPalavra] = useState('');
+        const [palavra_escolhida, setPalavra_escolhida] = useState('');
+        const [palavra_separada, setPalavra_separada] = useState(null);
+        const [palavra_espaco, setPalavra_espaco] = useState(null);
+        
         
         function Finish(value, Doubt, ResponseOne, ResponseTwo, ResponseTree, ResponseFour, checked){
             
@@ -121,24 +120,75 @@ export default function newActivitySentence({ navigation, route }) {
                 return;
             })        
         }
-          
+
+        const GeraPalavra = () => {
+            setPalavra_separada(palavra.split('??'));
+            setPalavra_espaco(palavra.split(' '));
+        }    
+        
+        const oculta_palavra = async (palav) => {
+            try{
+                await AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
+            }
+            catch{
+
+            }
+            
+            console.log(palav)
+    
+            setPalavra_escolhida(palav)
+            pilha.push(palav)
+    
+            setPalavra(palavra.replace(palav, '??'))
+            
+            console.log(pilha)
+    
+            GeraPalavra();
+        }
         
         slide.push(
             <View key = {i + 1} style={{  backgroundColor: '#FFF', padding: 5, margin: 10, borderRadius: 15}}>        
                {
-                   !showModal ? 
-                   
+                   !showModal ?                    
                    <View style={{padding: 12, flexDirection: 'row'}}>
                        <Text style={{fontWeight: 'bold',}}>Frase {i + 1}:  Concluida </Text>
                        <View style={{alignItems: 'flex-end'}}>
                             <Icon name='check-double' size={20} style={{color: '#008000'}}/>
                        </View>                       
                    </View>
-
                    :
                 <View style={{ width: '100%', padding: 10}}>
                     <Text>Frase: {i + 1}</Text>
-                    <TextInput outlineColor='#3CB371' label='Digite a frase' style={style.inputs}  placeholder='Digite a frase' onChangeText={(value) => setDoubt(value)}/> 
+                    <View style={{ flexDirection: 'row', width: '100%'}}>
+                        <View style={{ width: '85%'}}>
+                            <TextInput outlineColor='#3CB371' label='Digite a frase' style={style.inputs}  placeholder='Digite a frase' onChangeText={(value) => setPalavra(value)}/> 
+                        </View>
+                        <View style={{ width: '15%', alignItems: 'center', justifyContent: 'center'}}>
+                            <TouchableOpacity style={style.buttonPencil} onPress={GeraPalavra}>
+                                <Icon name='pencil' style={{ color: '#FFF' }} size={30}/>
+                            </TouchableOpacity>
+                        </View>                        
+                    </View>
+                    <FlatList 
+                        data={palavra_espaco} 
+                        style={{ margin: '5%'}}
+                        keyExtractor={item => item.id} 
+                        numColumns={4} 
+                        renderItem={({ item }) => {
+                            return (
+                                <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
+                                    {
+                                        palavra_escolhida.includes(item) ? null :
+                                        <TouchableOpacity onPress={() => oculta_palavra(item)} style={{ backgroundColor: 'green', padding: 10, margin: 5, borderRadius: 10 }} >
+                                            <Text style={{ color: '#FFF'}}>
+                                                {item}
+                                            </Text>
+                                        </TouchableOpacity>   
+                                    }                        
+                                </Animatable.View>                    
+                            );
+                        }} 
+                    />                    
                     <TouchableOpacity onPress={() => Finish(i + 1, Doubt, ResponseOne, ResponseTwo, ResponseTree, ResponseFour, checked)} style={{ 
                         backgroundColor: activity.main_color, 
                         borderRadius: 15, 
@@ -148,7 +198,7 @@ export default function newActivitySentence({ navigation, route }) {
                         marginRight: 5,
                         marginTop: 10,
                     }}>
-                        <Text style={{color: '#FFF', fontWeight: 'bold'}}>Concluir a Questão</Text>
+                        <Text style={{color: '#FFF', fontWeight: 'bold'}}>Concluir a Frase</Text>
                     </TouchableOpacity> 
                 </View>  
             }
@@ -216,4 +266,10 @@ const style = StyleSheet.create({
     radioQuestion: {
         color: '#FFF'
     },
+    buttonPencil: {
+        backgroundColor: '#D2691E',
+        padding: 10,
+        marginTop: '40%',
+        borderRadius: 15
+    },  
 })
