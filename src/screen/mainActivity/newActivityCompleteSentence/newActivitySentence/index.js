@@ -128,7 +128,7 @@ export default function newActivitySentence({ navigation, route }) {
         
         const oculta_palavra = async (palav) => {
             try{
-                await AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
+
             }
             catch{
 
@@ -158,7 +158,7 @@ export default function newActivitySentence({ navigation, route }) {
                    </View>
                    :
                 <View style={{ width: '100%', padding: 10}}>
-                    <Text>Frase: {i + 1}</Text>
+                    <Text style={{ fontWeight: 'bold'}}>Frase: {i + 1}</Text>
                     <View style={{ flexDirection: 'row', width: '100%'}}>
                         <View style={{ width: '85%'}}>
                             <TextInput outlineColor='#3CB371' label='Digite a frase' style={style.inputs}  placeholder='Digite a frase' onChangeText={(value) => setPalavra(value)}/> 
@@ -198,7 +198,7 @@ export default function newActivitySentence({ navigation, route }) {
                         marginRight: 5,
                         marginTop: 10,
                     }}>
-                        <Text style={{color: '#FFF', fontWeight: 'bold'}}>Concluir a Frase</Text>
+                        <Text style={{color: '#FFF', fontWeight: 'bold'}}>Concluir está Frase</Text>
                     </TouchableOpacity> 
                 </View>  
             }
