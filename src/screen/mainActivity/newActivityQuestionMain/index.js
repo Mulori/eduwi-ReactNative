@@ -107,7 +107,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} placeholderTextColor={activity.main_color} maxLength={40} onChangeText={(value) => setTitle(value)} placeholder={activity.placeholder} /> 
                         </View> 
-                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Senha</Text>   
+                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Senha (opcional)</Text>   
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} secureTextEntry autoCapitalize='none' maxLength={10} onChangeText={(value) => setPassword(value)} placeholderTextColor='#008000' /> 
                         </View> 
