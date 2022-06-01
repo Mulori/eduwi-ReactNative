@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, StatusBar, ScrollView, Alert, FlatList, AsyncStorage  } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, StatusBar, ScrollView, Alert, FlatList, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../../components/variables/VG';
@@ -7,15 +7,13 @@ import ActivityServices from '../../../../services/activityService/activityServi
 import LottieFinishBlue from '../../../../components/lotties/finishBlue';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
-//import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function newActivitySentence({ navigation, route }) {    
     const { itens, title, pass, type } = route.params;
     const [activity, setActivity] = useState({})
     const [end, setEnd] = useState(false);
     var slide = [];
-    const _questions = [];
-    var pilha = [];
 
     useEffect(() => {
         switch(type){
@@ -43,7 +41,7 @@ export default function newActivitySentence({ navigation, route }) {
             let data_header = {
                 title: title,
                 password: !pass ? "" : pass, 
-                type_activity: 'questions'
+                type_activity: 'phrases'
             }
 
             ActivityServices.ActivityCreate(data_header, VG.user_uid)
@@ -68,7 +66,7 @@ export default function newActivitySentence({ navigation, route }) {
                     })
                     .catch((error) => {
                         console.log(error);
-                        Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{text: 'Ok',style: 'destructive', }]);
+                        Alert.alert('Erro', 'Ocorreu um problema ao criar uma frase da atividade', [{text: 'Ok',style: 'destructive', }]);
                     })                     
                 });               
                 setEnd(true);
@@ -91,24 +89,32 @@ export default function newActivitySentence({ navigation, route }) {
         const [palavra_escolhida, setPalavra_escolhida] = useState('');
         const [palavra_separada, setPalavra_separada] = useState(null);
         const [palavra_espaco, setPalavra_espaco] = useState(null);
-        
-        
-        function Finish(value, Doubt, ResponseOne, ResponseTwo, ResponseTree, ResponseFour, checked){
-            
-            if(!Doubt || !ResponseOne || !ResponseTwo || !ResponseTree || !ResponseFour || !checked || !value){
-                Alert.alert('Atenção', 'Preencha todos os campos!');
-                return;
-            }
+        const [palavra_pronta, setPalavraPronta] = useState(null); //Esta hook vai ser usada para salvar no banco
+        const [isLoading, setIsLoading] = useState(false);
 
+        const storesLetter = async (value) => {
+            try {
+              await AsyncStorage.setItem('@storesLetter_' + i, value)
+            } catch (e) {
+              
+            }
+        }   
+        
+        const readLetter = async () => {
+            try {
+                const value = await AsyncStorage.getItem('@storesLetter_' + i)
+                if(value !== null) {
+                    setPalavra_escolhida(value.toString())
+                }
+            } catch(e) {
+                console.log(e)
+            }
+        }
+        
+        function Finish(){
             let obj = {
-                number_question: value.toString(),
-                question: Doubt,
-                responseOne: ResponseOne,
-                responseTwo: ResponseTwo,
-                responseTree: ResponseTree,
-                responseFour: ResponseFour,
-                question_correcty: checked
-             }
+                
+            }
     
             firestore().collection('user_activity_build_' + VG.user_uid).add(obj)
             .then(() => {
@@ -121,29 +127,60 @@ export default function newActivitySentence({ navigation, route }) {
             })        
         }
 
-        const GeraPalavra = () => {
+        const GeraPalavra = async () => {
+            await excluirSalvos()
             setPalavra_separada(palavra.split('??'));
             setPalavra_espaco(palavra.split(' '));
         }    
         
         const oculta_palavra = async (palav) => {
-            try{
+            setIsLoading(true);
+            try {
+                const value = await AsyncStorage.getItem('@storesLetter_' + i)
+                if(value !== null) {
 
-            }
-            catch{
+                    if(value.split(';').length / 2 >= palavra_espaco.length / 2){
+                        Alert.alert('Atenção', 'A quantidade de palavras ocultas não pode ser metade ou maior que a quantidade total de palavras na frase.')
+                        return;
+                    }
 
+                    console.log(value.split(';').length / 2)
+                    console.log(value.split(';').length / 2)
+                    console.log('--------------------------')
+
+                    storesLetter(value + ";" + palav)
+                }else{
+                    storesLetter(palav)
+                }
+                setPalavraPronta(palavra.replace(palav, '??'))
+                await readLetter()
+            } catch(e) {
+                
             }
-            
-            console.log(palav)
     
-            setPalavra_escolhida(palav)
-            pilha.push(palav)
-    
-            setPalavra(palavra.replace(palav, '??'))
-            
-            console.log(pilha)
-    
-            GeraPalavra();
+            setIsLoading(false);
+            //GeraPalavra();
+
+        }
+
+        const verSalvo = async () => {
+            try {
+                const value = await AsyncStorage.getItem('@storesLetter_' + i)
+                if(value !== null) {
+                    Alert.alert('Teste', value.toString())
+                }
+            } catch(e) {
+                console.log(e)
+            }
+        }
+
+        const excluirSalvos = async () => {
+            try {
+                const value = await AsyncStorage.removeItem('@storesLetter_' + i)
+                setPalavra_escolhida(null);
+            } catch(e) {
+                console.log(e)
+            }
         }
         
         slide.push(
@@ -158,10 +195,21 @@ export default function newActivitySentence({ navigation, route }) {
                    </View>
                    :
                 <View style={{ width: '100%', padding: 10}}>
-                    <Text style={{ fontWeight: 'bold'}}>Frase: {i + 1}</Text>
                     <View style={{ flexDirection: 'row', width: '100%'}}>
                         <View style={{ width: '85%'}}>
-                            <TextInput outlineColor='#3CB371' label='Digite a frase' style={style.inputs}  placeholder='Digite a frase' onChangeText={(value) => setPalavra(value)}/> 
+                            <Text style={{ fontWeight: 'bold'}}>Frase: {i + 1}</Text>
+                        </View>
+                        {
+                            !isLoading ? null :
+                            <View style={{ width: '15%'}}>
+                                <ActivityIndicator size="large" color="green" />  
+                            </View>
+                        }
+                    </View>
+                    
+                    <View style={{ flexDirection: 'row', width: '100%'}}>
+                        <View style={{ width: '85%'}}>
+                            <TextInput label='Digite a frase' style={style.inputs} placeholder='Digite a frase' onChangeText={(value) => setPalavra(value)}/> 
                         </View>
                         <View style={{ width: '15%', alignItems: 'center', justifyContent: 'center'}}>
                             <TouchableOpacity style={style.buttonPencil} onPress={GeraPalavra}>
@@ -169,6 +217,7 @@ export default function newActivitySentence({ navigation, route }) {
                             </TouchableOpacity>
                         </View>                        
                     </View>
+                    {/* Lista abaixo serve para exibir as palavras que podem ser ocultas */ }
                     <FlatList 
                         data={palavra_espaco} 
                         style={{ margin: '5%'}}
@@ -177,18 +226,26 @@ export default function newActivitySentence({ navigation, route }) {
                         renderItem={({ item }) => {
                             return (
                                 <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
-                                    {
-                                        palavra_escolhida.includes(item) ? null :
+                                    {        
+                                        /* Se for a primeira inserção não verifica os itens*/
+                                        !palavra_escolhida ? 
                                         <TouchableOpacity onPress={() => oculta_palavra(item)} style={{ backgroundColor: 'green', padding: 10, margin: 5, borderRadius: 10 }} >
                                             <Text style={{ color: '#FFF'}}>
                                                 {item}
                                             </Text>
-                                        </TouchableOpacity>   
+                                        </TouchableOpacity> 
+                                        : /* Como aqui já conterá itens então precisa verificar */         
+                                        ((palavra_escolhida.split(';').indexOf(item) > -1) || (item == '??'))? null :
+                                        <TouchableOpacity onPress={() => oculta_palavra(item)} style={{ backgroundColor: 'green', padding: 10, margin: 5, borderRadius: 10 }} >
+                                            <Text style={{ color: '#FFF'}}>
+                                                {item}
+                                            </Text>
+                                        </TouchableOpacity> 
                                     }                        
                                 </Animatable.View>                    
                             );
                         }} 
-                    />                    
+                    />                   
                     <TouchableOpacity onPress={() => Finish(i + 1, Doubt, ResponseOne, ResponseTwo, ResponseTree, ResponseFour, checked)} style={{ 
                         backgroundColor: activity.main_color, 
                         borderRadius: 15, 
@@ -200,6 +257,14 @@ export default function newActivitySentence({ navigation, route }) {
                     }}>
                         <Text style={{color: '#FFF', fontWeight: 'bold'}}>Concluir está Frase</Text>
                     </TouchableOpacity> 
+
+                    {/* O botão abaixo é para teste, precisa ser tirado quando terminar */}
+                    <TouchableOpacity onPress={verSalvo}>
+                        <Text>Ver</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={excluirSalvos}>
+                        <Text>Apagar</Text>
+                    </TouchableOpacity>
                 </View>  
             }
             </View>
