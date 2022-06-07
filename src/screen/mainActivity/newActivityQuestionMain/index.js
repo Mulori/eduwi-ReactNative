@@ -1,27 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import LottieCrashHeadActivity from '../../../components/lotties/crashHeadActivity'
 import Icon from 'react-native-vector-icons/Entypo';
 import * as Animatable from 'react-native-animatable';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
-import ColorPalette from 'react-native-color-palette'
-
-
-const ControlledColorPicker = () => {
-    let selectedColor = '';
-    return (
-      <ColorPalette
-        onChange={color => selectedColor = color}
-        value={selectedColor}
-        colors={['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9']}
-        title={"Selecione a cor principal da atividade:"}
-        icon={
-          <Icon name={'check'} size={25} color={'black'} />
-        // React-Native-Vector-Icons Example
-      }
-    />)
-  }
 
 export default function newActivityQuestionMain({ navigation, route }) {
     const { types } = route.params;
@@ -31,6 +14,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
     const [password, setPassword] = useState(null);
     const [error, setError] = useState(false);
     const [msgErro, setMsgErro] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         switch(types){
@@ -53,12 +37,15 @@ export default function newActivityQuestionMain({ navigation, route }) {
             });
 
             if(types == 1){
+                setIsLoading(false);
                 navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password, type: types})
             }else if(types == 2){
+                setIsLoading(false);
                 navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types})
             }            
         })
         .catch(() => {
+            setIsLoading(false);
             Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
         }); 
     }
@@ -92,6 +79,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
             }            
         }
 
+        setIsLoading(true);
         DeleteActivityTemp();       
     }
 
@@ -123,10 +111,18 @@ export default function newActivityQuestionMain({ navigation, route }) {
                                 borderRadius: 13,
                                 padding: 15,
                             }}>
-                                <View style={{ flexDirection: 'row'}}>
-                                    <Text style={{color: '#FFF', fontWeight: 'bold'}}>Proximo</Text>
-                                    <Icon name='chevron-right' style={{color: '#FFF'}} size={20} />
-                                </View>                            
+                                    {
+                                        !isLoading 
+                                        ?
+                                        <View style={{ flexDirection: 'row'}}>
+                                            <Text style={{color: '#FFF', fontWeight: 'bold'}}>Proximo</Text>
+                                            <Icon name='chevron-right' style={{color: '#FFF'}} size={20} />
+                                        </View>                                        
+                                        :
+                                        <View>
+                                            <ActivityIndicator size="large" color="#FFF" /> 
+                                        </View>
+                                    }                     
                             </TouchableOpacity>
                         </View>                      
                     </ScrollView>                            

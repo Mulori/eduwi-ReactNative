@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, StatusBar, ScrollView, Alert,
 import Icon from 'react-native-vector-icons/EvilIcons';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../../components/variables/VG';
-import ActivityServices from '../../../../services/activityService/activityService';
+import MainService from '../../../../services/mainService/mainService';
 import LottieFinishBlue from '../../../../components/lotties/finishBlue';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
@@ -41,26 +41,24 @@ export default function newActivitySentence({ navigation, route }) {
             let data_header = {
                 title: title,
                 password: !pass ? "" : pass, 
-                type_activity: 'phrases'
+                type_activity: 'sentences'
             }
 
-            ActivityServices.ActivityCreate(data_header, VG.user_uid)
+            MainService.Post('/activity', VG.user_uid, data_header)
             .then((response) => {
                 querySnapshot.forEach(documentSnapshot => {
                     const obj_f = documentSnapshot.data()
 
                     let data_answer = {
                         activity_id: parseInt(response.data.id),
-                        number_question: parseInt(obj_f.number_question), 
-                        answer_one: obj_f.responseOne,
-                        answer_two: obj_f.responseTwo,
-                        answer_tree: obj_f.responseTree,
-                        answer_four: obj_f.responseFour,
-                        right_answer: obj_f.question_correcty,
-                        question: obj_f.question
+                        number_sentence: parseInt(obj_f.number_sentence), 
+                        complete_sentence: obj_f.complete_sentence,
+                        marked_sentence: obj_f.marked_sentence,
+                        hidden_words: obj_f.hidden_words,
+                        words_help: obj_f.words_help == '' ? '0' : obj_f.words_help
                     }
 
-                    ActivityServices.ActivityQuestionCreate(data_answer, VG.user_uid)
+                    MainService.Post('/activity/sentences', VG.user_uid, data_answer)
                     .then((response) => {
         
                     })
@@ -91,6 +89,11 @@ export default function newActivitySentence({ navigation, route }) {
         const [palavra_espaco, setPalavra_espaco] = useState(null);
         const [palavra_pronta, setPalavraPronta] = useState(null); //Esta hook vai ser usada para salvar no banco
         const [isLoading, setIsLoading] = useState(false);
+        const [help, setHelp] = useState('');
+
+        useEffect(async () => {
+            await excluirSalvos()
+        }, [])
 
         const storesLetter = async (value) => {
             try {
@@ -105,15 +108,40 @@ export default function newActivitySentence({ navigation, route }) {
                 const value = await AsyncStorage.getItem('@storesLetter_' + i)
                 if(value !== null) {
                     setPalavra_escolhida(value.toString())
+                    return value;
                 }
             } catch(e) {
                 console.log(e)
             }
         }
         
-        function Finish(){
+        const Finish = async () => {
+            var marked = [];
+            var sPalavras = '';
+            var aPalavras = await readLetter();
+            marked = aPalavras.split(';');
+
+            if(palavra == ''){
+                Alert.alert('Atenção', 'Informe a frase desejada.')
+                return;
+            }
+
+            if(marked.length == 0){
+                Alert.alert('Atenção', 'Selecione ao menos uma palavra para ocultar.')
+                return;
+            }
+
+            sPalavras = palavra;
+            marked.forEach((item) => {
+                sPalavras = sPalavras.replace(item, '??')
+            })
+
             let obj = {
-                
+                number_sentence: i + 1,
+                complete_sentence: palavra,
+                marked_sentence: sPalavras,
+                hidden_words: aPalavras,
+                words_help: help.trim()
             }
     
             firestore().collection('user_activity_build_' + VG.user_uid).add(obj)
@@ -215,8 +243,8 @@ export default function newActivitySentence({ navigation, route }) {
                             <TouchableOpacity style={style.buttonPencil} onPress={GeraPalavra}>
                                 <Icon name='pencil' style={{ color: '#FFF' }} size={30}/>
                             </TouchableOpacity>
-                        </View>                        
-                    </View>
+                        </View>                                                                          
+                    </View>                    
                     {/* Lista abaixo serve para exibir as palavras que podem ser ocultas */ }
                     <FlatList 
                         data={palavra_espaco} 
@@ -245,8 +273,11 @@ export default function newActivitySentence({ navigation, route }) {
                                 </Animatable.View>                    
                             );
                         }} 
-                    />                   
-                    <TouchableOpacity onPress={() => Finish(i + 1, Doubt, ResponseOne, ResponseTwo, ResponseTree, ResponseFour, checked)} style={{ 
+                    />  
+                    <View>
+                        <TextInput label='Palavras de ajuda (Opcional)' style={style.inputs} placeholder='Digite as palavras' onChangeText={(value) => setHelp(value)}/>  
+                    </View>                 
+                    <TouchableOpacity onPress={Finish} style={{ 
                         backgroundColor: activity.main_color, 
                         borderRadius: 15, 
                         padding: 15, 
@@ -259,12 +290,6 @@ export default function newActivitySentence({ navigation, route }) {
                     </TouchableOpacity> 
 
                     {/* O botão abaixo é para teste, precisa ser tirado quando terminar */}
-                    <TouchableOpacity onPress={verSalvo}>
-                        <Text>Ver</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={excluirSalvos}>
-                        <Text>Apagar</Text>
-                    </TouchableOpacity>
                 </View>  
             }
             </View>
@@ -318,7 +343,7 @@ const style = StyleSheet.create({
     inputs:{
         backgroundColor: '#FFF',
         borderRadius: 15,
-        margin: 5,
+        margin: 3,
     },
     inputsResponse:{
         backgroundColor: '#FFF',
