@@ -16,7 +16,10 @@ export default function mainSearchActivity({ navigation, route }) {
         switch(activity.type_activity) { 
             case 'questions':             
                 setTipo('Questões')
-                break;        
+                break;   
+            case 'sentences':             
+                setTipo('Complete a Frase')
+                break;      
         }
     }, [])
 
