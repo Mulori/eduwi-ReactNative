@@ -20,6 +20,7 @@ import Game from '../game';
 import GameDetail from '../game/gameDetail';
 import newActivityCompleteSentence from '../mainActivity/newActivityCompleteSentence';
 import newActivitySentence from '../mainActivity/newActivityCompleteSentence/newActivitySentence';
+import responseSentences from '../mainActivity/response/sentences';
 
 import Teste from '../teste/';
 import Teste2 from '../teste/teste2';
@@ -49,6 +50,7 @@ export default function Home() {
             <Stack.Screen name='GameDetail' options={{ headerTitle: 'Gamificação - Item' }} component={GameDetail} />
             <Stack.Screen name='newActivityCompleteSentence' options={{ headerShown: false }} component={newActivityCompleteSentence} />
             <Stack.Screen name='newActivitySentence' options={{ headerShown: false }} component={newActivitySentence} />
+            <Stack.Screen name='responseSentences' options={{ headerShown: false }} component={responseSentences} />
 
             <Stack.Screen name='Teste' options={{ headerTitle: 'Teste' }} component={Teste} />           
             <Stack.Screen name='Teste2' options={{ headerTitle: 'Teste 2' }} component={Teste2} />     
