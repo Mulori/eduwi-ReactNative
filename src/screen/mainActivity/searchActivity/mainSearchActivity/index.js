@@ -35,7 +35,14 @@ export default function mainSearchActivity({ navigation, route }) {
                         firestore().collection('user_activity_' + activity.id + '_response_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
                     });
 
-                    navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));       
+                    if(tipo == 'Questões'){
+                        navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));   
+                        console.log(1);
+                    }
+                    else if(tipo == 'Complete a Frase'){
+                        navigation.dispatch(StackActions.replace('responseSentences', { data: activity}));     
+                        console.log(2)   
+                    }                           
                 })
                 .catch(() => {
                     Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
