@@ -19,52 +19,52 @@ export default function responseSentences({ navigation, route }) {
     function Rewarding(number_question, type){
         switch(type){
             case 6: //Espie uma resposta
-                switch(listQuestion[number_question - 1].right_answer){
+                switch(listSentences[number_question - 1].right_answer){
                     case 'one':
-                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_one)
+                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_one)
                         break;
                     case 'two':
-                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_two)
+                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_two)
                         break;
                     case 'tree':
-                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_tree)
+                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_tree)
                         break;
                     case 'four':
-                        Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_four)
+                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_four)
                         break;
                 }
 
                 break;
             case 7: //Dica de resposta
 
-                switch(listQuestion[number_question - 1].right_answer){
+                switch(listSentences[number_question - 1].right_answer){
                     case 'one':
-                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_one.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_one.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_one.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_one.split(' ')[2]  )
                         break;
                     case 'two':
-                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_two.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_two.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_two.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_two.split(' ')[2]  )
                         break;
                     case 'tree':
-                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_tree.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_tree.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_tree.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_tree.split(' ')[2]  )
                         break;
                     case 'four':
-                        Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_four.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_four.split(' ')[2]  )
+                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_four.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_four.split(' ')[2]  )
                         break;
                 }
                 
                 break;
             case 5: //Gabarite uma atividade
 
-                console.log(listQuestion)
+                console.log(listSentences)
 
                 var sucess = true;
                 var index = 0;
                 var activity = {};
                 var activityArray = [];
 
-                listQuestion.forEach(item => {
+                listSentences.forEach(item => {
                     index++                    
-                    activity.activity_id = parseInt(listQuestion[0].activity_id);
+                    activity.activity_id = parseInt(listSentences[0].activity_id);
                     activity.number_question = index;
                     activity.answer = item.right_answer;
                     activityArray.push({...activity});    
@@ -72,7 +72,7 @@ export default function responseSentences({ navigation, route }) {
 
                 console.log(JSON.stringify(activityArray))
 
-                APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: listQuestion[0].activity_id }) //Faz a postagem do cabeçalho da atividade
+                APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: listSentences[0].activity_id }) //Faz a postagem do cabeçalho da atividade
                 .then(() => {    
                     APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
                     .then()
@@ -147,7 +147,7 @@ export default function responseSentences({ navigation, route }) {
 
         setModalVisible(true);
 
-        APIActivity.Get('/activity/' + data.id + '/response', VG.user_uid)
+        APIActivity.Get('/activity/' + data.id + '/sentences', VG.user_uid)
         .then((sentences) => {
             setListSentences(sentences.data);
             GetReward();
@@ -172,7 +172,7 @@ export default function responseSentences({ navigation, route }) {
                         <View style={{ alignItems: 'center' }}>
                             <Text style={{ fontSize: 18 }}>Selecione uma questão</Text>
                             <FlatList
-                                data={listQuestion}
+                                data={listSentences}
                                 style={{  width: '100%', margin: 15 }}
                                 renderItem={({ item }) => {return(
                                     <TouchableOpacity 
@@ -181,10 +181,10 @@ export default function responseSentences({ navigation, route }) {
                                     onPress={() => {
                                         console.log(item);
                                         setModalMenuVisible(false);
-                                        Rewarding(item.number_question, Type)
+                                        Rewarding(item.number_sentence, Type)
                                     }}
                                     >
-                                        <Text style={{ color: '#FFF', fontWeight: 'bold' }}>{item.number_question} - {item.question}</Text>
+                                        <Text style={{ color: '#FFF', fontWeight: 'bold' }}>{item.number_sentence}</Text>
                                     </TouchableOpacity>
                                 )}}
                             />
@@ -227,7 +227,7 @@ export default function responseSentences({ navigation, route }) {
                     </View>
                 }
             </View>
-            <RenderActivity data={listQuestion} user={VG.user_uid} navi={navigation}/>    
+            <RenderActivity data={listSentences} user={VG.user_uid} navi={navigation}/>    
             <Modal visible={modalVisible}>
                 <View style={[style.containerLoad, style.horizontal]}>
                     <ActivityIndicator size="large" color="green" />                                                    
@@ -322,19 +322,19 @@ function ListResponse(props){
     return(
         <View style={{ flex: 1, marginTop: 15}}>            
             <View style={{width: '90%'}}>
-                <Text style={style.number_question}>Frase: {item.number_question}</Text>
+                <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
             </View>                
             <View style={{width: '90%', marginTop: 15, marginBottom: 15}}>
                 <Text style={style.question}>{item.question}</Text>
             </View>
             <ScrollView>
             { 
-                !palavra_separada ? null :
-                palavra_separada.map((item, index) =>
+                !item.marked_sentence ? null :
+                item.marked_sentence.split('??').map((item, index) =>
                     <View style={{ alignItems: 'center', width: '100%'}}>
                         <Text style={{ fontWeight: 'bold', fontSize: 15}}>{item}</Text>                  
                         {
-                            index + 1 == palavra_separada.length ? null :
+                            index + 1 == item.marked_sentence.split('??').length ? null :
                             <TextInput style={{ backgroundColor: '#e7e4d5', width: '60%', borderRadius: 15, padding: 12, fontSize: 20, fontWeight: 'bold', textAlign: 'center'}} />
                         }    
                     </View>                    
@@ -349,7 +349,7 @@ class RenderActivity extends React.Component {
 
     _renderSlides = ({item}) => {   
 
-        firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
+        firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_sentence.toString())
         .set({
             response: 'null',
         })
