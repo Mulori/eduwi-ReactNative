@@ -11,7 +11,7 @@ import {NavigationActions, StackActions} from '@react-navigation/native';
 export default function responseSentences({ navigation, route }) {
     const { data } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
-    const [listQuestion, setListQuestions] = useState([]);
+    const [listSentences, setListSentences] = useState([]);
     const [dataReward, setDataReward] = useState(null);
     const [ModalMenuVisible, setModalMenuVisible] = useState(false);
     const [Type, setType] = useState(0);
@@ -148,8 +148,8 @@ export default function responseSentences({ navigation, route }) {
         setModalVisible(true);
 
         APIActivity.Get('/activity/' + data.id + '/response', VG.user_uid)
-        .then((questions) => {
-            setListQuestions(questions.data);
+        .then((sentences) => {
+            setListSentences(sentences.data);
             GetReward();
             setModalVisible(false);
         })
@@ -328,7 +328,18 @@ function ListResponse(props){
                 <Text style={style.question}>{item.question}</Text>
             </View>
             <ScrollView>
-                
+            { 
+                !palavra_separada ? null :
+                palavra_separada.map((item, index) =>
+                    <View style={{ alignItems: 'center', width: '100%'}}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 15}}>{item}</Text>                  
+                        {
+                            index + 1 == palavra_separada.length ? null :
+                            <TextInput style={{ backgroundColor: '#e7e4d5', width: '60%', borderRadius: 15, padding: 12, fontSize: 20, fontWeight: 'bold', textAlign: 'center'}} />
+                        }    
+                    </View>                    
+                )
+            } 
             </ScrollView>  
         </View>                     
     )
