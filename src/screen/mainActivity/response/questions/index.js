@@ -162,7 +162,11 @@ export default function responseQuestion({ navigation, route }) {
 
     return(
         <View style={style.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#fff' />   
+             <ImageBackground  
+                    source={require('../../../../assets/image/wallpaperSentence.png')} 
+                    style={{width: '100%', height: '100%', position: 'absolute'}}  
+            />
+            <StatusBar barStyle='dark-content' backgroundColor='#5271ff' />   
             <View>
                 <View>
                     <Modal

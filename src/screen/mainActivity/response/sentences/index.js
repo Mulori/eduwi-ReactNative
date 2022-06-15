@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, StatusBar, Alert, ScrollView, ActivityIndicator, Modal, ImageBackground, FlatList } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, StatusBar, Alert, ScrollView, ActivityIndicator, Modal, ImageBackground, FlatList, TextInput } from 'react-native';
 import APIActivity from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
 import AppIntroSlider from 'react-native-app-intro-slider';
@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 import MainServices from '../../../../services/mainService/mainService';
 import {NavigationActions, StackActions} from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 export default function responseSentences({ navigation, route }) {
     const { data } = route.params;
@@ -162,8 +163,12 @@ export default function responseSentences({ navigation, route }) {
 
     return(
         <View style={style.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#fff' />   
-            <View>
+            <ImageBackground  
+                    source={require('../../../../assets/image/wallpaperSentence.png')} 
+                    style={{width: '100%', height: '100%', position: 'absolute'}}  
+            />
+            <StatusBar barStyle='light-content' backgroundColor='#5271ff' />   
+            <View style={{  backgroundColor: 'transparent' }}>                
                 <View>
                     <Modal
                         visible={ModalMenuVisible}
@@ -195,7 +200,7 @@ export default function responseSentences({ navigation, route }) {
                 !dataReward ? null :
                     dataReward.length == 0 ? null :
                     <View>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 0}}>Recompensas Disponíveis</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 0, color: '#000' }}>Recompensas Disponíveis</Text>
                         <FlatList 
                             data={dataReward} 
                             horizontal
@@ -240,7 +245,7 @@ export default function responseSentences({ navigation, route }) {
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        backgroundColor: 'transparent',
     },
     containerLoad: {
         flex: 1,
@@ -318,9 +323,11 @@ const style = StyleSheet.create({
 function ListResponse(props){
     const [icons, setIcons] = useState(null);
     const [item, setItem] = useState(props.item);
+    const [itemPalavra, setItemPalavra] = useState('');
+    console.log(item)
 
     return(
-        <View style={{ flex: 1, marginTop: 15}}>            
+        <View style={{ flex: 1, marginTop: 15, backgroundColor: 'transparent'}}>            
             <View style={{width: '90%'}}>
                 <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
             </View>                
@@ -330,16 +337,43 @@ function ListResponse(props){
             <ScrollView>
             { 
                 !item.marked_sentence ? null :
-                item.marked_sentence.split('??').map((item, index) =>
+                item.marked_sentence.split('??').map((frase, index) =>
                     <View style={{ alignItems: 'center', width: '100%'}}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15}}>{item}</Text>                  
+                        <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: '#e7e4d5', margin: 5, padding: 15, borderRadius: 15 }}>{frase}</Text>                  
                         {
                             index + 1 == item.marked_sentence.split('??').length ? null :
-                            <TextInput style={{ backgroundColor: '#e7e4d5', width: '60%', borderRadius: 15, padding: 12, fontSize: 20, fontWeight: 'bold', textAlign: 'center'}} />
+                            <TextInput style={{ 
+                                backgroundColor: '#e7e4d5', 
+                                width: itemPalavra.length > 3 ?  25 + itemPalavra.length * 2 + '%' : '25%', 
+                                borderRadius: 15, 
+                                padding: 12, 
+                                fontSize: 18, 
+                                fontWeight: 'bold',
+                                ontWeight: 'bold', 
+                                textAlign: 'center'
+                            }} 
+                                onChangeText={(value) => setItemPalavra(value)}
+                            />
                         }    
                     </View>                    
                 )
-            } 
+            }             
+            <FlatList 
+            data={item.words_help.split(' ')} 
+            style={{ margin: '5%'}}
+            keyExtractor={item => item.id} 
+            numColumns={5} 
+            renderItem={({ item }) => {
+                return (
+                    <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
+                            <TouchableOpacity style={{ backgroundColor: '#5e17eb', padding: 10, margin: 5, borderRadius: 10 }} >
+                                <Text style={{ color: '#FFF'}}>
+                                    {item}
+                                </Text>
+                            </TouchableOpacity>           
+                    </Animatable.View>                    
+                );
+            }} />        
             </ScrollView>  
         </View>                     
     )
@@ -451,6 +485,7 @@ class RenderActivity extends React.Component {
       return (
         <AppIntroSlider
           data={data}
+          style={{backgroundColor: 'transparent' }}
           renderItem={this._renderSlides}
           onDone={done}
           renderNextButton={this._renderNextButton}
