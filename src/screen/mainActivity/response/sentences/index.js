@@ -335,47 +335,49 @@ function ListResponse(props){
                 <Text style={style.question}>{item.question}</Text>
             </View>
             <ScrollView>
-            
+                <View  style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center' }}>
                 {
                     !item.marked_sentence ? null :
-                    item.marked_sentence.split('??').map((frase, index) =>
-                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', flex: 1, justifyContent: 'center',  }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: '#e7e4d5', margin: 5, padding: 15, borderRadius: 15 }}>{frase}</Text>                  
-                            {
-                                index + 1 == item.marked_sentence.split('??').length ? null :
+                    item.marked_sentence.split(' ').map((frase, index) =>
+                        <View>                                      
+                            {      
+                                frase == '??'?                          
                                 <TextInput style={{ 
-                                    backgroundColor: '#e7e4d5', 
-                                    width: '25%', 
-                                    borderRadius: 15, 
+                                    backgroundColor: '#e7e4d5',
+                                    borderRadius: 15,
                                     padding: 12, 
+                                    margin: 5,
                                     fontSize: 18, 
-                                    fontWeight: 'bold',
                                     fontWeight: 'bold', 
-                                    textAlign: 'center'
+                                    textAlign: 'center',
                                 }} 
                                     onChangeText={(value) => setItemPalavra(value)}
                                 />
+                                :
+                                <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: '#e7e4d5', margin: 5, padding: 15, borderRadius: 15,  }}>{frase}</Text>        
                             }        
                         </View>  
                     )
-                }              
-                            
-            <FlatList 
-            data={item.words_help.split(' ')} 
-            style={{ margin: '5%'}}
-            keyExtractor={item => item.id} 
-            numColumns={5} 
-            renderItem={({ item }) => {
-                return (
-                    <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
-                            <TouchableOpacity style={{ backgroundColor: '#5e17eb', padding: 10, margin: 5, borderRadius: 10 }} >
-                                <Text style={{ color: '#FFF'}}>
-                                    {item}
-                                </Text>
-                            </TouchableOpacity>           
-                    </Animatable.View>                    
-                );
-            }} />        
+                } 
+                </View>
+                                        
+                                
+                <FlatList 
+                data={item.words_help.split(' ')} 
+                style={{ margin: '5%'}}
+                keyExtractor={item => item.id} 
+                numColumns={5} 
+                renderItem={({ item }) => {
+                    return (
+                        <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
+                                <TouchableOpacity style={{ backgroundColor: '#5e17eb', padding: 10, margin: 5, borderRadius: 10 }} >
+                                    <Text style={{ color: '#FFF'}}>
+                                        {item}
+                                    </Text>
+                                </TouchableOpacity>           
+                        </Animatable.View>                    
+                    );
+                }} />        
             </ScrollView>  
         </View>                     
     )
