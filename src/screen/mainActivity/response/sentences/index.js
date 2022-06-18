@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import MainServices from '../../../../services/mainService/mainService';
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function responseSentences({ navigation, route }) {
     const { data } = route.params;
@@ -294,12 +295,11 @@ const style = StyleSheet.create({
     },
     number_question: {
         fontWeight: 'bold',
-        marginLeft: '5%',
         fontSize: 18,
     },
     question: {
         fontWeight: 'bold',
-        marginLeft: '5%',
+        marginLeft: '3%',
         fontSize: 15,
     },
     buttonCircle: {
@@ -324,10 +324,20 @@ function ListResponse(props){
     const [icons, setIcons] = useState(null);
     const [item, setItem] = useState(props.item);
     const [itemPalavra, setItemPalavra] = useState('');
-    console.log(item)
+
+    const HandleSaveText = async (text, number, index) => {
+        try{
+            const text_json = {
+                sentence: text
+            }
+            await AsyncStorage.setItem('@response;' + item.activity_id + ';' + number + ';' + index, JSON.stringify(text_json));
+        }catch(error){
+            console.log(error);
+        }   
+    }
 
     return(
-        <View style={{ flex: 1, marginTop: 15, backgroundColor: 'transparent'}}>            
+        <View style={{ flex: 1, marginTop: 15, alignItems: 'center', backgroundColor: 'transparent'}}>            
             <View style={{width: '90%'}}>
                 <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
             </View>                
@@ -345,16 +355,16 @@ function ListResponse(props){
                                 <TextInput style={{ 
                                     backgroundColor: '#e7e4d5',
                                     borderRadius: 15,
-                                    padding: 12, 
+                                    padding: 5, 
                                     margin: 5,
                                     fontSize: 18, 
                                     fontWeight: 'bold', 
                                     textAlign: 'center',
                                 }} 
-                                    onChangeText={(value) => setItemPalavra(value)}
+                                    onChangeText={async(value) => HandleSaveText(value, item.number_sentence, index)}
                                 />
                                 :
-                                <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: '#e7e4d5', margin: 5, padding: 15, borderRadius: 15,  }}>{frase}</Text>        
+                                <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: 'transparent', color: '#FFF', margin: 5, padding: 5, borderRadius: 15,  }}>{frase}</Text>        
                             }        
                         </View>  
                     )
@@ -364,9 +374,8 @@ function ListResponse(props){
                                 
                 <FlatList 
                 data={item.words_help.split(' ')} 
-                style={{ margin: '5%'}}
                 keyExtractor={item => item.id} 
-                numColumns={5} 
+                numColumns={4} 
                 renderItem={({ item }) => {
                     return (
                         <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
@@ -429,6 +438,7 @@ class RenderActivity extends React.Component {
 
     render() {
       const { data, user, navi } = this.props;
+      
       function done(){
         firestore().collection('user_activity_' + data[0].activity_id + '_response_' + VG.user_uid).get()
         .then(querySnapshot => {
