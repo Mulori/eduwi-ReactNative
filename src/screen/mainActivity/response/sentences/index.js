@@ -134,7 +134,6 @@ export default function responseSentences({ navigation, route }) {
         );
     }
 
-
     function GetReward(){
         MainServices.Get("/reward/users", VG.user_uid)
         .then((response) => {
@@ -145,9 +144,37 @@ export default function responseSentences({ navigation, route }) {
         })         
     }
 
-    useEffect(() => {
+    async function ClearStorageResponse(){
+        let keys = []
+        try {
+            keys = await AsyncStorage.getAllKeys();
+            const keys_delete = [];
+            keys.forEach((item, index) => {      
+                var keyStorageName = item;          
+                item = item.replace('@', '');
 
+                var array_item = item.split(';');
+
+                if(array_item[0] == 'response'){
+                    keys_delete.push(keyStorageName);
+                }                
+            })
+
+            try {
+                await AsyncStorage.multiRemove(keys_delete)
+            } catch(e) {
+                console.log(e);
+            }
+            
+        } catch(e) {
+            
+        }
+    }
+
+    useEffect(() => {
         setModalVisible(true);
+
+        ClearStorageResponse();
 
         APIActivity.Get('/activity/' + data.id + '/sentences', VG.user_uid)
         .then((sentences) => {
@@ -212,9 +239,9 @@ export default function responseSentences({ navigation, route }) {
 
                                 return (                             
                                     <TouchableOpacity 
-                                    key={item.id} 
-                                    style={{backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
-                                    onPress={() => UseReward(item)}
+                                        key={item.id} 
+                                        style={{backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
+                                        onPress={() => UseReward(item)}
                                     >
                                         <View style={style.containerImage}>      
                                             <ImageBackground  
@@ -361,7 +388,7 @@ function ListResponse(props){
                                     fontWeight: 'bold', 
                                     textAlign: 'center',
                                 }} 
-                                    onChangeText={async(value) => HandleSaveText(value, item.number_sentence, index)}
+                                    onChangeText={async(value) => HandleSaveText(value.toString().trim(), item.number_sentence, index)}
                                 />
                                 :
                                 <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: 'transparent', color: '#FFF', margin: 5, padding: 5, borderRadius: 15,  }}>{frase}</Text>        
@@ -386,7 +413,7 @@ function ListResponse(props){
                                 </TouchableOpacity>           
                         </Animatable.View>                    
                     );
-                }} />        
+                }} />   
             </ScrollView>  
         </View>                     
     )
@@ -394,23 +421,11 @@ function ListResponse(props){
 
 class RenderActivity extends React.Component {    
 
-    _renderSlides = ({item}) => {   
-
-        firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_sentence.toString())
-        .set({
-            response: 'null',
-        })
-        .then()
-        .catch((erro) => {
-            console.log(erro)
-            Alert.alert('Erro', 'Ocorreu um erro ao montar as questões. Tente novamente!');
-        }) 
-        
+    _renderSlides = ({item}) => {          
         return(
            <ListResponse item={item} />                  
         )
     };
-
     _renderNextButton = () => {
       return (
         <View style={style.buttonCircle}>
@@ -435,66 +450,112 @@ class RenderActivity extends React.Component {
         </View>
       );
     };
-
     render() {
-      const { data, user, navi } = this.props;
-      
-      function done(){
-        firestore().collection('user_activity_' + data[0].activity_id + '_response_' + VG.user_uid).get()
-        .then(querySnapshot => {
-            var bloqueia_post = false;
-            var sucess = true;
-            var index = 0;
-            var activity = {};
-            var activityArray = [];
+    const { data, user, navi } = this.props;
 
-            querySnapshot.forEach(documentSnapshot => {
-                const valid = documentSnapshot.data()
-                if(valid.response == 'null'){
-                    Alert.alert('Atenção', 'Responda todas as questões.');
-                    bloqueia_post = true;
+    async function done(){
+
+        let keys = [];        
+        let keys_done = [];
+        try {
+            keys = await AsyncStorage.getAllKeys();
+            const keys_insert = [];
+            var warning = false;
+
+            keys.forEach((item, index) => {      
+                var keyStorageName = item;          
+                item = item.replace('@', '');
+
+                var array_item = item.split(';');
+
+                if(array_item[0] + ';' + data[0].activity_id == 'response;' + data[0].activity_id){
+                    keys_insert.push(keyStorageName);
+                }                
+            })
+
+            keys_insert.sort();
+
+            console.log(data.length)
+
+            for(var i = 0; i < data.length; i++){
+                let sub_keys = [];
+                keys_insert.forEach((item_sentence, index) => {
+                    if(item_sentence.split(';')[2] == i + 1){
+                        
+                        sub_keys.push(item_sentence)
+                    } 
+                })
+
+                sub_keys.sort();
+
+                if(data[i].hidden_words.split(';').length !== sub_keys.length){
+                    warning = true;
+                }
+
+                let values;
+                let text_informed = '';
+                try {
+                    values = await AsyncStorage.multiGet(sub_keys)
+                    values.forEach((item) => {
+                        if(text_informed.length > 0){
+                            text_informed = text_informed + ';' + JSON.parse(item[1]).sentence;
+                        }else{
+                            text_informed = JSON.parse(item[1]).sentence;
+                        }
+                    })
+                } catch(e) {
+                    console.log(e);
                     return;
                 }
 
-                index++
-                
-                activity.activity_id = parseInt(data[0].activity_id);
-                activity.number_question = index;
-                activity.answer = valid.response;
-                activityArray.push({...activity});             
+                console.log(text_informed)
 
-            });   
+                let obj_sentence = {
+                    activity_id: parseInt(data[0].activity_id),
+                    number_sentence: i + 1,
+                    sentences_informed: text_informed
+                }
 
-            console.log(bloqueia_post)
-            if(bloqueia_post){
-                return;
+                keys_done.push(obj_sentence);
             }
 
-            console.log(JSON.stringify(activityArray))
+            if(warning){
+                Alert.alert('Atenção', 'Uma ou mais frases estão imcompletas. Deseja continuar?',  
+                    [{  text: 'Sim', onPress: () => { SendResponse(JSON.stringify(keys_done)) } },  
+                     {  text: 'Cancelar', onPress: () => { return; }} ]
+                );
+            }else{
+                SendResponse(keys_done)
+            }
+            
+        } catch(e) {
+            console.log(e);
+            return;
+        }
+    }
 
-            APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
-            .then(() => {    
-                APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
-                .then()
-                .catch((erro) => {
-                    sucess = false;
-                    console.log(erro)
-                    Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{text: 'Ok',style: 'destructive', }]);
-                })  
+    async function SendResponse(value){
+        var sucess = true;
+        console.log(value);
+        APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
+        .then(() => {    
+            APIActivity.Post('/activity/sentences/users/response', VG.user_uid, value)
+            .then()
+            .catch((erro) => {
+                sucess = false;
+                console.log(erro)
+                Alert.alert('Erro', 'Ocorreu um problema ao responder as frases da atividade', [{text: 'Ok',style: 'destructive', }]);
+            })  
 
-                if (sucess) {
-                    navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
-                }                
-            })
-            .catch((error) => {
-                console.log(error);
-                Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{text: 'Ok',style: 'destructive', }]);
-            })                  
+            if (sucess) {
+                navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
+            }                
         })
-        .catch(() => {
-            Alert.alert('Erro', 'Ocorreu um erro ao realizara leitura das respostas temporarias.');
-        });  
-      }
+        .catch((error) => {
+            console.log(error);
+            Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{text: 'Ok',style: 'destructive', }]);
+        })  
+    }
 
       return (
         <AppIntroSlider
