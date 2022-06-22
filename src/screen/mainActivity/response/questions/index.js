@@ -294,10 +294,12 @@ const style = StyleSheet.create({
     number_question: {
         fontWeight: 'bold',
         marginLeft: '5%',
+        color: '#FFF',
         fontSize: 18,
     },
     question: {
         fontWeight: 'bold',
+        color: '#FFF',
         marginLeft: '5%',
         fontSize: 15,
     },
