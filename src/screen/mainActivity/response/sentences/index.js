@@ -4,7 +4,6 @@ import APIActivity from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/Ionicons';
-import firestore from '@react-native-firebase/firestore';
 import MainServices from '../../../../services/mainService/mainService';
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
@@ -322,6 +321,7 @@ const style = StyleSheet.create({
     },
     number_question: {
         fontWeight: 'bold',
+        color: '#FFF',
         fontSize: 18,
     },
     question: {
@@ -351,9 +351,15 @@ function ListResponse(props){
     const [icons, setIcons] = useState(null);
     const [item, setItem] = useState(props.item);
     const [itemPalavra, setItemPalavra] = useState('');
+    let sentenca = Array(item.marked_sentence.split(' ').length -1);
+
+    //sentenca[1] = 'mais vai pra la'
+    //sentenca[6] = 'hihihi'
+    //console.log(sentenca)
 
     const HandleSaveText = async (text, number, index) => {
         try{
+            sentenca[index] = text;
             const text_json = {
                 sentence: text
             }
@@ -361,6 +367,12 @@ function ListResponse(props){
         }catch(error){
             console.log(error);
         }   
+    }
+
+
+    const HandleEditingField = (text) => {
+        console.log(text)
+        
     }
 
     return(
@@ -376,7 +388,8 @@ function ListResponse(props){
                 {
                     !item.marked_sentence ? null :
                     item.marked_sentence.split(' ').map((frase, index) =>
-                        <View>                                      
+                        <View>      
+                            <Text>{index}</Text>                                
                             {      
                                 frase == '??'?                          
                                 <TextInput style={{ 
@@ -388,6 +401,7 @@ function ListResponse(props){
                                     fontWeight: 'bold', 
                                     textAlign: 'center',
                                 }} 
+                                    value={sentenca[index]}
                                     onChangeText={async(value) => HandleSaveText(value.toString().trim(), item.number_sentence, index)}
                                 />
                                 :
@@ -396,24 +410,37 @@ function ListResponse(props){
                         </View>  
                     )
                 } 
-                </View>
-                                        
-                                
-                <FlatList 
-                data={item.words_help.split(' ')} 
-                keyExtractor={item => item.id} 
-                numColumns={4} 
-                renderItem={({ item }) => {
-                    return (
-                        <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
-                                <TouchableOpacity style={{ backgroundColor: '#5e17eb', padding: 10, margin: 5, borderRadius: 10 }} >
+                </View>                                       
+                <View style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center' }} >
+                    {
+                        item.words_help.split(' ').map((help, index) => 
+                            <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
+                                <TouchableOpacity
+                                onPressOut={
+                                    item.marked_sentence.split(' ').forEach((st, subindex) => {
+                                        if(st == '??'){
+                                            console.log('sim' + subindex)
+                                            if(sentenca[subindex] === undefined){
+                                                sentenca[subindex] = help;
+                                            }else{
+                                                if (sentenca[subindex].length == 0){
+                                                    sentenca[subindex] = help;
+                                                }
+                                            }
+                                            
+                                        }
+                                    })
+                                } 
+                                style={{ backgroundColor: '#5e17eb', padding: 10, margin: 5, borderRadius: 10 }} >
                                     <Text style={{ color: '#FFF'}}>
-                                        {item}
+                                        {help}
                                     </Text>
                                 </TouchableOpacity>           
-                        </Animatable.View>                    
-                    );
-                }} />   
+                            </Animatable.View>                    
+                        )
+                    }
+                </View>      
+                  
             </ScrollView>  
         </View>                     
     )
