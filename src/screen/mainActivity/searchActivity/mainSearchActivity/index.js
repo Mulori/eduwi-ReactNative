@@ -40,7 +40,7 @@ export default function mainSearchActivity({ navigation, route }) {
                         console.log(1);
                     }
                     else if(tipo == 'Complete a Frase'){
-                        navigation.dispatch(StackActions.replace('responseSentences', { data: activity}));     
+                        navigation.dispatch(StackActions.replace('responsesentences', { data: activity}));     
                         console.log(2)   
                     }                           
                 })

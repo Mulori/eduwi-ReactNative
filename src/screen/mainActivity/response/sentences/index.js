@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, StatusBar, Alert, ScrollView,
 import APIActivity from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Entypo';
 import MainServices from '../../../../services/mainService/mainService';
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
@@ -131,17 +131,7 @@ export default function responseSentences({ navigation, route }) {
                 },
             ]
         );
-    }
-
-    function GetReward(){
-        MainServices.Get("/reward/users", VG.user_uid)
-        .then((response) => {
-            setDataReward(response.data);    
-        })
-        .catch((error) => {
-            console.log(error);
-        })         
-    }
+    }    
 
     async function ClearStorageResponse(){
         let keys = []
@@ -178,7 +168,7 @@ export default function responseSentences({ navigation, route }) {
         APIActivity.Get('/activity/' + data.id + '/sentences', VG.user_uid)
         .then((sentences) => {
             setListSentences(sentences.data);
-            GetReward();
+            //GetReward();
             setModalVisible(false);
         })
         .catch(() => {
@@ -194,71 +184,7 @@ export default function responseSentences({ navigation, route }) {
                     source={require('../../../../assets/image/wallpaperSentence.png')} 
                     style={{width: '100%', height: '100%', position: 'absolute'}}  
             />
-            <StatusBar barStyle='light-content' backgroundColor='#5271ff' />   
-            <View style={{  backgroundColor: 'transparent' }}>                
-                <View>
-                    <Modal
-                        visible={ModalMenuVisible}
-                        style={{ margin: 50 }}
-                    >
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 18 }}>Selecione uma questão</Text>
-                            <FlatList
-                                data={listSentences}
-                                style={{  width: '100%', margin: 15 }}
-                                renderItem={({ item }) => {return(
-                                    <TouchableOpacity 
-                                    key={item} 
-                                    style={{ backgroundColor: '#878286', padding: 15, margin: 5}}
-                                    onPress={() => {
-                                        console.log(item);
-                                        setModalMenuVisible(false);
-                                        Rewarding(item.number_sentence, Type)
-                                    }}
-                                    >
-                                        <Text style={{ color: '#FFF', fontWeight: 'bold' }}>{item.number_sentence}</Text>
-                                    </TouchableOpacity>
-                                )}}
-                            />
-                        </View>                        
-                    </Modal>
-                </View>
-                {
-                !dataReward ? null :
-                    dataReward.length == 0 ? null :
-                    <View>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 0, color: '#000' }}>Recompensas Disponíveis</Text>
-                        <FlatList 
-                            data={dataReward} 
-                            horizontal
-                            style={{ marginLeft: 20, marginTop: 0}}
-                            keyExtractor={item => item.id} 
-                            renderItem={({ item }) => {
-                                const image = { uri: item.picture };
-
-                                return (                             
-                                    <TouchableOpacity 
-                                        key={item.id} 
-                                        style={{backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
-                                        onPress={() => UseReward(item)}
-                                    >
-                                        <View style={style.containerImage}>      
-                                            <ImageBackground  
-                                                source={image} 
-                                                style={{width: 40, height: 40, borderRadius: 50}}  
-                                            />                        
-                                        </View>  
-                                        <Text style={{fontWeight: 'bold', fontSize: 10, color: '#000'}}>{item.name}</Text>
-                                        <View style={style.containerValue}>                      
-                                            <Text style={{color: '#000', marginLeft: 5, fontSize: 10,}}>Quantidade: {item.amount}</Text>  
-                                        </View>                                 
-                                    </TouchableOpacity>      
-                                );
-                            }}
-                        />   
-                    </View>
-                }
-            </View>
+            <StatusBar barStyle='light-content' backgroundColor='#5271ff' />               
             <RenderActivity data={listSentences} user={VG.user_uid} navi={navigation}/>    
             <Modal visible={modalVisible}>
                 <View style={[style.containerLoad, style.horizontal]}>
@@ -351,6 +277,9 @@ function ListResponse(props){
     const [icons, setIcons] = useState(null);
     const [item, setItem] = useState(props.item);
     const [itemPalavra, setItemPalavra] = useState('');
+    const [isVisible, setIsVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [dataReward, setDataReward] = useState(null);
     let sentenca = Array(item.marked_sentence.split(' ').length -1);
 
     //sentenca[1] = 'mais vai pra la'
@@ -369,27 +298,96 @@ function ListResponse(props){
         }   
     }
 
-
     const HandleEditingField = (text) => {
         console.log(text)
-        
+    }
+
+    function GetReward(){
+        setIsLoading(true);
+        MainServices.Get("/reward/users", VG.user_uid)
+        .then((response) => {
+            console.log(response.data);
+            setDataReward(response.data);    
+        })
+        .catch((error) => {
+            console.log(error);
+        })         
+        setIsLoading(false)
+    }
+
+    function ModalReward(){
+        return(
+            <View style={{ position: 'absolute', flex: 1, height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{ backgroundColor: '#FFF', height: '60%', width: '80%', borderRadius: 15}}>
+                    <View style={{ top: '40%'}}>
+                        {
+                            isLoading ? 
+                            <View style={[style.containerLoad, style.horizontal]}>
+                                <ActivityIndicator size="large" color="green" />                                                    
+                            </View> 
+                            :
+                            <FlatList 
+                            data={dataReward} 
+                            horizontal
+                            keyExtractor={item => item.id} 
+                            renderItem={({ item }) => {
+                                const image = { uri: item.picture };
+                                return (                             
+                                    <TouchableOpacity 
+                                    key={item.id} 
+                                    style={{backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
+                                    onPress={() => UseReward(item)}
+                                    >
+                                        <View style={style.containerImage}>      
+                                            <ImageBackground  
+                                                source={image} 
+                                                style={{width: 40, height: 40, borderRadius: 50}}  
+                                            />                        
+                                        </View>  
+                                        <Text style={{fontWeight: 'bold', fontSize: 10, color: '#000'}}>{item.name}</Text>
+                                        <View style={style.containerValue}>                      
+                                            <Text style={{color: '#000', marginLeft: 5, fontSize: 10,}}>Quantidade: {item.amount}</Text>  
+                                        </View>                                 
+                                    </TouchableOpacity>      
+                                );
+                            }}
+                        />   
+                        }    
+                    </View>
+                    <TouchableOpacity 
+                    onPress={() => setIsVisible(false)}
+                    style={{ backgroundColor: '#5e17eb', padding: 10, width: '100%', 
+                    borderBottomLeftRadius: 15, borderBottomEndRadius: 15, bottom: -1, position: 'absolute', alignItems: 'center'
+                    }}>
+                        <Text style={{ color: '#FFF',}}>Fechar</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
     }
 
     return(
-        <View style={{ flex: 1, marginTop: 15, alignItems: 'center', backgroundColor: 'transparent'}}>            
-            <View style={{width: '90%'}}>
-                <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
+        <View style={{ flex: 1, marginTop: 15, alignItems: 'center', backgroundColor: 'transparent'}}>  
+            <View style={{width: '100%', flexDirection: 'row'}}>
+                <View style={{ width: '90%', marginLeft: 5}}>
+                    <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
+                </View>
+                <TouchableOpacity style={{ width: '10%'}} onPress={() => { 
+                    setIsVisible(true);
+                    GetReward();
+                }}>
+                    <Icon name='game-controller' size={25} style={{ color: '#FFF' }}/>
+                </TouchableOpacity>   
             </View>                
             <View style={{width: '90%', marginTop: 15, marginBottom: 15}}>
                 <Text style={style.question}>{item.question}</Text>
             </View>
             <ScrollView>
-                <View  style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center' }}>
+                <View  style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center',  }}>
                 {
                     !item.marked_sentence ? null :
                     item.marked_sentence.split(' ').map((frase, index) =>
-                        <View>      
-                            <Text>{index}</Text>                                
+                        <View>                                   
                             {      
                                 frase == '??'?                          
                                 <TextInput style={{ 
@@ -411,27 +409,12 @@ function ListResponse(props){
                     )
                 } 
                 </View>                                       
-                <View style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center' }} >
+                <View style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center', marginTop: 30 }} >
                     {
                         item.words_help.split(' ').map((help, index) => 
-                            <Animatable.View animation='rubberBand' duration={2000} key={item.id}>
-                                <TouchableOpacity
-                                onPressOut={
-                                    item.marked_sentence.split(' ').forEach((st, subindex) => {
-                                        if(st == '??'){
-                                            console.log('sim' + subindex)
-                                            if(sentenca[subindex] === undefined){
-                                                sentenca[subindex] = help;
-                                            }else{
-                                                if (sentenca[subindex].length == 0){
-                                                    sentenca[subindex] = help;
-                                                }
-                                            }
-                                            
-                                        }
-                                    })
-                                } 
-                                style={{ backgroundColor: '#5e17eb', padding: 10, margin: 5, borderRadius: 10 }} >
+                            <Animatable.View animation='rubberBand' duration={2000} key={index}>
+                                <TouchableOpacity                                 
+                                    style={{ backgroundColor: '#5e17eb', padding: 10, margin: 5, borderRadius: 10 }} >
                                     <Text style={{ color: '#FFF'}}>
                                         {help}
                                     </Text>
@@ -442,6 +425,9 @@ function ListResponse(props){
                 </View>      
                   
             </ScrollView>  
+            {
+                isVisible ? <ModalReward /> : null
+            }  
         </View>                     
     )
 }
