@@ -4,6 +4,7 @@ import APIActivity from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import MainServices from '../../../../services/mainService/mainService';
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
@@ -16,122 +17,6 @@ export default function responseSentences({ navigation, route }) {
     const [dataReward, setDataReward] = useState(null);
     const [ModalMenuVisible, setModalMenuVisible] = useState(false);
     const [Type, setType] = useState(0);
-
-    function Rewarding(number_question, type){
-        switch(type){
-            case 6: //Espie uma resposta
-                switch(listSentences[number_question - 1].right_answer){
-                    case 'one':
-                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_one)
-                        break;
-                    case 'two':
-                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_two)
-                        break;
-                    case 'tree':
-                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_tree)
-                        break;
-                    case 'four':
-                        Alert.alert('Espiando Questão ' + number_question, listSentences[number_question - 1].answer_four)
-                        break;
-                }
-
-                break;
-            case 7: //Dica de resposta
-
-                switch(listSentences[number_question - 1].right_answer){
-                    case 'one':
-                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_one.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_one.split(' ')[2]  )
-                        break;
-                    case 'two':
-                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_two.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_two.split(' ')[2]  )
-                        break;
-                    case 'tree':
-                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_tree.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_tree.split(' ')[2]  )
-                        break;
-                    case 'four':
-                        Alert.alert('Dica da Questão ' + number_question, listSentences[number_question - 1].answer_four.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_four.split(' ')[2]  )
-                        break;
-                }
-                
-                break;
-            case 5: //Gabarite uma atividade
-
-                console.log(listSentences)
-
-                var sucess = true;
-                var index = 0;
-                var activity = {};
-                var activityArray = [];
-
-                listSentences.forEach(item => {
-                    index++                    
-                    activity.activity_id = parseInt(listSentences[0].activity_id);
-                    activity.number_question = index;
-                    activity.answer = item.right_answer;
-                    activityArray.push({...activity});    
-                });   
-
-                console.log(JSON.stringify(activityArray))
-
-                APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: listSentences[0].activity_id }) //Faz a postagem do cabeçalho da atividade
-                .then(() => {    
-                    APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
-                    .then()
-                    .catch((erro) => {
-                        sucess = false;
-                        console.log(erro)
-                        Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{text: 'Ok',style: 'destructive', }]);
-                    })  
-
-                    if (sucess) {
-                        navigation.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
-                    }                
-                })
-                .catch((error) => {
-                    console.log(error);
-                    Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{text: 'Ok',style: 'destructive', }]);
-                }) 
-
-                break;
-        }
-    }
-
-    function Reward(item){
-        if(item[0].type.toString() == '6'){ //Espie uma resposta
-            setType(6);
-            setModalMenuVisible(true); 
-        }
-
-        if(item[0].type.toString() == '7'){ //Dica de resposta
-            setType(7);
-            setModalMenuVisible(true); 
-        }
-
-        if(item[0].type.toString() == '5'){ //Gabarite uma atividade
-            Rewarding(item.number_question, 5)
-        }
-    }
-
-    function UseReward(item){
-        Alert.alert(item.name, "Deseja utilizar está recompensa?",  
-            [{  text: "Sim",
-                onPress: () => {
-                    MainServices.Post("/reward/" + item.id_amount + "/use", VG.user_uid, null)
-                    .then((response) => {
-                        GetReward();
-                        Reward(response.data);  
-                    })
-                    .catch((error) => {
-                        Alert.alert('Atenção', error)   
-                    })  
-                },
-            },  
-                {
-                text: "Não",
-                },
-            ]
-        );
-    }    
 
     async function ClearStorageResponse(){
         let keys = []
@@ -266,7 +151,8 @@ const style = StyleSheet.create({
     },
     containerImage: {
         borderRadius: 20,
-        alignItems: 'center',
+        width: '15%',
+        alignItems: 'flex-start',
     },
     containerValue: {
         alignItems: 'center',
@@ -277,14 +163,65 @@ function ListResponse(props){
     const [icons, setIcons] = useState(null);
     const [item, setItem] = useState(props.item);
     const [itemPalavra, setItemPalavra] = useState('');
+    const [helpVisible, setHelpVisible] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [dataReward, setDataReward] = useState(null);
     let sentenca = Array(item.marked_sentence.split(' ').length -1);
 
-    //sentenca[1] = 'mais vai pra la'
-    //sentenca[6] = 'hihihi'
-    //console.log(sentenca)
+    function Rewarding(type){
+        switch(type){
+            case 7: //Dica de resposta
+            setHelpVisible(true);
+                break;
+        }
+    }
+
+    function Reward(item){
+        // if(item[0].type.toString() == '6'){ //Espie uma resposta
+        //     setType(6);
+        //     setIsVisible(true); 
+        // }
+
+        if(item[0].type.toString() == '7'){ //Dica de resposta
+            //setType(7);
+            setIsVisible(false); 
+            Rewarding(7);
+        }
+
+        // if(item[0].type.toString() == '5'){ //Gabarite uma atividade
+        //     Rewarding(item.number_question, 5)
+        // }
+    }
+
+    function UseReward(item_){
+        console.log(item_)
+        if(item_.type == 7){
+            if(item.words_help == "0"){
+                Alert.alert('Atenção', 'Não existe dicas para está frase.');
+                return;
+            }
+        }
+
+        Alert.alert(item_.name, "Deseja utilizar está recompensa?",  
+            [{  text: "Sim",
+                onPress: () => {
+                    MainServices.Post("/reward/" + item_.id_amount + "/use", VG.user_uid, null)
+                    .then((response) => {
+                        GetReward();
+                        Reward(response.data);  
+                    })
+                    .catch((error) => {
+                        Alert.alert('Atenção', error)   
+                    })  
+                },
+            },  
+                {
+                text: "Não",
+                },
+            ]
+        );
+    } 
 
     const HandleSaveText = async (text, number, index) => {
         try{
@@ -319,39 +256,48 @@ function ListResponse(props){
         return(
             <View style={{ position: 'absolute', flex: 1, height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center'}}>
                 <View style={{ backgroundColor: '#FFF', height: '60%', width: '80%', borderRadius: 15}}>
-                    <View style={{ top: '40%'}}>
+                    <View style={{ top: 5}}>
                         {
                             isLoading ? 
                             <View style={[style.containerLoad, style.horizontal]}>
                                 <ActivityIndicator size="large" color="green" />                                                    
                             </View> 
                             :
-                            <FlatList 
-                            data={dataReward} 
-                            horizontal
-                            keyExtractor={item => item.id} 
-                            renderItem={({ item }) => {
-                                const image = { uri: item.picture };
-                                return (                             
-                                    <TouchableOpacity 
-                                    key={item.id} 
-                                    style={{backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
-                                    onPress={() => UseReward(item)}
-                                    >
-                                        <View style={style.containerImage}>      
-                                            <ImageBackground  
-                                                source={image} 
-                                                style={{width: 40, height: 40, borderRadius: 50}}  
-                                            />                        
-                                        </View>  
-                                        <Text style={{fontWeight: 'bold', fontSize: 10, color: '#000'}}>{item.name}</Text>
-                                        <View style={style.containerValue}>                      
-                                            <Text style={{color: '#000', marginLeft: 5, fontSize: 10,}}>Quantidade: {item.amount}</Text>  
-                                        </View>                                 
-                                    </TouchableOpacity>      
-                                );
-                            }}
-                        />   
+                            <View>
+                                <View style={{ alignItems: 'center', marginBottom: 5 }}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 15, }}>Recompensas</Text>
+                                </View>                                
+                                <FlatList 
+                                    data={dataReward} 
+                                    horizontal
+                                    keyExtractor={item => item.id} 
+                                    renderItem={({ item }) => {
+                                        const image = { uri: item.picture };
+                                        return (                             
+                                            <TouchableOpacity 
+                                            key={item.id} 
+                                            style={{ borderRadius: 15, marginLeft: 5}}
+                                            onPress={() => UseReward(item)}
+                                            >
+                                                <View style={{ flexDirection: 'row', width: '100%'}}>
+                                                    <View style={style.containerImage}>      
+                                                        <ImageBackground  
+                                                            source={image} 
+                                                            style={{width: 40, height: 40, borderRadius: 50}}  
+                                                        />                        
+                                                    </View> 
+                                                    <View style={{ width: '85%', alignItems: 'flex-start' }}>
+                                                        <Text style={{fontWeight: 'bold', fontSize: 13, color: '#000'}}>{item.name}</Text>
+                                                        <View style={style.containerValue}>                      
+                                                            <Text style={{color: '#000', fontSize: 12,}}>Quantidade: {item.amount}</Text>  
+                                                        </View>  
+                                                    </View>
+                                                </View>                                                                       
+                                            </TouchableOpacity>      
+                                        );
+                                    }}
+                                /> 
+                            </View>                              
                         }    
                     </View>
                     <TouchableOpacity 
@@ -367,8 +313,8 @@ function ListResponse(props){
     }
 
     return(
-        <View style={{ flex: 1, marginTop: 15, alignItems: 'center', backgroundColor: 'transparent'}}>  
-            <View style={{width: '100%', flexDirection: 'row'}}>
+        <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'transparent'}}>  
+            <View style={{width: '100%', flexDirection: 'row', backgroundColor: '#5271ff', padding: 10}}>
                 <View style={{ width: '90%', marginLeft: 5}}>
                     <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
                 </View>
@@ -408,9 +354,10 @@ function ListResponse(props){
                         </View>  
                     )
                 } 
-                </View>                                       
+                </View>  
                 <View style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center', marginTop: 30 }} >
                     {
+                        !helpVisible ? null : 
                         item.words_help.split(' ').map((help, index) => 
                             <Animatable.View animation='rubberBand' duration={2000} key={index}>
                                 <TouchableOpacity                                 
@@ -422,8 +369,7 @@ function ListResponse(props){
                             </Animatable.View>                    
                         )
                     }
-                </View>      
-                  
+                </View> 
             </ScrollView>  
             {
                 isVisible ? <ModalReward /> : null
@@ -434,6 +380,7 @@ function ListResponse(props){
 
 class RenderActivity extends React.Component {    
 
+    
     _renderSlides = ({item}) => {          
         return(
            <ListResponse item={item} />                  
@@ -443,7 +390,7 @@ class RenderActivity extends React.Component {
       return (
         <View style={style.buttonCircle}>
             <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15}}>Próxima</Text> 
-            <Icon
+            <Ionicons
                 name="arrow-forward-sharp"
                 color="rgba(255, 255, 255, .9)"
                 size={24}
@@ -455,7 +402,7 @@ class RenderActivity extends React.Component {
       return (
         <View style={style.buttonCircle}>
             <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15}}>Finalizar</Text> 
-            <Icon
+            <Ionicons
                 name="md-checkmark"
                 color="rgba(255, 255, 255, .9)"
                 size={24}
@@ -463,6 +410,7 @@ class RenderActivity extends React.Component {
         </View>
       );
     };
+
     render() {
     const { data, user, navi } = this.props;
 
@@ -533,10 +481,7 @@ class RenderActivity extends React.Component {
             }
 
             if(warning){
-                Alert.alert('Atenção', 'Uma ou mais frases estão imcompletas. Deseja continuar?',  
-                    [{  text: 'Sim', onPress: () => { SendResponse(JSON.stringify(keys_done)) } },  
-                     {  text: 'Cancelar', onPress: () => { return; }} ]
-                );
+                return;
             }else{
                 SendResponse(keys_done)
             }
