@@ -7,14 +7,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function QuestionsUsers({ navigation, route }) {
     const { activity, user_uid, name, value } = route.params;
-    const [listQuestion, setListQuestions] = useState([]);
+    const [listSentences, setListSentences] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         setModalVisible(true)
         APIActivity.Get('/activity/' + activity + '/users/response/finished', user_uid)
         .then((questions) => {
-            setListQuestions(questions.data)
+            setListSentences(questions.data)
             setModalVisible(false)
         })
         .catch(() => {
@@ -42,8 +42,8 @@ export default function QuestionsUsers({ navigation, route }) {
                 </View>     
             </Modal>
             {
-                !listQuestion ? null : 
-                <ListResponse item={listQuestion}/>
+                !listSentences ? null : 
+                <ListResponse item={listSentences}/>
             }            
         </View>    
     );
@@ -53,13 +53,14 @@ function ListResponse(props){
 
     return(
         <FlatList data={props.item} style={{marginTop: 10, marginLeft: 1, marginRight: 1}} keyExtractor={item => item.id} renderItem={({ item }) => {
+            var contador = 0;
             return (
                 <View key={item} style={{ flex: 1, alignItems: 'center' }}>
                     <View style={{width: '90%'}}>
-                        <Text style={style.number_question}>Questão: {item.number_question}</Text>
+                        <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
                     </View>                                  
                     <View style={{width: '90%', marginTop: 15, marginBottom: 15}}>
-                        <Text style={style.question}>{item.question}</Text>
+                        <Text style={style.question}>{item.complete_sentence}</Text>
                         <View
                             style={{
                                 width: '90%',
@@ -71,99 +72,31 @@ function ListResponse(props){
                         >
                                 {item.response_user == item.response_correcty 
                                 ? 
-                                <Text style={{color: '#FFF', marginLeft: 10}}>Resposta Correta</Text>
+                                <Text style={{color: '#FFF', marginLeft: 10, fontWeight: 'bold'}}>Resposta Correta</Text>
                                 :
-                                <Text style={{color: '#FFF', marginLeft: 10}}>Resposta Incorreta</Text>
+                                <Text style={{color: '#FFF', marginLeft: 10, fontWeight: 'bold'}}>Resposta Incorreta</Text>
                                 }
-                        </View>   
-                        
-                                           
-                        <View style={{ alignItems: 'center'}}>
-                            <Animatable.View animation='fadeIn' duration={2000} style={{
-                                width: '90%',
-                                padding: 10,
-                                margin: 5,
-                                borderRadius: 12,
-                                flexDirection: 'row',
-                                borderBottomWidth: 1,
-                            }}>  
-                                <View>
-                                    {
-                                        item.response_user !== 'one' ? null : <Icon style={{color: '#582770'}} name='md-return-down-forward' size={20} />
-                                    }                                    
-                                </View>   
-                                {                        
-                                    item.response_correcty == 'one' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
-                                }              
-                                <Text style={style.text_response}>
-                                    {item.answer_one}
-                                </Text>                                                                  
-                            </Animatable.View>
-                            <Animatable.View animation='fadeInDown' duration={2000} style={{
-                                width: '90%',
-                                padding: 10,
-                                margin: 5,
-                                borderRadius: 12,
-                                flexDirection: 'row',
-                                borderBottomWidth: 1,
-                            }}>  
-                                <View>
-                                    {
-                                        item.response_user !== 'two' ? null : <Icon style={{color: '#582770'}} name='md-return-down-forward' size={20} />
-                                    }                                    
-                                </View>   
-                                {                        
-                                    item.response_correcty == 'two' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
-                                }  
-                                <Text style={style.text_response}>
-                                    {item.answer_two}
-                                </Text>                    
-                            </Animatable.View>
-                            <Animatable.View animation='fadeInDownBig' duration={2000} style={{
-                                width: '90%',
-                                padding: 10,
-                                margin: 5,
-                                borderRadius: 12,
-                                flexDirection: 'row',
-                                borderBottomWidth: 1,
-                            }}>   
-                                <View>
-                                    {
-                                        item.response_user !== 'tree' ? null : <Icon style={{color: '#582770'}} name='md-return-down-forward' size={20} />
-                                    }                                    
-                                </View>   
-                                {                        
-                                    item.response_correcty == 'tree' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
-                                }  
-                                <Text style={style.text_response}>
-                                    {item.answer_tree}
-                                </Text>                     
-                            </Animatable.View>
-                            <Animatable.View animation='fadeInUp' duration={2000} style={{
-                                width: '90%',
-                                padding: 10,
-                                margin: 5,
-                                borderRadius: 12,
-                                flexDirection: 'row',
-                                borderBottomWidth: 1,
-                            }}>  
-                                <View>
-                                    {
-                                        item.response_user !== 'four' ? null : <Icon style={{color: '#582770'}} name='md-return-down-forward' size={20} />
-                                    }                                    
-                                </View>   
-                                {                        
-                                    item.response_correcty == 'four' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
-                                }   
-                                <Text style={style.text_response}>
-                                    {item.answer_four}
-                                </Text>                    
-                            </Animatable.View>
-                        </View>                    
+                            <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row', width: '100%'}}>
+                            {
+                                item.marked_sentence.split(' ').map((phrase, index) => {
+                                    
+                                    if(phrase == '??'){
+                                        var sentence = item.response_user.split(';')[contador];
+                                        contador++;
+
+                                        return(
+                                            <Text style={{color: '#FFF', marginLeft: 10}}>{sentence} </Text>
+                                        )
+                                    }else{
+                                        return(
+                                            <Text style={{color: '#FFF', marginLeft: 10}}>{phrase} </Text>
+                                        )
+                                    }                                
+                                })
+                            }  
+                            </View> 
+                        </View>      
+                                                                                 
                     </View> 
                 </View>
             );
