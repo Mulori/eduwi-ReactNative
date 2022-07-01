@@ -21,7 +21,7 @@ import GameDetail from '../game/gameDetail';
 import newActivityCompleteSentence from '../mainActivity/newActivityCompleteSentence';
 import newActivitySentence from '../mainActivity/newActivityCompleteSentence/newActivitySentence';
 import responseSentences from '../mainActivity/response/sentences';
-
+import sentencesUsers from '../mainActivity/response/sentencesUsers';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +49,7 @@ export default function Home() {
             <Stack.Screen name='newActivityCompleteSentence' options={{ headerShown: false }} component={newActivityCompleteSentence} />
             <Stack.Screen name='newActivitySentence' options={{ headerShown: false }} component={newActivitySentence} />
             <Stack.Screen name='responsesentences' options={{ headerShown: false }} component={responseSentences} />  
+            <Stack.Screen name='sentencesUsers' options={{ headerShown: false }} component={sentencesUsers} />             
         </Stack.Navigator>   
     );
 }

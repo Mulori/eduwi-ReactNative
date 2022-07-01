@@ -109,7 +109,13 @@ export default function usersActivity({ navigation, route }) {
                     return (
                         <View style={{ backgroundColor: '#FFF', margin: 10, borderRadius: 15}}>
                             <TouchableOpacity key={item.id} 
-                            onPress={() => {navigation.navigate('QuestionsUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value})}}  
+                            onPress={() => {
+                                if(activity.type_activity == 'questions'){
+                                    navigation.navigate('QuestionsUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title})
+                                }else if(activity.type_activity == 'sentences'){
+                                    navigation.navigate('sentencesUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title})
+                                } 
+                            }}  
                             style={{ 
                                 backgroundColor: '#F0F0', 
                                 flexDirection: 'row', 
