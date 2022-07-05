@@ -23,6 +23,8 @@ export default function myActivity({ navigation }) {
         switch(value){
             case "questions":
                 return "Questões";
+            case "sentences":
+                return "Complete a Frase";
         }
     }
 
@@ -32,16 +34,12 @@ export default function myActivity({ navigation }) {
         
     return(
         <View style={style.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#FFD700' />
-            <Animatable.View  animation='fadeInDownBig' duration={1000}  style={style.containerHead}>
-                <Text style={style.titleHead}>Minhas atividades</Text>
-                <IconFont5 style={style.iconHead} name='book' size={22} />
-            </Animatable.View>
+            <StatusBar barStyle='dark-content' backgroundColor='#FFF' />
             <ScrollView>
                 {!data ? null : 
                         data.map((item, key) => 
                         <TouchableOpacity key={key} onPress={() => {navigation.navigate('usersActivity', { activity: item})}}>
-                            <View style={{ backgroundColor: '#d2d2d2', padding: 10, margin: 8}}>
+                            <View style={{ backgroundColor: '#FFD700',  padding: 10, width: '85%', marginTop: 10, borderBottomEndRadius: 40, borderTopEndRadius: 40 }}>
                                 <Text style={{color: '#000', fontSize: 17, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text> 
                                 <Text style={{color: '#000', fontSize: 13, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>Membros: {item.number_members}</Text>     
                                 <Text style={{color: '#000', fontSize: 13, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>Tipo: {ConvertNameActivity(item.type_activity)}</Text> 
@@ -60,7 +58,7 @@ const style = StyleSheet.create({
         backgroundColor: '#FFF'
     },
     containerHead: {
-        backgroundColor: '#FFD700',
+        backgroundColor: '#FFF',
         height: '5%',
         flexDirection: 'row'
     },

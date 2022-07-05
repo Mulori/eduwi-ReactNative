@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, StatusBar, FlatList, Modal, Alert, Linking } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, StatusBar, FlatList, Modal, Alert, ActivityIndicator } from 'react-native';
 import activityServices from '../../../services/activityService/activityService';
 import VG from '../../../components/variables/VG';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -16,6 +16,7 @@ export default function usersActivity({ navigation, route }) {
     const [code, setCode] = useState('');
     const [title, setTitle] = useState(null);    
     const [pass, setPass] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const openShared = async () => {
         const shareOption = {
@@ -33,8 +34,7 @@ export default function usersActivity({ navigation, route }) {
 
     function GetUsers(){
         activityServices.Get('/activity/' + activity.id + '/users/concluded', VG.user_uid)
-        .then((response) => {
-            console.log(response.data)
+        .then((response) => {            
             setData(response.data);    
         })
         .catch((error) => {
@@ -73,6 +73,29 @@ export default function usersActivity({ navigation, route }) {
         })  
     }
 
+    function ShowResponse(){
+        setIsLoading(true);
+
+        if(!data){
+            setIsLoading(false);
+            return;
+        }
+
+        data.map(element => {
+            console.log(element);
+
+            activityServices.Put('/activity/' + activity.id + '/display/user', VG.user_uid, { user_uid: element.user_uid})
+            .then((response) => {
+
+            })
+            .catch((error) => {
+                Alert.alert(error)
+            }) 
+        });
+
+        setIsLoading(false);
+    }
+
     useEffect(() => {
         setCode(Buffer.from(activity.id.toString(), 'utf-8').toString('base64'))
         GetUsers();
@@ -85,8 +108,8 @@ export default function usersActivity({ navigation, route }) {
             <View style={{ backgroundColor: '#582770', padding: 10, alignItems: 'center', borderRadius: 15, borderBottomWidth: 1, borderBottomColor: '#FFF', flexDirection: 'row'}}>
                 <View style={{ width: '90%'}}>
                     <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 19}}>{title}</Text>  
-                    <TouchableOpacity onPress={() => openShared(data, code)} >
-                        <Text style={{ color: '#FFF', fontSize: 15}}>Código: {code}</Text>  
+                    <TouchableOpacity style={{ backgroundColor: 'orange', borderRadius: 15, alignItems: 'center'}} onPress={() => openShared(data, code)} >
+                        <Text style={{ color: '#582770', fontSize: 15, fontWeight: 'bold'}}>Compartilhar código: {code}</Text>  
                     </TouchableOpacity>                    
                 </View>
                 <View style={{ width: '10%'}}>
@@ -128,7 +151,7 @@ export default function usersActivity({ navigation, route }) {
                                     <Text style={{ color: '#000', fontSize: 12}}>{item.email}</Text>
                                 </View>        
                                 <View style={{flexDirection: 'column', width: '15%'}}>
-                                    <Text style={{ color: item.value >= 50 ? 'green' : 'red', fontSize: 14, fontWeight: 'bold' }}>{item.value}%</Text>
+                                    <Text style={{ color: item.value >= 50 ? 'green' : 'red', fontSize: 20, fontWeight: 'bold' }}>{item.value}%</Text>
                                 </View> 
                             </TouchableOpacity>
                         </View>                        
@@ -137,7 +160,7 @@ export default function usersActivity({ navigation, route }) {
                 />    
 
                 <Modal visible={modalMenu}>
-                    <View style={{ height: '100%'}}>
+                    <View style={{ height: '100%', backgroundColor: '#582770'}}>
                         <View style={{ backgroundColor: '#582770', padding: 10, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#FFF', flexDirection: 'row'}}>
                             <View style={{ width: '90%', flexDirection: 'row'}}>
                                 <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 19}}>Configurações</Text>
@@ -190,6 +213,28 @@ export default function usersActivity({ navigation, route }) {
 
                             <TouchableOpacity 
                             onPress={() => {
+                                Alert.alert("Atenção?", "Deseja liberar os resultados para os participantes?",  
+                                    [{  text: "Sim",
+                                        onPress: () => {
+                                            ShowResponse();   
+                                        },
+                                    },
+                                        {
+                                        text: "Não",
+                                        },
+                                    ]
+                                );
+                            }}
+                            style={{ padding: 15, margin: 5, backgroundColor: 'green', alignItems: 'center', borderRadius: 15}}>
+                                {
+                                    isLoading 
+                                    ?<ActivityIndicator size="large" color="#FFF"  />       
+                                    :<Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Liberar resultados</Text>
+                                }
+                            </TouchableOpacity>    
+
+                            <TouchableOpacity 
+                            onPress={() => {
                                 Alert.alert("Atenção?", "Deseja encerrar a atividade permanentemente?",  
                                     [{  text: "Sim",
                                         onPress: () => {
@@ -210,7 +255,7 @@ export default function usersActivity({ navigation, route }) {
                             }}
                             style={{ padding: 15, margin: 5, backgroundColor: 'red', alignItems: 'center', borderRadius: 15}}>
                                 <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Encerrar</Text>
-                            </TouchableOpacity>                            
+                            </TouchableOpacity>                        
                         </View>
                     </View>
                 </Modal>           

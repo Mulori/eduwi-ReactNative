@@ -29,17 +29,7 @@ export default function QuestionsUsers({ navigation, route }) {
 
     return (    
         <KeyboardAvoidingView style={style.container}>
-            <StatusBar backgroundColor='#582770' /> 
-            <View style={{ backgroundColor: '#582770', padding: 15, alignItems: 'center'}}>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ width: '100%' }}>
-                        <Text style={{ color: '#FFF', fontSize: 20, fontWeight: 'bold'}}>Respostas do Participante</Text>
-                        <Text style={{ color: '#FFF', fontSize: 12}}>Nome da Atividade: {title}</Text>
-                        <Text style={{ color: '#FFF', fontSize: 12}}>Nome do Participante: {name}</Text>
-                        <Text style={{ color: '#FFF', fontSize: 12}}>Pontuação: {value}% de acertos</Text>
-                    </View>
-                </View>
-            </View> 
+            <StatusBar backgroundColor='#582770' />             
             <Modal visible={modalVisible}>
                 <View style={[style.containerLoad, style.horizontal]}>
                     <ActivityIndicator size="large" color="green" />                                                    
@@ -60,6 +50,14 @@ function ListResponse(props){
     const [textComment, setTextComment] = useState('');
 
     function openComment(commentVisible, numberSentence){
+        APIActivity.Get('/activity/' + props.item[0].activity_id + '/comment/' + numberSentence + '/user/' + props.item[0].user_uid, VG.user_uid)
+        .then((value) => {
+            setTextComment(value.data[0].comments);
+        })
+        .catch((erro) => {
+            Alert.alert('Erro', erro);
+        })
+
         setCommentVisible(commentVisible);
         setNumberSentence(numberSentence);
     }
@@ -67,27 +65,33 @@ function ListResponse(props){
     function closeComment(commentVisible, numberSentence){
         setCommentVisible(commentVisible);
         setNumberSentence(numberSentence);
+        setTextComment('');
         setIsLoadingComment(false);
     }
 
     function Comment(){
         setIsLoadingComment(true);
 
+        if(!textComment){
+            Alert.alert('Atenção', 'O comentário não pode ser nulo.');
+            setIsLoadingComment(false);
+            return;
+        }
+
         APIActivity.Put('/activity/' + props.item[0].activity_id + '/comment/' + numberSentence, VG.user_uid, { comment: textComment, user_uid: props.item[0].user_uid })
         .then(() => {
-            console.log('certo')
+            setTextComment('');
             setCommentVisible(false);
             setIsLoadingComment(false);
         })
         .catch((erro) => {
-            console.log('errador')
             Alert.alert('Erro', erro)
             setIsLoadingComment(false);
         })        
     }
 
     return(
-        <KeyboardAvoidingView>
+        <View>
             <FlatList data={props.item}  keyExtractor={item => item.id} renderItem={({ item }) => {           
                 var contador = 0;
                 return (
@@ -141,38 +145,40 @@ function ListResponse(props){
                     </View>                
                 );
             }}            
-        />
-        {
-            commentVisible ? 
-            <View
-            style={{ flex: 1, position: 'absolute', width: '100%', height: '90%', top: 30, alignItems: 'center', justifyContent: 'center'}}>
-                <View style={{flex: 1, backgroundColor: '#FFF', height: '100%', width: '90%', borderRadius: 50, position: 'absolute', bottom: 0 }}>
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => closeComment(false, numberSentence)}>
-                        <View style={{ width: '85%', }}>
+            />
+            {
+                commentVisible ? 
+                <View
+                style={{flex: 1, position: 'absolute', width: '100%', height: '100%', alignItems: 'center', }}>
+                    <View style={{flex: 1, backgroundColor: '#FFF', width: '100%', height: 300, borderRadius: 50, position: 'absolute' }}>
+                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => closeComment(false, numberSentence)}>
+                            <View style={{ width: '85%', }}>
+                                
+                            </View>
+                            <View style={{ width: '15%', }}>  
+                                <FontAwesome name='close' size={40} style={{ color: '#582770', top: '30%',}}/>
+                            </View>   
+                        </TouchableOpacity>
+                        <View>
+                            <TextInput onChangeText={(text) => setTextComment(text)} value={textComment} label={'Insira um comentário na frase ' + numberSentence} multiline={true} maxLength={500} style={{ top: 15, backgroundColor: '#FFF', height: '80%'}} mode='outlined' />                       
+                        </View>                   
+                        <TouchableOpacity 
+                        onPress={Comment}
+                        style={{ backgroundColor: 'green', borderStartWidth: 1, borderEndWidth: 1, borderBottomWidth: 1, borderColor: '#582770', alignItems: 'center', borderBottomLeftRadius: 50, borderBottomEndRadius: 50, top: -40, height: '20%' }}>
+                            {
+                                IsLoadingComment 
+                                ?<ActivityIndicator size="large" color="#FFF" style={{ top: 17 }} />       
+                                :<Text style={{ top: 20, fontWeight: 'bold', color: '#FFF', }}>Adicionar</Text>
+                            }
                             
-                        </View>
-                        <View style={{ width: '15%', }}>  
-                            <FontAwesome name='close' size={40} style={{ color: '#582770', top: '30%',}}/>
-                        </View>   
-                    </TouchableOpacity>
-                    <View>
-                        <TextInput onChangeText={(text) => setTextComment(text)} label={'Insira um comentário na frase ' + numberSentence} multiline={true} maxLength={500} style={{ top: 15, backgroundColor: '#FFF', height: '80%'}} mode='outlined' />                       
-                    </View>                   
-                    <TouchableOpacity 
-                    onPress={Comment}
-                    style={{ backgroundColor: 'green', borderStartWidth: 1, borderEndWidth: 1, borderBottomWidth: 1, borderColor: '#582770', alignItems: 'center', borderBottomLeftRadius: 50, borderBottomEndRadius: 50, top: -40, height: '20%' }}>
-                        {
-                            IsLoadingComment 
-                            ?<ActivityIndicator size="large" color="#FFF" style={{ top: 17 }} />       
-                            :<Text style={{ top: 20, fontWeight: 'bold', color: '#FFF', }}>Adicionar</Text>
-                        }
-                        
-                    </TouchableOpacity>
-                </View>          
-            </View>  
-            : null
-        } 
-        </KeyboardAvoidingView>                                  
+                        </TouchableOpacity>
+                    </View>          
+                </View>  
+                : null
+            }  
+        </View>
+        
+                            
     )
 }
 
