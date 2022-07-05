@@ -57,7 +57,7 @@ export default function Main({ navigation }){
                 setModalVisible(false)
                 break;
             case 2:             
-                navigation.navigate('myActivity')
+                navigation.navigate('activity')
                 setModalVisible(false)
                 break;
             case 3:             
