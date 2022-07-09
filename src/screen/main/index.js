@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, View, Text, TouchableOpacity, ImageBackground, Modal, FlatList} from 'react-native';
+import { StatusBar, StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, ImageBackground, Modal, FlatList} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Feather';
 import IconFont5 from 'react-native-vector-icons/FontAwesome5';
@@ -16,10 +16,12 @@ export default function Main({ navigation }){
     const [modalVisible, setModalVisible] = useState(false);
     const [configMenu, setConfigMenu] = useState(null);
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        setIsLoading(true);
         GetUser();
-        configMenuMain();
+        configMenuMain();        
     }, [])
 
     setTimeout(() => {
@@ -29,7 +31,8 @@ export default function Main({ navigation }){
     function configMenuMain(){
         mainservices.GetConfigMenu(VG.user_uid)
         .then((response) => {
-            setConfigMenu(response.data);      
+            setConfigMenu(response.data);   
+            setIsLoading(false);   
         })
         .catch((error) => {
             console.log(error);
@@ -207,7 +210,13 @@ export default function Main({ navigation }){
                 }}
                 />
                 <WindMill />
-            </Modal>        
+            </Modal>    
+
+            <Modal style={style.modalLoading} visible={isLoading}>
+                <View style={[style.containerLoad, style.horizontal]}>
+                    <ActivityIndicator size="large" color="green" />                                                    
+                </View>  
+            </Modal>    
         </View>
     )
 }
@@ -226,6 +235,15 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         width: '90%'
     },  
+    containerLoad: {
+        flex: 1,
+        justifyContent: "center"
+    },
+    horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
+    },
     containerScore: {
         padding: 10,
         marginTop: 15,
@@ -252,6 +270,9 @@ const style = StyleSheet.create({
         fontSize: 20
     },
     modalMenu: {
+        position: 'absolute'
+    },
+    modalLoading: {
         position: 'absolute'
     },
     title:{
