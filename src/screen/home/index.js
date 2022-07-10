@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MainActivity from '../mainActivity';
 import newActivity from '../mainActivity/newActivity';
 import newActivityQuestionMain from '../mainActivity/newActivityQuestionMain';
@@ -14,6 +12,7 @@ import responseQuestion from '../mainActivity/response/questions';
 import PageSucess from '../../screen/mainActivity/response/sucess';
 import usersActivity from '../../screen/mainActivity/usersActivity';
 import QuestionsActivity from '../mainActivity/myActivity/questionsActivity';
+import sentencesActivity from '../mainActivity/myActivity/sentencesActivity';
 import QuestionsUsers from '../../screen/mainActivity/response/questionsUsers';
 import myProfile from '../profile';
 import Main from '../main';
@@ -45,6 +44,7 @@ export default function Home() {
             <Stack.Screen name='pageSucess' options={{ headerShown: false }} component={PageSucess} />         
             <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={usersActivity} />
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
+            <Stack.Screen name='sentencesActivity' options={{ headerShown: false }} component={sentencesActivity} /> 
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />    
             <Stack.Screen name='myProfile' options={{ headerTitle: 'Meu Perfil' }} component={myProfile} />
             <Stack.Screen name='Game' options={{ headerTitle: 'Gamificação - Loja' }} component={Game} />
@@ -80,12 +80,3 @@ export default function Home() {
         </Stack.Navigator>   
     );
 }
-
-
-
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFF',
-    },
-})

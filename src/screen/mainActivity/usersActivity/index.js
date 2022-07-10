@@ -187,7 +187,7 @@ export default function usersActivity({ navigation, route }) {
                             </View>
                             <View style={{ flexDirection: 'row'}}>
                                 <View style={{ width: '70%', alignItems: 'center'}}>
-                                   <TextInput mode='outlined' onChangeText={(value) => setPass(value)} placeholder='Senha' secureTextEntry style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff'}}/>
+                                   <TextInput mode='outlined' onChangeText={(value) => setPass(value)} placeholder='Senha' secureTextEntry style={{ width: '90%', fontWeight: 'bold', backgroundColor: '#FFF', borderColor: '#4e71ff', }}/>
                                 </View>
                                 <View style={{ width: '30%', marginTop: 5}}>
                                     <TouchableOpacity 
@@ -197,19 +197,23 @@ export default function usersActivity({ navigation, route }) {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            {
-                                activity.type_activity == 'questions' ? 
-                                <TouchableOpacity 
-                                onPress={() => {
-                                    setModalMenu(false);
+
+                            <TouchableOpacity 
+                            onPress={() => {
+
+                                setModalMenu(false);
+                                if(activity.type_activity == 'questions'){
                                     navigation.navigate('QuestionsActivity', { data: activity});
-                                }}
-                                style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15}}>
-                                    <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Visualizar Questões</Text>
-                                </TouchableOpacity>
-                                :
-                                null
-                            }        
+                                }                                    
+                                else if(activity.type_activity == 'sentences'){
+                                    navigation.navigate('sentencesActivity', { data: activity});
+                                }
+                                    
+                            }}
+                            style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15}}>
+                                <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Visualizar {activity.type_activity == 'questions' ? 'Questões' : 'Frases'}</Text>
+                            </TouchableOpacity>
+                                
 
                             <TouchableOpacity 
                             onPress={() => {
@@ -229,7 +233,7 @@ export default function usersActivity({ navigation, route }) {
                                 {
                                     isLoading 
                                     ?<ActivityIndicator size="large" color="#FFF"  />       
-                                    :<Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Liberar resultados</Text>
+                                    :<Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Liberar Resultados</Text>
                                 }
                             </TouchableOpacity>    
 
@@ -254,7 +258,7 @@ export default function usersActivity({ navigation, route }) {
                                 );
                             }}
                             style={{ padding: 15, margin: 5, backgroundColor: 'red', alignItems: 'center', borderRadius: 15}}>
-                                <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Encerrar</Text>
+                                <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold'}}>Encerrar Atividade</Text>
                             </TouchableOpacity>                        
                         </View>
                     </View>
