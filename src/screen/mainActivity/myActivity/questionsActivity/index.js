@@ -27,11 +27,7 @@ export default function QuestionsActivity({ navigation, route }) {
 
     return (    
         <View style={style.container}>
-            <StatusBar backgroundColor='#582770' />  
-            <View style={{ backgroundColor: '#582770', padding: 15, alignItems: 'center', borderBottomLeftRadius: 20, borderBottomEndRadius: 20}}>
-                <Text style={{ color: '#FFF', fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>Respostas da Questão</Text>
-               
-            </View> 
+            <StatusBar backgroundColor='#582770' barStyle='ligth-content'/>  
             <Modal visible={modalVisible}>
                 <View style={[style.containerLoad, style.horizontal]}>
                     <ActivityIndicator size="large" color="green" />                                                    
@@ -48,13 +44,13 @@ export default function QuestionsActivity({ navigation, route }) {
 function ListResponse(props){
 
     return(
-        <FlatList data={props.item} style={{margin: 5}} keyExtractor={item => item.id} renderItem={({ item }) => {
+        <FlatList data={props.item} keyExtractor={item => item.id} renderItem={({ item }) => {
             return (
-                <View style={{ flex: 1, alignItems: 'center', margin: 5 }}>
-                    <View style={{width: '90%'}}>
+                <View style={{ flex: 1 }}>
+                    <View style={{width: '30%', backgroundColor: 'red', borderBottomEndRadius: 25, borderTopEndRadius: 25, }}>
                         <Text style={style.number_question}>Questão: {item.number_question}</Text>
                     </View>             
-                    <View style={{width: '90%', marginTop: 10, marginBottom: 15}}>
+                    <View style={{width: '90%', marginTop: 10, marginBottom: 15,}}>
                         <Text style={style.question}>{item.question}</Text>                    
                         <View style={{ alignItems: 'center'}}>
                             <Animatable.View animation='fadeIn' duration={2000} style={{
@@ -65,7 +61,7 @@ function ListResponse(props){
                             }}>        
                                 {                        
                                     item.right_answer == 'one' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
+                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'white'}} name='md-close-circle-sharp' size={20}/>
                                 }                
                                 <Text style={style.text_response}>
                                     {item.answer_one}
@@ -79,7 +75,7 @@ function ListResponse(props){
                             }}>  
                                 {                        
                                     item.right_answer == 'two' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
+                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'white'}} name='md-close-circle-sharp' size={20}/>
                                 }  
                                 <Text style={style.text_response}>
                                     {item.answer_two}
@@ -93,7 +89,7 @@ function ListResponse(props){
                             }}>   
                                 {                        
                                     item.right_answer == 'tree' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
+                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'white'}} name='md-close-circle-sharp' size={20}/>
                                 }  
                                 <Text style={style.text_response}>
                                     {item.answer_tree}
@@ -107,7 +103,7 @@ function ListResponse(props){
                             }}>  
                                 {                        
                                     item.right_answer == 'four' ?
-                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'red'}} name='md-close-circle-sharp' size={20}/>
+                                    <Icon style={{color: 'green'}} name='md-checkmark-circle-sharp' size={20}/>  :  <Icon style={{color: 'white'}} name='md-close-circle-sharp' size={20}/>
                                 }  
                                 <Text style={style.text_response}>
                                     {item.answer_four}
@@ -125,7 +121,7 @@ function ListResponse(props){
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        backgroundColor: '#582770'
     },
     containerLoad: {
         flex: 1,
@@ -169,17 +165,19 @@ const style = StyleSheet.create({
         flexDirection: 'row'
     },
     text_response: {
-        color: '#000',
+        color: 'white',
     },
     number_question: {
         fontWeight: 'bold',
         marginLeft: '5%',
+        color: '#FFF',
         fontSize: 18,
     },
     question: {
         fontWeight: 'bold',
         marginLeft: '5%',
         fontSize: 15,
+        color: 'white',
     },
     buttonCircle: {
         width: 110,
