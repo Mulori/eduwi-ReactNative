@@ -83,6 +83,10 @@ export default function newActivityQuestionMain({ navigation, route }) {
         DeleteActivityTemp();       
     }
 
+    function SearchImage(){
+
+    }
+
     return(
         <View style={{flex: 1}}>
             <View style={{flex: 1, backgroundColor: activity.main_color,  alignItems: 'center', }}>
@@ -124,7 +128,11 @@ export default function newActivityQuestionMain({ navigation, route }) {
                                         </View>
                                     }                     
                             </TouchableOpacity>
-                        </View>                      
+                        </View>   
+
+                        <TouchableOpacity style={{ padding: 10, backgroundColor: 'orange'}} onPress={() => {SearchImage}}>
+                            <Text>Imagem</Text>
+                        </TouchableOpacity>                   
                     </ScrollView>                            
                 </View>                
             </View>  
