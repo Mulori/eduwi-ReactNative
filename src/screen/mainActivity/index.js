@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, Modal, StyleSheet, StatusBar, FlatList, ImageBackground, RefreshControl, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, Modal, StyleSheet, StatusBar, FlatList, Image, RefreshControl, ScrollView } from 'react-native';
 import mainservices from '../../services/mainService/mainService';
 import activityServices from '../../services/activityService/activityService';
 import WindMill from '../../components/lotties/WindMill';
@@ -17,6 +17,8 @@ export default function MainActivity({ navigation }) {
     const [configMenu, setConfigMenu] = useState(null);
     const [listActivitys, setListActivitys] = useState(null);
     const [refreshing, setRefreshing] = React.useState(false);
+
+    const encodedData = 'R0lGODlhAQABAIAAAAAA...7';
 
     const onRefresh = React.useCallback(() => {
         GetActvity();
@@ -91,11 +93,7 @@ export default function MainActivity({ navigation }) {
 
     return(
         <View style={style.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#caedff' />
-            <ImageBackground  
-                source={require('../../assets/image/paisagem_background.png')} 
-                style={{width: '100%', height: '100%', position: 'absolute'}}  
-            />            
+            <StatusBar barStyle='dark-content' backgroundColor='#FFF' />      
 
             <ScrollView 
             refreshControl={
@@ -108,26 +106,20 @@ export default function MainActivity({ navigation }) {
                {!listActivitys ? null : 
                     listActivitys.map((item, key) => 
                     <TouchableOpacity key={key} onPress={() => {Enter(item)}} style={{ 
-                        flexGrow: 1, 
-                        flexBasis: 0, 
-                        backgroundColor: 'rgba(0,0,0,0.1)',                     
+                        backgroundColor: '#365663',                     
                         margin: 5,
-                        borderRadius: 15,                        
-                        textShadowColor: 'rgba(0, 0, 0, 0.90)',
-                        textShadowOffset: {width: -1, height: 1},
-                        textShadowRadius: 10,
+                        borderRadius: 15,                
                         }}>
                         <View style={{flexDirection: 'row'}}>
-                            <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', width:'86%', borderBottomStartRadius: 15, borderTopLeftRadius: 15, padding: 15}}>
+                        <Image
+                            style={style.logo}
+                            source={{
+                            uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==',
+                            }}
+                        />
+                            {/* <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', width:'86%', borderBottomStartRadius: 15, borderTopLeftRadius: 15, padding: 15}}>
                                 <Text style={{color: '#FFF', fontSize: 15, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text>     
-                            </View>
-                            <View style={{ backgroundColor: 'rgba(0,0,0,0.9)',  width:'14%', borderBottomEndRadius: 15, borderTopEndRadius: 15, padding: 15}}>
-                                {
-                                    item.with_password == 0
-                                    ? <Icon name='lock-open' size={15} style={{ color: '#FFF', marginLeft: '2%'}} />
-                                    : <Icon name='lock' size={15} style={{ color: '#FFF',marginLeft: '2%'}}/>
-                                }
-                            </View>
+                            </View> */}
                         </View>
                         
                         
@@ -175,4 +167,8 @@ const style = StyleSheet.create({
         shadowColor: '#470000',
         elevation: 10
     },
+    logo: {
+        height: 50,
+        width: 50,
+    }
 })

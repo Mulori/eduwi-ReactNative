@@ -23,6 +23,7 @@ import newActivitySentence from '../mainActivity/newActivityCompleteSentence/new
 import responseSentences from '../mainActivity/response/sentences';
 import sentencesUsers from '../mainActivity/response/sentencesUsers';
 import responseSentenceUser from '../mainActivity/response/responseSentenceUser';
+import responseQuestionUser from '../mainActivity/response/responseQuestionUser';
 import activitypage from '../mainActivity/activity';
 
 const Stack = createNativeStackNavigator();
@@ -77,6 +78,20 @@ export default function Home() {
                 },
                 headerTintColor: '#FFF',
                 }} component={responseSentenceUser} /> 
+            <Stack.Screen name='responseQuestionUser' 
+            options={{ 
+                headerTitle: 'Resposta', 
+                headerStyle: { 
+                    backgroundColor: '#582770', 
+                    color: '#FFF' 
+                }, 
+                headerTitleStyle: { 
+                    color: '#FFF' 
+                },
+                headerTintColor: '#FFF',
+                }} component={responseQuestionUser} />             
+
+
         </Stack.Navigator>   
     );
 }

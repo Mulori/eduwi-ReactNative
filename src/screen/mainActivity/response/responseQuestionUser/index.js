@@ -4,17 +4,17 @@ import APIActivity  from '../../../../services/activityService/activityService';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import VG from '../../../../components/variables/VG';
 import style from './styles';
 
-
-export default function QuestionsUsers({ navigation, route }) {
-    const { activity, user_uid, name, value } = route.params;
+export default function responseQuestionUser({ navigation, route }) {
+    const { data } = route.params;
     const [listQuestion, setListQuestions] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         setModalVisible(true)
-        APIActivity.Get('/activity/' + activity + '/users/response/finished', user_uid)
+        APIActivity.Get('/activity/' + data.id + '/users/response/finished', VG.user_uid)
         .then((questions) => {
             setListQuestions(questions.data)
             setModalVisible(false)

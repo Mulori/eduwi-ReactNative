@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, View, StyleSheet, StatusBar, Text, FlatList, Modal, Alert, TouchableOpacity, KeyboardAvoidingView, ScrollView, ImageEditor } from 'react-native';
 import APIActivity  from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
-import * as Animatable from 'react-native-animatable';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import style from './styles';
 
 export default function responseSentenceUser({ navigation, route }) {
