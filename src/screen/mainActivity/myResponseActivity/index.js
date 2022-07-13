@@ -60,7 +60,7 @@ export default function myResponseActivity({ navigation }) {
                                 if (item.type_activity == 'questions'){
                                     navigation.navigate('responseQuestionUser', { data: item});
                                 }
-                                else if(item.type_activity == 'questions'){
+                                else if(item.type_activity == 'sentences'){
                                     navigation.navigate('responseSentenceUser', { data: item});
                                 }
                             }}>
