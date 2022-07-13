@@ -1,10 +1,15 @@
-import React, {useState} from 'react';
-import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, TextInput, Alert, StatusBar, KeyboardAvoidingView } from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo'
+import React, { useState } from 'react';
+import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, TextInput, Alert, StatusBar, Image, ScrollView, FlatList } from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import LottieRegister from '../../components/lotties/register';
 import * as Animatable from 'react-native-animatable';
 import auth from '@react-native-firebase/auth';
 import userServices from '../../services/userService/userService';
+import style from './styles.js'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import styles from './styles.js';
 
 export default function Register({ navigation }) {
     const [name, setName] = useState('')
@@ -16,10 +21,24 @@ export default function Register({ navigation }) {
     const [isPassIncorrect, setPassIncorrect] = useState(false)
     const [isFieldEmpty, setisFieldEmpty] = useState(false)
     const [isPassLower, setisPassLower] = useState(false)
+    const [viewAvatar, setViewAvatar] = useState(false);
+    const [image, setImage] = useState(null);
+
+    const [avatarMonster, setAvatarMonster] = useState([
+        require('../../assets/image/m_befre.png'),
+        require('../../assets/image/m_big-blue.png'),
+        require('../../assets/image/m_crazy.png'),
+        require('../../assets/image/m_ding.png'),
+        require('../../assets/image/m_goe.png'),
+        require('../../assets/image/m_kalef.png'),
+        require('../../assets/image/m_nuy.png'),
+        require('../../assets/image/m_tree.png'),
+        require('../../assets/image/m_phin.png'),
+    ]);
 
     const validator = require('validator');
 
-    function Register(){
+    function Register() {
 
         const name_clean = name.trim()
         const last_name_clean = lastName.trim()
@@ -27,10 +46,10 @@ export default function Register({ navigation }) {
         const password_clean = password.trim()
         const password_confirm_clean = passwordConfirm.trim()
 
-        if(!name_clean || !last_name_clean || !email_clean || !password_clean || !password_confirm_clean){
+        if (!name_clean || !last_name_clean || !email_clean || !password_clean || !password_confirm_clean) {
             setisFieldEmpty(true);
             return;
-        }else{
+        } else {
             setisFieldEmpty(false);
         }
 
@@ -41,188 +60,150 @@ export default function Register({ navigation }) {
             return;
         }
 
-        if(password_clean !== password_confirm_clean){
+        if (password_clean !== password_confirm_clean) {
             setPassIncorrect(true);
             return;
-        }else{
+        } else {
             setPassIncorrect(false);
         }
 
-        if(password_clean.length < 6){
+        if (password_clean.length < 6) {
             setisPassLower(true);
             return;
-        }else{
+        } else {
             setisPassLower(false);
         }
 
         auth()
-        .createUserWithEmailAndPassword(email_clean, password_clean)
-        .then((ok) => {
-            let data = {
-                firebase_uid: ok.user.uid,
-                email: ok.user.email,
-                name: name_clean,
-                last_name: last_name_clean
-            }   
+            .createUserWithEmailAndPassword(email_clean, password_clean)
+            .then((ok) => {
+                let data = {
+                    firebase_uid: ok.user.uid,
+                    email: ok.user.email,
+                    name: name_clean,
+                    last_name: last_name_clean
+                }
 
-            userServices.userCreate(data)
-            .then((response) => {
-                navigation.pop();
-                Alert.alert('Sucesso', 'Conta criada com sucesso!', [{text: 'Ok',style: 'destructive', }]);
-                
+                userServices.userCreate(data)
+                    .then((response) => {
+                        navigation.pop();
+                        Alert.alert('Sucesso', 'Conta criada com sucesso!', [{ text: 'Ok', style: 'destructive', }]);
+
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        Alert.alert('Erro', 'Ocorreu um problema ao criar a conta', [{ text: 'Ok', style: 'destructive', }]);
+                    })
             })
-            .catch((error) => {
-                console.log(error);
-                Alert.alert('Erro', 'Ocorreu um problema ao criar a conta', [{text: 'Ok',style: 'destructive', }]);
-            })        
-        })
-        .catch((erro) => {
-            Alert.alert("Erro", erro);
-        })
+            .catch((erro) => {
+                Alert.alert("Erro", erro);
+            })
     }
 
-    function back(){
+    function back() {
         navigation.pop();
     }
 
-    return (    
+    function imagePickerCallback(data) {
+        if (data.didCancel) {
+            console.log(data);
+            return;
+        }
+        if (data.assets[0].error) {
+            console.log(data);
+            return;
+        }
+        if (!data.assets[0].uri) {
+            console.log(data);
+            return;
+        }
+
+        setImage(data);
+        setViewAvatar(false)
+    }
+
+    return (
         <View style={style.container}>
-            <StatusBar backgroundColor='#d2583a' barStyle='light-content'/>   
-            <Animatable.Text animation="fadeInLeft" duration={500} style={style.title}>Cadastre-se</Animatable.Text>            
-            <View style={style.containerForm}>   
-                <TextInput style={style.inputHead} placeholder='Nome' onChangeText={ (value) => setName(value)}/>
-                <TextInput style={style.input} placeholder='Sobrenome' onChangeText={ (value) => setLastName(value)}/>           
-                <TextInput style={style.input} placeholder='Email' autoCapitalize = 'none' onChangeText={ (value) => setEmail(value)}/>
-                <TextInput style={style.input} placeholder='Senha' autoCapitalize = 'none' secureTextEntry onChangeText={ (value) => setPassword(value)}/>
-                <TextInput style={style.input} placeholder='Confirme a senha' autoCapitalize = 'none' secureTextEntry onChangeText={ (value) => setPasswordConfirm(value)}/>
-                <TouchableOpacity style={style.containerButton} onPress={Register}>
-                    <Text style={style.textButton}>Registrar</Text>
-                </TouchableOpacity>        
-            </View>
-            
-            <TouchableOpacity style={style.containerBack} onPress={back}>
-                <Icon name="reply-all" size={20} style={{ color: '#FFF'}} />
-                <Text style={style.textBack}>Já possuo uma conta</Text>
-            </TouchableOpacity>
+            <StatusBar backgroundColor='#d2583a' barStyle='light-content' />
+            <ScrollView>
+                <Animatable.Text animation="fadeInLeft" duration={500} style={style.title}>Cadastre-se</Animatable.Text>
+                <View style={style.containerForm}>
+                    <TextInput style={style.inputHead} placeholder='Nome' onChangeText={(value) => setName(value)} />
+                    <TextInput style={style.input} placeholder='Sobrenome' onChangeText={(value) => setLastName(value)} />
+                    <TextInput style={style.input} placeholder='Email' autoCapitalize='none' onChangeText={(value) => setEmail(value)} />
+                    <TextInput style={style.input} placeholder='Senha' autoCapitalize='none' secureTextEntry onChangeText={(value) => setPassword(value)} />
+                    <TextInput style={style.input} placeholder='Confirme a senha' autoCapitalize='none' secureTextEntry onChangeText={(value) => setPasswordConfirm(value)} />
 
-            { !isEmaiIncorrect ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.emailInvalid}>
-            
-              <Text style={style.textMsg}>O e-mail informado é invalido</Text>
-            </Animatable.View>
-            }   
+                    <TouchableOpacity style={style.button_search_image} onPress={() => setViewAvatar(true)}>
+                        <Image source={image ? { uri: image.assets[0].uri } : require('../../assets/image/avatarMissing.png')} style={style.avatar} />
+                        <Text style={style.text_button_search_image}>Escolher Avatar</Text>
+                    </TouchableOpacity>
 
-            { !isPassIncorrect ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.passInvalid}>
-            
-              <Text style={style.textMsg}>As senhas não coincidem</Text>
-            </Animatable.View>
-            }   
-        
-            { !isFieldEmpty ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.fieldEmpty}>
-            
-              <Text style={style.textMsg}>Preencha todos os campos</Text>
-            </Animatable.View>
-            }   
+                    <TouchableOpacity style={style.containerButton} onPress={Register}>
+                        <Text style={style.textButton}>Registrar</Text>
+                    </TouchableOpacity>
+                </View>
 
-            { !isPassLower ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.fieldEmpty}>
-            
-              <Text style={style.textMsg}>A senha deve conter no minimo 6 caracteres</Text>
-            </Animatable.View>
-            }   
-        </View>    
+                <TouchableOpacity style={style.containerBack} onPress={back}>
+                    <Entypo name="reply-all" size={20} style={{ color: '#FFF' }} />
+                    <Text style={style.textBack}>Já possuo uma conta</Text>
+                </TouchableOpacity>
+            </ScrollView>
+
+            {!isEmaiIncorrect ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.emailInvalid}>
+
+                    <Text style={style.textMsg}>O e-mail informado é invalido</Text>
+                </Animatable.View>
+            }
+
+            {!isPassIncorrect ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.passInvalid}>
+
+                    <Text style={style.textMsg}>As senhas não coincidem</Text>
+                </Animatable.View>
+            }
+
+            {!isFieldEmpty ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.fieldEmpty}>
+
+                    <Text style={style.textMsg}>Preencha todos os campos</Text>
+                </Animatable.View>
+            }
+
+            {!isPassLower ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.fieldEmpty}>
+
+                    <Text style={style.textMsg}>A senha deve conter no minimo 6 caracteres</Text>
+                </Animatable.View>
+            }
+
+            {!viewAvatar ? null :
+                <Animatable.View animation='bounceInUp' duration={2000} style={style.container_avatar}>
+                    <View style={style.container_buttons_media}>
+                        <TouchableOpacity style={style.button_media_library} onPress={() => { launchImageLibrary({}, imagePickerCallback) }}>
+                            <MaterialCommunityIcons name='folder-multiple-image' size={20} style={style.icon_galery} />
+                            <Text style={style.text_button_media_library}>Galeria</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={style.button_media_camera} onPress={() => { launchCamera({}, imagePickerCallback) }}>
+                            <FontAwesome name='camera' size={20} style={style.icon_camera} />
+                            <Text style={style.text_button_media_camera}>Camera</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.container_list_avatar}>
+                        <FlatList data={avatarMonster} horizontal={false} numColumns={2} keyExtractor={item => item.title} renderItem={({ item, key }) => {
+                            return (
+                                <TouchableOpacity style={style.button_avatar} >
+                                    <Image source={item} key={key} style={style.avatar_monster} />
+                                </TouchableOpacity>
+                            )
+                        }} />
+                    </View>
+                    <TouchableOpacity style={style.button_close_view_avatar} onPress={() => setViewAvatar(false)}>
+                        <Text style={style.text_button_close_view_avatar}>Fechar</Text>
+                    </TouchableOpacity>
+                </Animatable.View>
+            }
+        </View>
     );
 }
-
-
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#d2583a',
-    },
-    inputHead:{
-        backgroundColor: '#FFFFFF',
-        width: '90%',      
-        marginBottom: 10,
-        marginTop: 10,
-        borderRadius: 10,
-        fontSize: 20,
-        padding: 10,     
-    },
-    input:{
-        backgroundColor: '#FFFFFF',
-        width: '90%',      
-        marginBottom: 10,
-        borderRadius: 10,
-        fontSize: 20,
-        padding: 10,
-        alignItems: 'center',
-    },
-    containerForm:{
-        alignItems : 'center'
-    },
-    containerButton:{
-        padding: 15,
-        backgroundColor: '#1b2d94',
-        width: '90%',
-        alignItems: 'center',
-        marginTop: 10,
-        borderRadius: 10,
-    },
-    textButton:{
-        color: '#FFF',
-        fontWeight: 'bold',
-        fontSize: 18
-    },
-    title:{
-        marginTop: 40,
-        marginLeft: 20,
-        fontWeight: 'bold',
-        fontSize: 30,
-        color: '#FFF',
-    },    
-    containerBack:{
-        paddingLeft: 20,
-        marginTop: 40,
-        flexDirection: 'row',
-    },
-    textBack:{
-        color: '#FFF',
-        fontWeight: 'bold',
-        fontSize: 15,
-        textAlign: 'left',
-        marginLeft: 8,
-    },
-    containerforgot:{
-        paddingLeft: 20,
-        marginTop: 10,
-        flexDirection: 'row',
-    },
-    textMsg:{
-        fontSize: 16,
-        color: '#FFF'
-    },
-    emailInvalid:{
-        position: 'absolute',
-        padding: 10,
-        backgroundColor: 'red',
-        borderTopEndRadius: 20,
-        borderBottomEndRadius: 20,
-    },
-    passInvalid:{
-        position: 'absolute',
-        padding: 10,
-        backgroundColor: 'orange',
-        borderTopEndRadius: 20,
-        borderBottomEndRadius: 20,
-    },
-    fieldEmpty:{
-        position: 'absolute',
-        padding: 10,
-        backgroundColor: 'blue',
-        borderTopEndRadius: 20,
-        borderBottomEndRadius: 20,
-    }
-})

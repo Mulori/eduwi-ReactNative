@@ -84,7 +84,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
     }
 
     function SearchImage(){
-
+        navigation.navigate('testee', {})
     }
 
     return(
@@ -130,7 +130,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
                             </TouchableOpacity>
                         </View>   
 
-                        <TouchableOpacity style={{ padding: 10, backgroundColor: 'orange'}} onPress={() => {SearchImage}}>
+                        <TouchableOpacity style={{ padding: 10, backgroundColor: 'orange'}} onPress={SearchImage}>
                             <Text>Imagem</Text>
                         </TouchableOpacity>                   
                     </ScrollView>                            

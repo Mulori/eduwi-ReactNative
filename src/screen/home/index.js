@@ -25,6 +25,7 @@ import sentencesUsers from '../mainActivity/response/sentencesUsers';
 import responseSentenceUser from '../mainActivity/response/responseSentenceUser';
 import responseQuestionUser from '../mainActivity/response/responseQuestionUser';
 import activitypage from '../mainActivity/activity';
+import teste from '../teste/';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,7 @@ export default function Home() {
             <Stack.Screen name='newActivitySentence' options={{ headerShown: false }} component={newActivitySentence} />
             <Stack.Screen name='responsesentences' options={{ headerShown: false }} component={responseSentences} />  
             <Stack.Screen name='activity' options={{ headerShown: false, }} component={activitypage} />   
+            <Stack.Screen name='testee' component={teste} />   
             <Stack.Screen name='sentencesUsers' 
             options={{ 
                 headerTitle: 'Respostas do Participante', 
