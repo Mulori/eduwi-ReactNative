@@ -9,37 +9,25 @@ import auth from '@react-native-firebase/auth';
 import userServices from '../../services/userService/userService';
 import style from './styles.js'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import styles from './styles.js';
+import RNFS from 'react-native-fs';
 
 export default function Register({ navigation }) {
-    const [name, setName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirm, setPasswordConfirm] = useState('')
-    const [isEmaiIncorrect, setEmailIncorrect] = useState(false)
-    const [isPassIncorrect, setPassIncorrect] = useState(false)
-    const [isFieldEmpty, setisFieldEmpty] = useState(false)
-    const [isPassLower, setisPassLower] = useState(false)
+    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [isEmaiIncorrect, setEmailIncorrect] = useState(false);
+    const [isPassIncorrect, setPassIncorrect] = useState(false);
+    const [isFieldEmpty, setisFieldEmpty] = useState(false);
+    const [isPassLower, setisPassLower] = useState(false);
     const [viewAvatar, setViewAvatar] = useState(false);
     const [image, setImage] = useState(null);
-
-    const [avatarMonster, setAvatarMonster] = useState([
-        require('../../assets/image/m_befre.png'),
-        require('../../assets/image/m_big-blue.png'),
-        require('../../assets/image/m_crazy.png'),
-        require('../../assets/image/m_ding.png'),
-        require('../../assets/image/m_goe.png'),
-        require('../../assets/image/m_kalef.png'),
-        require('../../assets/image/m_nuy.png'),
-        require('../../assets/image/m_tree.png'),
-        require('../../assets/image/m_phin.png'),
-    ]);
+    const [isImageNull, setIsImageNull] = useState(false);
 
     const validator = require('validator');
 
     function Register() {
-
         const name_clean = name.trim()
         const last_name_clean = lastName.trim()
         const email_clean = email.trim()
@@ -74,26 +62,44 @@ export default function Register({ navigation }) {
             setisPassLower(false);
         }
 
+        if (!image) {
+            setIsImageNull(true);
+            return;
+        } else {
+            setIsImageNull(false);
+        }
+
+        
+
         auth()
             .createUserWithEmailAndPassword(email_clean, password_clean)
             .then((ok) => {
-                let data = {
-                    firebase_uid: ok.user.uid,
-                    email: ok.user.email,
-                    name: name_clean,
-                    last_name: last_name_clean
-                }
-
-                userServices.userCreate(data)
+                RNFS.readFile(image.assets[0].uri, 'base64')
+                .then(res =>{
+                    let data = {
+                        firebase_uid: ok.user.uid,
+                        email: ok.user.email,
+                        name: name_clean,
+                        last_name: last_name_clean,
+                        avatar: res,
+                        avatar_format: image.assets[0].type + '|' + image.assets[0].width + '|' + image.assets[0].height
+                    }
+    
+                    userServices.userCreate(data)
                     .then((response) => {
                         navigation.pop();
                         Alert.alert('Sucesso', 'Conta criada com sucesso!', [{ text: 'Ok', style: 'destructive', }]);
-
+    
                     })
                     .catch((error) => {
                         console.log(error);
                         Alert.alert('Erro', 'Ocorreu um problema ao criar a conta', [{ text: 'Ok', style: 'destructive', }]);
                     })
+                })
+                .catch(cat => {
+                    console.log(cat);
+                });
+                
             })
             .catch((erro) => {
                 Alert.alert("Erro", erro);
@@ -136,7 +142,7 @@ export default function Register({ navigation }) {
 
                     <TouchableOpacity style={style.button_search_image} onPress={() => setViewAvatar(true)}>
                         <Image source={image ? { uri: image.assets[0].uri } : require('../../assets/image/avatarMissing.png')} style={style.avatar} />
-                        <Text style={style.text_button_search_image}>Escolher Avatar</Text>
+                        <Text style={style.text_button_search_image}>Escolher Foto</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={style.containerButton} onPress={Register}>
@@ -178,6 +184,13 @@ export default function Register({ navigation }) {
                 </Animatable.View>
             }
 
+            {!isImageNull ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.fieldEmpty}>
+
+                    <Text style={style.textMsg}>Insira uma imagem de perfil</Text>
+                </Animatable.View>
+            }
+
             {!viewAvatar ? null :
                 <Animatable.View animation='bounceInUp' duration={2000} style={style.container_avatar}>
                     <View style={style.container_buttons_media}>
@@ -189,15 +202,6 @@ export default function Register({ navigation }) {
                             <FontAwesome name='camera' size={20} style={style.icon_camera} />
                             <Text style={style.text_button_media_camera}>Camera</Text>
                         </TouchableOpacity>
-                    </View>
-                    <View style={styles.container_list_avatar}>
-                        <FlatList data={avatarMonster} horizontal={false} numColumns={2} keyExtractor={item => item.title} renderItem={({ item, key }) => {
-                            return (
-                                <TouchableOpacity style={style.button_avatar} >
-                                    <Image source={item} key={key} style={style.avatar_monster} />
-                                </TouchableOpacity>
-                            )
-                        }} />
                     </View>
                     <TouchableOpacity style={style.button_close_view_avatar} onPress={() => setViewAvatar(false)}>
                         <Text style={style.text_button_close_view_avatar}>Fechar</Text>

@@ -46,6 +46,22 @@ class mainService{
             return Promise.reject(error);
         })        
     };
+
+    async Put(route, firebase_uid, data){
+        return axios({
+            url: "http://137.184.207.191:8182" + route,
+            method: "PUT",
+            timeout: 5000,
+            data: data,
+            headers:{
+                firebase_uid: firebase_uid
+            }
+        }).then((response) => {
+            return Promise.resolve(response);
+        }).catch((error) => {
+            return Promise.reject(error);
+        })        
+    };
 }
 
 const mainServices = new mainService()

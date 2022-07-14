@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     container_avatar:{
         backgroundColor: '#FFF',
         width: '100%',
-        height: '60%',
+        height: '15%',
         bottom: 0,
         position: 'absolute',
         borderTopEndRadius: 25,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     },
     container_buttons_media:{
         width: '100%',
-        height: '15%',
+        height: '60%',
         borderTopStartRadius: 25,
         borderTopEndRadius: 25,
         flexDirection: 'row',
@@ -159,18 +159,6 @@ const styles = StyleSheet.create({
     icon_camera: {
         color: '#FFF',
     },
-    avatar_monster: {
-        width: 100, 
-        height: 100
-    },
-    container_list_avatar:{
-        marginTop: 5,
-        height: '70%',
-    },
-    button_avatar: {
-        marginLeft: 50,
-        padding: 10,
-    }
 })
 
 export default styles;
