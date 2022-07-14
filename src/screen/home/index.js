@@ -26,6 +26,7 @@ import responseSentenceUser from '../mainActivity/response/responseSentenceUser'
 import responseQuestionUser from '../mainActivity/response/responseQuestionUser';
 import activitypage from '../mainActivity/activity';
 import teste from '../teste/';
+import viewerImage from '../viewerImage';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,17 +57,12 @@ export default function Home() {
             <Stack.Screen name='responsesentences' options={{ headerShown: false }} component={responseSentences} />  
             <Stack.Screen name='activity' options={{ headerShown: false, }} component={activitypage} />   
             <Stack.Screen name='testee' component={teste} />   
+            <Stack.Screen name='viewerImage' component={viewerImage} options={{ headerTitle: 'Imagem', headerStyle: { backgroundColor: '#000',  color: '#000'}, headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />   
             <Stack.Screen name='sentencesUsers' 
             options={{ 
                 headerTitle: 'Respostas do Participante', 
-                headerStyle: { 
-                    backgroundColor: '#582770', 
-                    color: '#FFF' 
-                }, 
-                headerTitleStyle: { 
-                    color: '#FFF' 
-                },
-                headerTintColor: '#FFF',
+                headerStyle: { backgroundColor: '#582770', color: '#FFF' }, 
+                headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
                 }} component={sentencesUsers} />     
             <Stack.Screen name='responseSentenceUser' 
             options={{ 
