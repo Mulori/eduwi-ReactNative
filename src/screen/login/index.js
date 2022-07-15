@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, Text, View, SafeAreaView, StyleSheet, TextInput, Alert, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo'
 import LottieCrashHead from '../../components/lotties/crashHead';
@@ -16,15 +16,15 @@ export default function Login({ navigation }) {
 
     const validator = require('validator');
 
-    function Login(){
+    function Login() {
 
         setUserIncorrect(false);
         setSendEmail(false);
 
-        if(!email || !password){
+        if (!email || !password) {
             setisFieldEmpty(true);
             return;
-        }else{
+        } else {
             setisFieldEmpty(false);
         }
 
@@ -36,109 +36,109 @@ export default function Login({ navigation }) {
         }
 
         auth()
-        .signInWithEmailAndPassword(email, password)
-        .then()
-        .catch((erro) => {
-            console.log(erro);
-            if (erro.code === 'auth/user-not-found'){
-                setTextMessage('Email e/ou senha invalido(s)');
-                setUserIncorrect(true);
-                return;
-            }
-            if (erro.code === 'auth/wrong-password'){
-                setTextMessage('Senha incorreta');
-                setUserIncorrect(true);
-                return;
-            }
-            if (erro.code === 'auth/too-many-requests'){
-                setTextMessage('Usuário bloqueado temporariamente');
-                setUserIncorrect(true);
-                return;
-            }
-        })
-        .finally(() => {
+            .signInWithEmailAndPassword(email, password)
+            .then()
+            .catch((erro) => {
+                console.log(erro);
+                if (erro.code === 'auth/user-not-found') {
+                    setTextMessage('Email e/ou senha invalido(s)');
+                    setUserIncorrect(true);
+                    return;
+                }
+                if (erro.code === 'auth/wrong-password') {
+                    setTextMessage('Senha incorreta');
+                    setUserIncorrect(true);
+                    return;
+                }
+                if (erro.code === 'auth/too-many-requests') {
+                    setTextMessage('Usuário bloqueado temporariamente');
+                    setUserIncorrect(true);
+                    return;
+                }
+            })
+            .finally(() => {
 
-        })
+            })
     }
 
-    function back(){
+    function back() {
         navigation.pop();
     }
 
-    function forgot(){
+    function forgot() {
 
-        if(!email){
+        if (!email) {
             setisFieldEmpty(true);
             return;
-        }else{
+        } else {
             setisFieldEmpty(false);
         }
 
         auth()
-        .sendPasswordResetEmail(email)
-        .then(() => {
-            setSendEmail(true);
-        })
-        .catch((erro) => {
-            console.log(erro);
-            setSendEmail(false);
-        })
+            .sendPasswordResetEmail(email)
+            .then(() => {
+                setSendEmail(true);
+            })
+            .catch((erro) => {
+                console.log(erro);
+                setSendEmail(false);
+            })
     }
 
-    return (    
+    return (
         <View style={style.container}>
-            <StatusBar backgroundColor='#5e17eb' barStyle='light-content'/>
-            <LottieCrashHead />            
-            <Text style={style.title}>Entrar</Text>            
-            <View style={style.containerForm}>                
-                <TextInput style={style.inputHead} placeholder='Email' autoCapitalize='none' keyboardType='email-address' onChangeText={ (value) => setEmail(value)}/>
-                <TextInput style={style.input} placeholder='Senha'  secureTextEntry onChangeText={ (value) => setPassword(value)}/>
+            <StatusBar backgroundColor='#5e17eb' barStyle='light-content' />
+            <LottieCrashHead />
+            <Text style={style.title}>Entrar</Text>
+            <View style={style.containerForm}>
+                <TextInput style={style.inputHead} placeholder='Email' autoCapitalize='none' keyboardType='email-address' onChangeText={(value) => setEmail(value)} />
+                <TextInput style={style.input} placeholder='Senha' secureTextEntry onChangeText={(value) => setPassword(value)} />
+
                 <TouchableOpacity style={style.containerButton} onPress={Login}>
                     <Text style={style.textButton}>Entrar</Text>
+                </TouchableOpacity>
+                {!UserIncorrect
+                    ? null
+                    :
+                    <TouchableOpacity style={style.containerforgot} onPress={forgot}>
+                        <Icon name="emoji-sad" size={20} style={{ color: 'white'}} />
+                        <Text style={style.textBack}>Esqueci minha senha</Text>
+                    </TouchableOpacity>
+                }
 
-                </TouchableOpacity>    
-                { !UserIncorrect 
-                ? null 
-                : 
-                <TouchableOpacity style={style.containerforgot} onPress={forgot}>
-                    <Icon name="emoji-sad" size={20} />
-                    <Text style={style.textBack}>Esqueci minha senha</Text>
-                </TouchableOpacity> 
-                }       
-                    
             </View>
-            
+
             <TouchableOpacity style={style.containerBack} onPress={back}>
-                <Icon name="reply-all" size={20} style={{ color: '#FFF', }}/>
+                <Icon name="reply-all" size={20} style={{ color: '#FFF', }} />
                 <Text style={style.textBack}>Não possuo uma conta</Text>
             </TouchableOpacity>
-            <Icon name="mail" size={20} style={style.iconEmail} />
-            <Icon name="lock" size={20} style={style.iconPass} />
 
-            { !isFieldEmpty ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.fieldEmpty}>            
-              <Text style={style.textMsg}>Preencha todos os campos</Text>
-            </Animatable.View>
-            } 
 
-            { !EmailIncorrect ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.emailInvalid}>            
-              <Text style={style.textMsg}>O e-mail informado é invalido</Text>
-            </Animatable.View>
-            } 
 
-            { !UserIncorrect ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.userInvalid}>            
-              <Text style={style.textMsg}>{textMessage}</Text>
-            </Animatable.View>
-            } 
-
-            { !sendEmail ? null : 
-            <Animatable.View  animation="fadeInLeft" duration={500} style={style.sendEmail}>            
-              <Text style={style.textMsg}>Email de redefinição de senha enviado</Text>
-            </Animatable.View>
+            {!isFieldEmpty ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.fieldEmpty}>
+                    <Text style={style.textMsg}>Preencha todos os campos</Text>
+                </Animatable.View>
             }
-        </View>    
+
+            {!EmailIncorrect ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.emailInvalid}>
+                    <Text style={style.textMsg}>O e-mail informado é invalido</Text>
+                </Animatable.View>
+            }
+
+            {!UserIncorrect ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.userInvalid}>
+                    <Text style={style.textMsg}>{textMessage}</Text>
+                </Animatable.View>
+            }
+
+            {!sendEmail ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.sendEmail}>
+                    <Text style={style.textMsg}>Email de redefinição de senha enviado</Text>
+                </Animatable.View>
+            }
+        </View>
     );
 }
 
@@ -148,33 +148,30 @@ const style = StyleSheet.create({
         flex: 1,
         backgroundColor: '#5e17eb',
     },
-    inputHead:{
+    inputHead: {
         backgroundColor: '#FFFFFF',
-        width: '90%',      
+        width: '90%',
         marginBottom: 10,
         marginTop: 10,
         borderRadius: 10,
         fontSize: 20,
-        padding: 10,        
-        paddingLeft: 35,
+        padding: 10,
     },
-    input:{
+    input: {
         backgroundColor: '#FFFFFF',
-        width: '90%',      
+        width: '90%',
         marginBottom: 10,
         borderRadius: 10,
         fontSize: 20,
         padding: 10,
-        alignItems: 'center',
-        paddingLeft: 35,
     },
-    button:{
+    button: {
         borderRadius: 10
     },
-    containerForm:{
-        alignItems : 'center'
+    containerForm: {
+        alignItems: 'center'
     },
-    containerButton:{
+    containerButton: {
         padding: 15,
         backgroundColor: '#d2583a',
         width: '90%',
@@ -182,34 +179,23 @@ const style = StyleSheet.create({
         marginTop: 15,
         borderRadius: 10,
     },
-    textButton:{
+    textButton: {
         color: '#FFF',
         fontWeight: 'bold',
         fontSize: 18
     },
-    title:{
+    title: {
         marginTop: 60,
         marginLeft: 20,
         fontWeight: 'bold',
         fontSize: 30,
         color: '#FFF',
     },
-    iconEmail:{
-        position: 'absolute',
-        marginTop: 275,
-        marginLeft: 28,
-    },
-    iconPass:{
-        position: 'absolute',
-        marginTop: 331,
-        marginLeft: 28,
-    },
-    containerBack:{
-        paddingLeft: 20,
-        marginTop: 40,
+    containerBack: {
         flexDirection: 'row',
+        margin: 20,
     },
-    textBack:{
+    textBack: {
         color: '#000000',
         fontWeight: 'bold',
         fontSize: 15,
@@ -217,37 +203,36 @@ const style = StyleSheet.create({
         marginLeft: 8,
         color: '#FFF',
     },
-    containerforgot:{
-        paddingLeft: 20,
+    containerforgot: {
         marginTop: 10,
         flexDirection: 'row',
     },
-    textMsg:{
+    textMsg: {
         fontSize: 16,
         color: '#FFF'
     },
-    emailInvalid:{
+    emailInvalid: {
         position: 'absolute',
         padding: 10,
         backgroundColor: 'red',
         borderTopEndRadius: 20,
         borderBottomEndRadius: 20,
     },
-    userInvalid:{
+    userInvalid: {
         position: 'absolute',
         padding: 10,
         backgroundColor: 'orange',
         borderTopEndRadius: 20,
         borderBottomEndRadius: 20,
     },
-    fieldEmpty:{
+    fieldEmpty: {
         position: 'absolute',
         padding: 10,
         backgroundColor: 'blue',
         borderTopEndRadius: 20,
         borderBottomEndRadius: 20,
     },
-    sendEmail:{
+    sendEmail: {
         position: 'absolute',
         padding: 10,
         backgroundColor: 'green',
