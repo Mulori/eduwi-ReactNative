@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, ImageBackground, StyleSheet, StatusBar, FlatList, Image, Alert, Modal, ActivityIndicator } from 'react-native';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import activityServices from '../../services/activityService/activityService';
 import MainService from '../../services/mainService/mainService'
 import VG from '../../components/variables/VG';
@@ -10,12 +9,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import styles from './styles';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
+import ModuleStorage from '../../services/storage';
 
 export default function myProfile({ navigation }) {
     const [data, setData] = useState(null);
     const [dataReward, setDataReward] = useState(null);
-    const [imageDecode, setImageDecode] = useState(null);
     const [viewAvatar, setViewAvatar] = useState(false);
     const [image, setImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +24,7 @@ export default function myProfile({ navigation }) {
             .then((response) => {
                 setData(response.data);
                 console.log(response.data)
-                setImageDecode('data:' + response.data.avatar_format.split('|')[0] + ';base64,' + response.data.avatar_base64)
+                setImage(response.data.image_url)
                 setIsLoading(false)
             })
             .catch((error) => {
@@ -44,48 +42,70 @@ export default function myProfile({ navigation }) {
             })
     }
 
-    function imagePickerCallback(data) {
-        if (data.didCancel) {
-            console.log(data);
+    async function imagePickerCallback(data_) {
+        if (data_.didCancel) {
+            console.log(data_);
             return;
         }
-        if (data.assets[0].error) {
-            console.log(data);
+        if (data_.assets[0].error) {
+            console.log(data_);
             return;
         }
-        if (!data.assets[0].uri) {
-            console.log(data);
+        if (!data_.assets[0].uri) {
+            console.log(data_);
             return;
         }
 
-        setImage(data);
         setViewAvatar(false)
         setIsLoading(true);
 
-        RNFS.readFile(data.assets[0].uri, 'base64')
-            .then(res => {
-                let data_put = {
-                    avatar: res,
-                    avatar_format: data.assets[0].type + '|' + data.assets[0].width + '|' + data.assets[0].height
-                }
-                console.log(data_put)
-                MainService.Put('/users/image', VG.user_uid, data_put)
-                    .then((response) => {
-                        GetUser();
-                        Alert.alert('Sucesso', 'Image alterada!', [{ text: 'Ok', style: 'destructive', }]);
-                        setImageDecode(data.assets[0].uri)
-                        setIsLoading(false);
+        await ModuleStorage.SendFileStorage('user/profile/image/' + data_.assets[0].fileName, data_.assets[0].uri)
+            .then(async () => {
+                await ModuleStorage.GetFileStorage('user/profile/image/' + data_.assets[0].fileName)
+                    .then( async (value) => {
+                        if(data.image_url){
+                            const retorno = await ModuleStorage.DeleteStorage(data.image_url);
+                        }
+
+                        let data_image = {
+                            image_reference: 'user/profile/image/' + data_.assets[0].fileName,
+                            image_url: value,
+                            image_type: data_.assets[0].type,
+                            image_size_wh: data_.assets[0].width + '|' + data_.assets[0].height,
+                        }
+
+                        console.log(data_image)
+
+                        await UpdateImage(data_image).then(() => {
+                            setImage(value.toString())
+                            setIsLoading(false);
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                            setIsLoading(false);
+                        })                        
                     })
                     .catch((error) => {
-                        console.log(error);
-                        Alert.alert('Erro', 'Ocorreu um problema ao alterar a imagem.', [{ text: 'Ok', style: 'destructive', }]);
+                        console.log(error)
                         setIsLoading(false);
                     })
             })
-            .catch(cat => {
-                Alert.alert('Erro', 'Ocorreu um problema ao converter a imagem.' + cat, [{ text: 'Ok', style: 'destructive', }]);
+            .catch((imageUrlError) => {
                 setIsLoading(false);
-            });
+                console.log(imageUrlError)
+            })
+    }
+
+    async function UpdateImage(data_) {
+        await MainService.Put('/users/image', VG.user_uid, data_)
+            .then((response) => {
+                console.log(response);
+                return true;
+            })
+            .catch((error) => {
+                console.log(error);
+                return false;
+            })
     }
 
     useEffect(() => {
@@ -99,11 +119,11 @@ export default function myProfile({ navigation }) {
             <View style={{ alignItems: 'center' }}>
                 <View>
                     <TouchableOpacity onPress={() => {
-                        if (imageDecode) {
-                            navigation.navigate('viewerImage', { data: data, imageDecode: imageDecode })
+                        if (image) {
+                            navigation.navigate('viewerImage', { url: image })
                         }
                     }}>
-                        <Image source={imageDecode ? { uri: imageDecode } : require('../../assets/image/avatarMissing.png')} style={{ width: 150, height: 150, borderRadius: 75, marginTop: 20 }} />
+                        <Image source={image ? { uri : image } : require('../../assets/image/avatarMissing.png')} style={{ width: 150, height: 150, borderRadius: 75, marginTop: 20 }} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => setViewAvatar(true)}
