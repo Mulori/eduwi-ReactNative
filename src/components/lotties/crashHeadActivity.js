@@ -9,7 +9,6 @@ export default function LottieCrashHeadActivity() {
         width: 140,
         height: 140,
         alignSelf: 'center',
-        marginTop: 10
       }}
       autoPlay
       source={require('../../assets/lottie/crashHeadActivity.json')}

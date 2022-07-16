@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, ActivityIndicator, Image, Modal } from 'react-native';
 import LottieCrashHeadActivity from '../../../components/lotties/crashHeadActivity'
 import Icon from 'react-native-vector-icons/Entypo';
 import * as Animatable from 'react-native-animatable';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
+import styles_main from '../../../../styles';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 export default function newActivityQuestionMain({ navigation, route }) {
     const { types } = route.params;
@@ -14,7 +18,10 @@ export default function newActivityQuestionMain({ navigation, route }) {
     const [password, setPassword] = useState(null);
     const [error, setError] = useState(false);
     const [msgErro, setMsgErro] = useState(null);
+    const [viewAvatar, setViewAvatar] = useState(false);
+    const [image, setImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => {
         switch(types){
@@ -83,8 +90,25 @@ export default function newActivityQuestionMain({ navigation, route }) {
         DeleteActivityTemp();       
     }
 
-    function SearchImage(){
-        navigation.navigate('testee', {})
+    async function imagePickerCallback(data_) {
+        setIsLoading(true);
+
+        if (data_.didCancel) {
+            console.log(data_);
+            return;
+        }
+        if (data_.assets[0].error) {
+            console.log(data_);
+            return;
+        }
+        if (!data_.assets[0].uri) {
+            console.log(data_);
+            return;
+        }
+
+        setViewAvatar(false);        
+        setImage(data_);
+        setIsLoading(false);
     }
 
     return(
@@ -95,6 +119,12 @@ export default function newActivityQuestionMain({ navigation, route }) {
                     <ScrollView>
                         <LottieCrashHeadActivity />
                         <Text style={{marginTop: '5%', fontSize: 25, fontWeight: 'bold', textAlign: 'center',  color: activity.main_color}}>{activity.bigTitle}</Text>   
+                        <View style={{ alignItems: 'center', marginTop: 5}}>
+                            <TouchableOpacity style={{ alignItems: 'center'}} onPress={() => setViewAvatar(true)}>
+                                <Image source={image ? { uri : image.assets[0].uri } : require('../../../assets/image/imageNotFound.png')} style={{ width: 50, height: 50, borderRadius: 75, }} />
+                                <Text style={{ color: activity.main_color, fontWeight: 'bold'}} >Imagem</Text>
+                            </TouchableOpacity> 
+                        </View>                         
                         <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Nome da Atividade *</Text>   
                         <View style={{alignItems: 'center'}}>
                             <TextInput style={style.inputs} placeholderTextColor={activity.main_color} maxLength={40} onChangeText={(value) => setTitle(value)} placeholder={activity.placeholder} /> 
@@ -128,11 +158,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
                                         </View>
                                     }                     
                             </TouchableOpacity>
-                        </View>   
-
-                        <TouchableOpacity style={{ padding: 10, backgroundColor: 'orange'}} onPress={SearchImage}>
-                            <Text>Imagem</Text>
-                        </TouchableOpacity>                   
+                        </View>     
                     </ScrollView>                            
                 </View>                
             </View>  
@@ -141,6 +167,28 @@ export default function newActivityQuestionMain({ navigation, route }) {
                     <Text style={style.textMsg}>{msgErro}</Text>
                 </Animatable.View>
             }  
+            {!viewAvatar ? null :
+                <Animatable.View animation='bounceInUp' duration={2000} style={styles_main.container_avatar}>
+                    <View style={styles_main.container_buttons_media}>
+                        <TouchableOpacity style={styles_main.button_media_library} onPress={() => { launchImageLibrary({}, imagePickerCallback) }}>
+                            <MaterialCommunityIcons name='folder-multiple-image' size={20} style={styles_main.icon_galery} />
+                            <Text style={styles_main.text_button_media_library}>Galeria</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles_main.button_media_camera} onPress={() => { launchCamera({}, imagePickerCallback) }}>
+                            <FontAwesome name='camera' size={20} style={styles_main.icon_camera} />
+                            <Text style={styles_main.text_button_media_camera}>Camera</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles_main.button_close_view_avatar} onPress={() => setViewAvatar(false)}>
+                        <Text style={styles_main.text_button_close_view_avatar}>Fechar</Text>
+                    </TouchableOpacity>
+                </Animatable.View>
+            }
+            <Modal style={styles_main.modalLoading} visible={isLoading}>
+                <View style={[styles_main.containerLoad, styles_main.horizontal]}>
+                    <ActivityIndicator size="large" color="green" />
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -154,7 +202,8 @@ const style = StyleSheet.create({
         padding: 10,
     },
     inputs:{
-        borderBottomWidth: 1,
+        borderBottomWidth: 2,
+        borderColor: '#474ebb',
         width: '90%',
         color: '#000000',
     },
