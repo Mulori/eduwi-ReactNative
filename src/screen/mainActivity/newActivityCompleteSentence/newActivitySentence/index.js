@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, StatusBar, ScrollView, Alert, FlatList, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../../components/variables/VG';
 import MainService from '../../../../services/mainService/mainService';
@@ -8,11 +9,13 @@ import LottieFinishBlue from '../../../../components/lotties/finishBlue';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModuleStorage from '../../../../services/storage';
 
 export default function newActivitySentence({ navigation, route }) {    
-    const { itens, title, pass, type } = route.params;
+    const { itens, title, pass, type, objImage } = route.params;
     const [activity, setActivity] = useState({})
     const [end, setEnd] = useState(false);
+    const [loadingSend, setLoadingSend] = useState(false);
     var slide = [];
 
     useEffect(() => {
@@ -27,21 +30,54 @@ export default function newActivitySentence({ navigation, route }) {
     }, [])
 
     function FinishEnd(){
-        
+        var data_image = {}
+        setLoadingSend(true);
         firestore()
         .collection('user_activity_build_' + VG.user_uid)
         .get()
-        .then(querySnapshot => {
-            console.log(querySnapshot.size)
+        .then(async querySnapshot => {
+
             if(querySnapshot.size < itens){
                 Alert.alert('Atenção', 'Para concluir a criação da atividade, antes conclua as questões.');
+                setLoadingSend(false);
                 return;
+            }
+
+            if (objImage.assets[0].fileName) {
+                await ModuleStorage.SendFileStorage('activity/image/' + objImage.assets[0].fileName, objImage.assets[0].uri)
+                    .then(async () => {
+                        await ModuleStorage.GetFileStorage('activity/image/' + objImage.assets[0].fileName)
+                            .then((value) => {
+
+                                data_image = {
+                                    image_reference: 'activity/image/' + objImage.assets[0].fileName,
+                                    image_url: value,
+                                    image_type: objImage.assets[0].type,
+                                    image_size_wh: objImage.assets[0].width + '|' + objImage.assets[0].height,
+                                }
+
+                            })
+                            .catch((error) => {
+                                setLoadingSend(false);
+                                console.log(error)
+                                return;
+                            })
+                    })
+                    .catch((imageUrlError) => {
+                        setLoadingSend(false);
+                        console.log(imageUrlError)
+                        return;
+                    })
             }
 
             let data_header = {
                 title: title,
-                password: !pass ? "" : pass, 
-                type_activity: 'sentences'
+                password: !pass ? "" : pass,
+                type_activity: 'questions',
+                image_reference: !data_image ? '' : data_image.image_reference,
+                image_url: !data_image ? '' : data_image.image_url,
+                image_type: !data_image ? '' : data_image.image_type,
+                image_size_wh: !data_image ? '' : data_image.image_size_wh
             }
 
             MainService.Post('/activity', VG.user_uid, data_header)
@@ -64,6 +100,7 @@ export default function newActivitySentence({ navigation, route }) {
                     })
                     .catch((error) => {
                         console.log(error);
+                        setLoadingSend(false);
                         Alert.alert('Erro', 'Ocorreu um problema ao criar uma frase da atividade', [{text: 'Ok',style: 'destructive', }]);
                     })                     
                 });               
@@ -71,13 +108,16 @@ export default function newActivitySentence({ navigation, route }) {
             })
             .catch((error) => {
                 console.log(error);
+                setLoadingSend(false);
                 Alert.alert('Erro', 'Ocorreu um problema ao criar a atividade', [{text: 'Ok',style: 'destructive', }]);
             })            
         })
         .catch(() => {
             Alert.alert('Erro', 'Ocorreu um erro ao concluir a atividade. Tente novamente!')
+            setLoadingSend(false);
         });
 
+        setLoadingSend(false);
     }
     
         
@@ -90,7 +130,7 @@ export default function newActivitySentence({ navigation, route }) {
         const [palavra_pronta, setPalavraPronta] = useState(null); //Esta hook vai ser usada para salvar no banco
         const [isLoading, setIsLoading] = useState(false);
         const [help, setHelp] = useState('');
-
+        
         useEffect(async () => {
             await excluirSalvos()
         }, [])
@@ -218,7 +258,7 @@ export default function newActivitySentence({ navigation, route }) {
                    <View style={{padding: 12, flexDirection: 'row'}}>
                        <Text style={{fontWeight: 'bold',}}>Frase {i + 1}:  Concluida </Text>
                        <View style={{alignItems: 'flex-end'}}>
-                            <Icon name='check-double' size={20} style={{color: '#008000'}}/>
+                            <FontAwesome5 name='check-double' size={20} style={{color: '#008000'}}/>
                        </View>                       
                    </View>
                    :
@@ -275,7 +315,7 @@ export default function newActivitySentence({ navigation, route }) {
                         }} 
                     />  
                     <View>
-                        <TextInput label='Palavras de ajuda (Opcional)' style={style.inputs} placeholder='Digite as palavras' onChangeText={(value) => setHelp(value)}/>  
+                        <TextInput label='Palavras de ajuda (opcional)' style={style.inputs} placeholder='Digite as palavras' onChangeText={(value) => setHelp(value)}/>  
                     </View>                 
                     <TouchableOpacity onPress={Finish} style={{ 
                         backgroundColor: activity.main_color, 
@@ -314,7 +354,11 @@ export default function newActivitySentence({ navigation, route }) {
                         marginBottom: 15,
                         alignItems: 'center',
                     }}>
-                        <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 20}}>Concluir a Atividade</Text>
+                        {
+                            loadingSend 
+                            ? <ActivityIndicator size="large" color="white" />
+                            : <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 20}}>Concluir a Atividade</Text>
+                        }  
                     </TouchableOpacity>
                 </View>                
                 

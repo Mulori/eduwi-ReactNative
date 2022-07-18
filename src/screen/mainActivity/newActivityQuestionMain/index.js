@@ -45,10 +45,10 @@ export default function newActivityQuestionMain({ navigation, route }) {
 
             if(types == 1){
                 setIsLoading(false);
-                navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password, type: types})
+                navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password, type: types, objImage: image})
             }else if(types == 2){
                 setIsLoading(false);
-                navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types})
+                navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types, objImage: image})
             }            
         })
         .catch(() => {
@@ -58,6 +58,16 @@ export default function newActivityQuestionMain({ navigation, route }) {
     }
 
     function handlerNext(){
+
+        if(!image){
+            setMsgErro('Selecione uma imagem para a atividade.')
+            setError(true);
+            return;
+        }
+        else{
+            setMsgErro(null)
+            setError(false);
+        }
 
         if(!title){
             setMsgErro('Informe o nome da atividade.')
@@ -94,15 +104,18 @@ export default function newActivityQuestionMain({ navigation, route }) {
         setIsLoading(true);
 
         if (data_.didCancel) {
+            setIsLoading(false);
             console.log(data_);
             return;
         }
         if (data_.assets[0].error) {
             console.log(data_);
+            setIsLoading(false);
             return;
         }
         if (!data_.assets[0].uri) {
             console.log(data_);
+            setIsLoading(false);
             return;
         }
 
@@ -121,7 +134,7 @@ export default function newActivityQuestionMain({ navigation, route }) {
                         <Text style={{marginTop: '5%', fontSize: 25, fontWeight: 'bold', textAlign: 'center',  color: activity.main_color}}>{activity.bigTitle}</Text>   
                         <View style={{ alignItems: 'center', marginTop: 5}}>
                             <TouchableOpacity style={{ alignItems: 'center'}} onPress={() => setViewAvatar(true)}>
-                                <Image source={image ? { uri : image.assets[0].uri } : require('../../../assets/image/imageNotFound.png')} style={{ width: 50, height: 50, borderRadius: 75, }} />
+                                <Image source={image ? { uri : image.assets[0].uri } : require('../../../assets/image/imageNotFound.png')} style={{ width: 50, height: 50, borderRadius: 15, }} />
                                 <Text style={{ color: activity.main_color, fontWeight: 'bold'}} >Imagem</Text>
                             </TouchableOpacity> 
                         </View>                         
