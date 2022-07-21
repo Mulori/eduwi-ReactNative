@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, ActivityIndicator, Image, Modal } from 'react-native';
 import LottieCrashHeadActivity from '../../../components/lotties/crashHeadActivity'
 import Icon from 'react-native-vector-icons/Entypo';
@@ -9,6 +9,7 @@ import styles_main from '../../../../styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { Picker } from '@react-native-picker/picker';
 
 export default function newActivityQuestionMain({ navigation, route }) {
     const { types } = route.params;
@@ -21,83 +22,85 @@ export default function newActivityQuestionMain({ navigation, route }) {
     const [viewAvatar, setViewAvatar] = useState(false);
     const [image, setImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [tipos, setTipos] = useState(['Fácil', 'Exigente', 'Extremo'])
+    const [tipoSelecionado, setTipoSelecionado] = useState('Fácil')
 
 
     useEffect(() => {
-        switch(types){
+        switch (types) {
             case 1:
-                setActivity({ bigTitle: 'Atividade de Questões', sType: 'Questões', placeholder: 'Ex: Perguntinhas', main_color: '#008000'})
-                break;  
+                setActivity({ bigTitle: 'Atividade de Questões', sType: 'Questões', placeholder: 'Ex: Perguntinhas', main_color: '#008000' })
+                break;
             case 2:
-                setActivity({ bigTitle: 'Atividade Complete a Frase', sType: 'Frases', placeholder: 'Ex: Complete os verbos', main_color: '#D2691E'})
-                break;  
+                setActivity({ bigTitle: 'Atividade Complete a Frase', sType: 'Frases', placeholder: 'Ex: Complete os verbos', main_color: '#D2691E' })
+                break;
         }
     }, [])
 
-    function DeleteActivityTemp(){
+    function DeleteActivityTemp() {
         firestore()
-        .collection('user_activity_build_' + VG.user_uid)
-        .get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(documentSnapshot => {
-                firestore().collection('user_activity_build_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => {}).catch((error) => {});
-            });
+            .collection('user_activity_build_' + VG.user_uid)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
+                    firestore().collection('user_activity_build_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => { }).catch((error) => { });
+                });
 
-            if(types == 1){
+                if (types == 1) {
+                    setIsLoading(false);
+                    navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
+                } else if (types == 2) {
+                    setIsLoading(false);
+                    navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
+                }
+            })
+            .catch(() => {
                 setIsLoading(false);
-                navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password, type: types, objImage: image})
-            }else if(types == 2){
-                setIsLoading(false);
-                navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types, objImage: image})
-            }            
-        })
-        .catch(() => {
-            setIsLoading(false);
-            Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
-        }); 
+                Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');
+            });
     }
 
-    function handlerNext(){
+    function handlerNext() {
 
-        if(!image){
+        if (!image) {
             setMsgErro('Selecione uma imagem para a atividade.')
             setError(true);
             return;
         }
-        else{
+        else {
             setMsgErro(null)
             setError(false);
         }
 
-        if(!title){
+        if (!title) {
             setMsgErro('Informe o nome da atividade.')
             setError(true);
             return;
         }
-        else{
+        else {
             setMsgErro(null)
             setError(false);
         }
 
-        if(!itens){
+        if (!itens) {
             setMsgErro('Informe a quantidade de questões.')
             setError(true);
             return;
         }
-        else{
-            if(itens < 1){
+        else {
+            if (itens < 1) {
                 setMsgErro('A quantidade de questões não pode ser igual a zero.')
                 setError(true);
                 return;
             }
-            else{
+            else {
                 setMsgErro(null)
                 setError(false);
-            }            
+            }
         }
 
         setIsLoading(true);
-        DeleteActivityTemp();       
+        DeleteActivityTemp();
     }
 
     async function imagePickerCallback(data_) {
@@ -119,38 +122,55 @@ export default function newActivityQuestionMain({ navigation, route }) {
             return;
         }
 
-        setViewAvatar(false);        
+        setViewAvatar(false);
         setImage(data_);
         setIsLoading(false);
     }
 
-    return(
-        <View style={{flex: 1}}>
-            <View style={{flex: 1, backgroundColor: activity.main_color,  alignItems: 'center', }}>
+    return (
+        <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: activity.main_color, alignItems: 'center', }}>
                 <StatusBar barStyle='light-content' backgroundColor={activity.main_color} />
-                <View style={style.view}>    
+                <View style={style.view}>
                     <ScrollView>
                         <LottieCrashHeadActivity />
-                        <Text style={{marginTop: '5%', fontSize: 25, fontWeight: 'bold', textAlign: 'center',  color: activity.main_color}}>{activity.bigTitle}</Text>   
-                        <View style={{ alignItems: 'center', marginTop: 5}}>
-                            <TouchableOpacity style={{ alignItems: 'center'}} onPress={() => setViewAvatar(true)}>
-                                <Image source={image ? { uri : image.assets[0].uri } : require('../../../assets/image/imageNotFound.png')} style={{ width: 50, height: 50, borderRadius: 15, }} />
-                                <Text style={{ color: activity.main_color, fontWeight: 'bold'}} >Imagem</Text>
-                            </TouchableOpacity> 
-                        </View>                         
-                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Nome da Atividade *</Text>   
-                        <View style={{alignItems: 'center'}}>
-                            <TextInput style={style.inputs} placeholderTextColor={activity.main_color} maxLength={40} onChangeText={(value) => setTitle(value)} placeholder={activity.placeholder} /> 
-                        </View> 
-                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Senha (opcional)</Text>   
-                        <View style={{alignItems: 'center'}}>
-                            <TextInput style={style.inputs} secureTextEntry autoCapitalize='none' maxLength={10} onChangeText={(value) => setPassword(value)} placeholderTextColor='#008000' /> 
-                        </View> 
-                        <Text style={{marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color}}>Quantidade de {activity.sType} *</Text>   
-                        <View style={{alignItems: 'center'}}>
-                            <TextInput style={style.inputs} onChangeText={(value) => setItens(value)} maxLength={10} keyboardType='numeric' placeholderTextColor='#008000'/> 
-                        </View>     
-                        <View style={{alignItems: 'center', marginTop: 30}}>
+                        <Text style={{ marginTop: '5%', fontSize: 25, fontWeight: 'bold', textAlign: 'center', color: activity.main_color }}>{activity.bigTitle}</Text>
+                        <View style={{ width: '100%', flexDirection: 'row' }}>
+                            <View style={{ alignItems: 'center', marginTop: 5, width: '40%' }}>
+                                <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => setViewAvatar(true)}>
+                                    <Image source={image ? { uri: image.assets[0].uri } : require('../../../assets/image/imageNotFound.png')} style={{ width: 50, height: 50, borderRadius: 15, }} />
+                                    <Text style={{ color: activity.main_color, fontWeight: 'bold' }} >Imagem</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ width: '60%', alignItems: 'center', marginTop: 5, }}>
+                                <Picker
+                                    selectedValue={tipoSelecionado}
+                                    style={style.picker}
+                                    onValueChange={(itemValue) => setTipoSelecionado(itemValue)}>
+                                    {
+                                        tipos.map(cr => {
+                                            return <Picker.Item label={cr} value={cr} style={{ color: 'black', }} />
+                                        })
+                                    }
+                                </Picker>
+                                <Text style={{ color: activity.main_color, fontWeight: 'bold' }} >Nivel de Dificuldade</Text>
+                            </View>
+                        </View>
+
+                        <Text style={{ marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color }}>Nome da Atividade *</Text>
+                        <View style={{ alignItems: 'center' }}>
+                            <TextInput style={style.inputs} placeholderTextColor={activity.main_color} maxLength={40} onChangeText={(value) => setTitle(value)} placeholder={activity.placeholder} />
+                        </View>
+                        <Text style={{ marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color }}>Senha (opcional)</Text>
+                        <View style={{ alignItems: 'center' }}>
+                            <TextInput style={style.inputs} secureTextEntry autoCapitalize='none' maxLength={10} onChangeText={(value) => setPassword(value)} placeholderTextColor='#008000' />
+                        </View>
+                        <Text style={{ marginLeft: '5%', marginTop: '5%', fontSize: 15, fontWeight: 'bold', color: activity.main_color }}>Quantidade de {activity.sType} *</Text>
+                        <View style={{ alignItems: 'center' }}>
+                            <TextInput style={style.inputs} onChangeText={(value) => setItens(value)} maxLength={10} keyboardType='numeric' placeholderTextColor='#008000' />
+                        </View>
+
+                        <View style={{ alignItems: 'center', marginTop: 30 }}>
                             <TouchableOpacity onPress={handlerNext} style={{
                                 backgroundColor: activity.main_color,
                                 width: '90%',
@@ -158,28 +178,28 @@ export default function newActivityQuestionMain({ navigation, route }) {
                                 borderRadius: 13,
                                 padding: 15,
                             }}>
-                                    {
-                                        !isLoading 
+                                {
+                                    !isLoading
                                         ?
-                                        <View style={{ flexDirection: 'row'}}>
-                                            <Text style={{color: '#FFF', fontWeight: 'bold'}}>Proximo</Text>
-                                            <Icon name='chevron-right' style={{color: '#FFF'}} size={20} />
-                                        </View>                                        
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Próximo</Text>
+                                            <Icon name='chevron-right' style={{ color: '#FFF' }} size={20} />
+                                        </View>
                                         :
                                         <View>
-                                            <ActivityIndicator size="large" color="#FFF" /> 
+                                            <ActivityIndicator size="large" color="#FFF" />
                                         </View>
-                                    }                     
+                                }
                             </TouchableOpacity>
-                        </View>     
-                    </ScrollView>                            
-                </View>                
-            </View>  
-            { !error ? null : 
-                <Animatable.View  animation="fadeInLeft" duration={500} style={style.containerError}>                
+                        </View>
+                    </ScrollView>
+                </View>
+            </View>
+            {!error ? null :
+                <Animatable.View animation="fadeInLeft" duration={500} style={style.containerError}>
                     <Text style={style.textMsg}>{msgErro}</Text>
                 </Animatable.View>
-            }  
+            }
             {!viewAvatar ? null :
                 <Animatable.View animation='bounceInUp' duration={2000} style={styles_main.container_avatar}>
                     <View style={styles_main.container_buttons_media}>
@@ -207,27 +227,33 @@ export default function newActivityQuestionMain({ navigation, route }) {
 }
 
 const style = StyleSheet.create({
-    view:{
+    view: {
         backgroundColor: '#FFF',
         borderRadius: 20,
         width: '90%',
         height: '80%',
         padding: 10,
     },
-    inputs:{
+    inputs: {
         borderBottomWidth: 2,
         borderColor: '#474ebb',
         width: '90%',
         color: '#000000',
     },
-    containerError:{
+    picker: {
+        backgroundColor: '#c0c0c0',
+        borderColor: '#474ebb',
+        width: '80%',
+        color: '#000000',
+    },
+    containerError: {
         position: 'absolute',
         padding: 10,
         backgroundColor: 'red',
         borderTopEndRadius: 20,
         borderBottomEndRadius: 20,
     },
-    textMsg:{
+    textMsg: {
         fontSize: 16,
         color: '#FFF'
     },

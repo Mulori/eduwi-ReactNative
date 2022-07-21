@@ -336,7 +336,9 @@ function ListResponse(props){
                         <View>                                   
                             {      
                                 frase == '??'?                          
-                                <TextInput style={{ 
+                                <TextInput 
+                                autoCapitalize='none'
+                                style={{ 
                                     backgroundColor: '#e7e4d5',
                                     borderRadius: 15,
                                     padding: 5, 
