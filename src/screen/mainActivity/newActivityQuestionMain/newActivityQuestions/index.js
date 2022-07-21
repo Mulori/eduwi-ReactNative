@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, Alert } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import firestore from '@react-native-firebase/firestore';
@@ -10,11 +10,38 @@ import * as Animatable from 'react-native-animatable';
 import ModuleStorage from '../../../../services/storage';
 
 export default function newActivityQuestions({ navigation, route }) {
-    const { itens, title, pass, objImage } = route.params;
+    const { itens, title, pass, objImage, tipoSelecionado } = route.params;
     const [end, setEnd] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
+    const [concluded, setConcluded] = useState(false);
     var slide = [];
     const _questions = [];
+    const hasUnsavedChanges = Boolean(concluded);
+
+    React.useEffect(
+        () =>
+            navigation.addListener('beforeRemove', (e) => {
+                if(concluded){
+                    return;
+                }
+
+                e.preventDefault();
+
+                Alert.alert(
+                    'Descartar alterações?',
+                    'Tem certeza que deseja descartá-las e sair da tela?',
+                    [
+                        { text: "Não, quero continuar", style: 'cancel', onPress: () => { } },
+                        {
+                            text: 'Descartar e sair',
+                            style: 'destructive',
+                            onPress: () => navigation.dispatch(e.data.action),
+                        },
+                    ]
+                );
+            }),
+        [navigation, hasUnsavedChanges]
+    );
 
     async function FinishEnd() {
         var data_image = {}
@@ -64,7 +91,8 @@ export default function newActivityQuestions({ navigation, route }) {
                     image_reference: !data_image ? '' : data_image.image_reference,
                     image_url: !data_image ? '' : data_image.image_url,
                     image_type: !data_image ? '' : data_image.image_type,
-                    image_size_wh: !data_image ? '' : data_image.image_size_wh
+                    image_size_wh: !data_image ? '' : data_image.image_size_wh,
+                    difficulty_level: tipoSelecionado
                 }
 
                 ActivityServices.ActivityCreate(data_header, VG.user_uid)
@@ -93,22 +121,21 @@ export default function newActivityQuestions({ navigation, route }) {
                                     Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{ text: 'Ok', style: 'destructive', }]);
                                 })
                         });
+                        setConcluded(true);
                         setEnd(true);
+                        setLoadingSend(false);
                     })
                     .catch((error) => {
                         console.log(error);
                         setLoadingSend(false);
-                        Alert.alert('Erro', 'Ocorreu um problema ao criar a atividade' , [{ text: 'Ok', style: 'destructive', }]);
+                        Alert.alert('Erro', 'Ocorreu um problema ao criar a atividade', [{ text: 'Ok', style: 'destructive', }]);
                     })
             })
             .catch(() => {
                 Alert.alert('Erro', 'Ocorreu um erro ao concluir a atividade. Tente novamente!')
                 setLoadingSend(false);
             });
-
-            setLoadingSend(false);
     }
-
 
     for (let i = 0; i < itens; i++) {
         const [showModal, setShowModal] = useState(true);
@@ -242,10 +269,10 @@ export default function newActivityQuestions({ navigation, route }) {
                             alignItems: 'center',
                         }}>
                         {
-                            loadingSend 
-                            ? <ActivityIndicator size="large" color="white" />
-                            : <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 20}}>Concluir a Atividade</Text>
-                        }  
+                            loadingSend
+                                ? <ActivityIndicator size="large" color="white" />
+                                : <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 20 }}>Concluir a Atividade</Text>
+                        }
                     </TouchableOpacity>
                 </View>
 
@@ -262,6 +289,19 @@ export default function newActivityQuestions({ navigation, route }) {
                     </View>
                 </View>
             }
+
+            {/* <View style={{ flex: 1 }}>
+                <View style={{ width: '80%', height: '50%' }}>
+                    <View style={{ width: '100%', flexDirection: 'row' }}>
+                        <View style={{ width: '30%' }}>
+                            <ActivityIndicator size="large" color="white" />
+                        </View>
+                        <View style={{ width: '70%'}}>
+
+                        </View>
+                    </View>
+                </View>
+            </View> */}
         </View>
     );
 }

@@ -115,7 +115,7 @@ export default function MainActivity({ navigation }) {
             <Text style={{ left: 20, fontSize: 20, fontWeight: 'bold' }}>Atividades Populares</Text>
             </View>
             <ScrollView
-                style={{ width: '100%', }}
+                style={{ width: '100%', height: '100%'}}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -129,10 +129,9 @@ export default function MainActivity({ navigation }) {
                             style={{
                                 width: '100%',
                                 alignItems: 'center',
-                                height: '100%',
                             }}>
                             <TouchableOpacity key={key} onPress={() => { Enter(item) }} style={{
-                                backgroundColor: '#365663',
+                                backgroundColor: '#004c91',
                                 margin: 5,
                                 height: 150,
                                 borderRadius: 15,
@@ -140,15 +139,20 @@ export default function MainActivity({ navigation }) {
                                 width: '90%'
                             }}>
                                 <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ position: 'absolute', color: '#FFF', left: -10, top: -15, fontWeight: 'bold' }}>{key + 1}</Text>
                                     <Image
                                         style={style.logo}
                                         source={item.image_url ? { uri: item.image_url } : require('../../assets/image/imageNotFound.png')}
                                     />
                                     <View>
-                                        <Text style={{color: '#FFF', fontSize: 15, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5 }}>{item.title}</Text>     
+                                        <Text style={{color: '#FFF', fontSize: 18, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5 }}>{item.title}</Text>     
                                     </View>
-                                    <Text style={{ color: '#FFF', position: 'absolute', bottom: 0, left: 115, fontSize: 15 }}>Dificuldade: Média</Text>
+                                    <Text style={{ color: '#FFF', position: 'absolute', bottom: 0, left: 115, fontSize: 15 }}>Dificuldade: {item.difficulty_level}</Text>
                                     <FontAwesome name='star' size={22} style={{ color: '#FFF', position: 'absolute', bottom: 3, right: 20}} />
+                                    {
+                                        key + 1 > 3 ? null :
+                                        <Icon name='medal' size={30} style={{ color: key + 1 == 1 ? '#eaea32' : key + 1 == 2 ? '#c0c0c0' : key + 1 == 3 ? '#996515' : '#FFF', position: 'absolute', top: -20, right: -5}} />
+                                    }
                                     <Text style={{ color: '#FFF', position: 'absolute', bottom: 0, right: 5, fontSize: 22 }}>5</Text>
                                 </View>
 
