@@ -43,7 +43,7 @@ export default function newActivity({ navigation }) {
                         <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#000000'}}>Selecione o Tipo</Text>               
                     </Animatable.View>
                     <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity onPress={() => navigation.navigate('newActivityQuestionMain', { types: 1 })} style={{
+                        <TouchableOpacity onPress={() => navigation.navigate('NewActivityName', { types: 1 })} style={{
                             backgroundColor: '#008000',
                             padding: 15,
                             margin: 10,
@@ -54,7 +54,7 @@ export default function newActivity({ navigation }) {
                             <LottieQuestion />
                             <Text style={{fontWeight: 'bold', color: '#FFF'}}>Questões</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('newActivityQuestionMain', { types: 2 })} style={{
+                        <TouchableOpacity onPress={() => navigation.navigate('NewActivityName', { types: 2 })} style={{
                             backgroundColor: '#D2691E',
                             padding: 15,
                             margin: 10,

@@ -27,6 +27,9 @@ import ResponseQuestionUser from '../mainActivity/response/responseQuestionUser'
 import Activitypage from '../mainActivity/activity';
 import Teste from '../teste/';
 import ViewerImage from '../viewerImage';
+import NewActivityName from '../mainActivity/newActivity/newActivityName';
+import NewActivityImage from '../mainActivity/newActivity/newActivityImage';
+import NewActivityOptions from '../mainActivity/newActivity/newActivityOptions';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +59,9 @@ export default function Home() {
             <Stack.Screen name='newActivitySentence' options={{ headerShown: false }} component={NewActivitySentence} />
             <Stack.Screen name='responsesentences' options={{ headerShown: false }} component={ResponseSentences} />  
             <Stack.Screen name='activity' options={{ headerShown: false, }} component={Activitypage} />   
+            <Stack.Screen name='NewActivityName' options={{ headerShown: false, }} component={NewActivityName} /> 
+            <Stack.Screen name='NewActivityImage' options={{ headerShown: false, }} component={NewActivityImage} /> 
+            <Stack.Screen name='NewActivityOptions' options={{ headerShown: false, }} component={NewActivityOptions} /> 
             <Stack.Screen name='testee' component={Teste} />   
             <Stack.Screen name='viewerImage' component={ViewerImage} options={{ headerTitle: 'Imagem', headerStyle: { backgroundColor: '#000',  color: '#000'}, headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />   
             <Stack.Screen name='sentencesUsers' 
