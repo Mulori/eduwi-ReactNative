@@ -30,6 +30,7 @@ import ViewerImage from '../viewerImage';
 import NewActivityName from '../mainActivity/newActivity/newActivityName';
 import NewActivityImage from '../mainActivity/newActivity/newActivityImage';
 import NewActivityOptions from '../mainActivity/newActivity/newActivityOptions';
+import Sucess from '../sucess';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,7 @@ export default function Home() {
             <Stack.Screen name='NewActivityName' options={{ headerShown: false, }} component={NewActivityName} /> 
             <Stack.Screen name='NewActivityImage' options={{ headerShown: false, }} component={NewActivityImage} /> 
             <Stack.Screen name='NewActivityOptions' options={{ headerShown: false, }} component={NewActivityOptions} /> 
+            <Stack.Screen name='Sucess' options={{ headerShown: false, }} component={Sucess} /> 
             <Stack.Screen name='testee' component={Teste} />   
             <Stack.Screen name='viewerImage' component={ViewerImage} options={{ headerTitle: 'Imagem', headerStyle: { backgroundColor: '#000',  color: '#000'}, headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />   
             <Stack.Screen name='sentencesUsers' 
