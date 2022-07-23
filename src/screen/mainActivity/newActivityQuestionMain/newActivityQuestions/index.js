@@ -122,8 +122,10 @@ export default function newActivityQuestions({ navigation, route }) {
                                 })
                         });
                         setConcluded(true);
-                        setEnd(true);
+                        //setEnd(true);
                         setLoadingSend(false);
+
+                        navigation.navigate('Sucess', { title: 'Atividade Criada', avaliable: true })
                     })
                     .catch((error) => {
                         console.log(error);
