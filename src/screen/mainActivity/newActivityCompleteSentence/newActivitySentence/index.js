@@ -101,7 +101,7 @@ export default function newActivitySentence({ navigation, route }) {
                 let data_header = {
                     title: title,
                     password: !pass ? "" : pass,
-                    type_activity: 'questions',
+                    type_activity: 'sentences',
                     image_reference: !data_image ? '' : data_image.image_reference,
                     image_url: !data_image ? '' : data_image.image_url,
                     image_type: !data_image ? '' : data_image.image_type,
@@ -134,8 +134,16 @@ export default function newActivitySentence({ navigation, route }) {
                                 })
                         });
                         setConcluded(true);
-                        setEnd(true);
+                        //setEnd(true);
                         setLoadingSend(false);
+
+                        navigation.reset({
+                            index: 1,
+                            routes: [
+                                { name: 'Main' },
+                                { name: 'Sucess', params: { title: 'Atividade Criada', avaliable: false, activity_id: 0 }, },
+                            ],
+                        })
                     })
                     .catch((error) => {
                         console.log(error);

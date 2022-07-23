@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, ImageBackground, Modal, FlatList} from 'react-native';
+import { StatusBar, StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, ImageBackground, Modal, FlatList, Image } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Feather';
 import IconFont5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import IconFoundation from 'react-native-vector-icons/Foundation';
 import WindMill from '../../components/lotties/WindMill';
 import mainservices from '../../services/mainService/mainService';
@@ -12,7 +13,7 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 
 
-export default function Main({ navigation }){
+export default function Main({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [configMenu, setConfigMenu] = useState(null);
     const [user, setUser] = useState(null);
@@ -21,220 +22,169 @@ export default function Main({ navigation }){
     useEffect(() => {
         setIsLoading(true);
         GetUser();
-        configMenuMain();        
+        configMenuMain();
     }, [])
 
     setTimeout(() => {
-       GetUser();
+        GetUser();
     }, 10000);
 
-    function configMenuMain(){
+    function configMenuMain() {
         mainservices.GetConfigMenu(VG.user_uid)
-        .then((response) => {
-            setConfigMenu(response.data);   
-            setIsLoading(false);   
-        })
-        .catch((error) => {
-            console.log(error);
-        })         
+            .then((response) => {
+                setConfigMenu(response.data);
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
-    function GetUser(){
+    function GetUser() {
         userService.Get('/users', VG.user_uid)
-        .then((response) => {
-            setUser(response.data);      
-        })
-        .catch((error) => {
-            console.log(error);
-        })         
+            .then((response) => {
+                setUser(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
-    function setModalMenu(value){
+    function setModalMenu(value) {
         setModalVisible(value);
     }
 
-    function CaseScreen(item){
-        switch(item) { 
-            case 1:             
+    function CaseScreen(item) {
+        switch (item) {
+            case 1:
                 navigation.navigate('newActivity')
                 setModalVisible(false)
                 break;
-            case 2:             
+            case 2:
                 navigation.navigate('activity')
                 setModalVisible(false)
                 break;
-            case 3:             
+            case 3:
                 navigation.navigate('searchActivity')
                 setModalVisible(false)
                 break;
-            case 4:             
+            case 4:
                 navigation.navigate('myProfile')
                 setModalVisible(false)
                 break;
             case 5:
                 auth().signOut();
-                break;          
+                break;
         }
     }
 
-    return(
+    return (
         <View style={style.containerMaster}>
             <StatusBar backgroundColor='#FFF' barStyle='dark-content' />
-            <Animatable.View animation='bounceInDown' duration={2000}>
-                <ImageBackground  
-                    source={require('../../assets/image/logoEduwi.png')} 
-                    style={{width: 400, height: 350, position: 'absolute'}}  
-                />
-            </Animatable.View>
-                      
-            <Animatable.View animation='bounceInLeft' duration={2000} style={style.containerChild}> 
+
+            <ImageBackground
+                source={require('../../assets/image/imageBackgroundMain.png')}
+                style={{ width: '100%', height: '100%', position: 'absolute' }}
+            />
+
+            <Animatable.View animation='bounceInLeft' duration={2000} style={style.containerChild}>
                 <View style={style.containerHeader}>
-                    <View style={{ width: '100%'}}>          
-                        <View style={style.containerScore}>      
-                            <ImageBackground  
+                    <View style={{ width: '60%' }}>
+                        <View style={style.containerScore}>
+                            {/* <ImageBackground  
                                 source={require('../../assets/image/cifrao.png')} 
                                 style={{width: 20, height: 20}}  
-                            />                        
-                            <Text style={{color: '#FFF', fontWeight: 'bold', marginLeft: 5}}>{!user ? '0' : user.score}</Text>                        
-                            
-                            <View style={{ alignItems: 'flex-end', width: '40%'}}>
+                            />       */}
+                            <IconFont5 name='coins' size={20} style={{ color: '#ffd700' }} />
+                            <Text style={{ color: '#FFF', fontWeight: 'bold', marginLeft: 5, fontSize: 15 }}>{!user ? '0' : user.score}</Text>
+
+                            {/* <View style={{ alignItems: 'flex-end', width: '40%'}}>
                                 <TouchableOpacity onPress={GetUser}>
                                     <IconFoundation name='refresh' size={20} style={{ color: '#FFF'}}/>
                                 </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>                  
-                </View>
-
-
-                <View
-                    style={{
-                        alignItems: 'center',
-                        width: '70%',
-                        height: '7%',
-                        marginTop: '95%',
-                        backgroundColor: '#f97d25',
-                        borderBottomEndRadius: 15,
-                        borderTopEndRadius: 15,
-                        borderTopLeftRadius: 20,
-                        borderBottomStartRadius: 20,
-                    }}
-                >
-                    <View style={{ flexDirection: 'row'}}>
-                        <View style={{ width: '20%', justifyContent: 'center'}}>
-                            <IconFont5 name='globe-americas' style={{ color: '#FFF', marginLeft: 10}} size={35} />             
-                        </View>
-                        <View style={{ width: '80%', justifyContent: 'center'}}>
-                            <TouchableOpacity style={style.buttonGame} onPress={() => {navigation.navigate('mainActivity')}}>
-                                <View>                            
-                                    <Text style={style.textButtonGame}>EXPLORAR</Text>
-                                </View>                        
-                            </TouchableOpacity>
+                            </View> */}
                         </View>
                     </View>
+                    
+                    <TouchableOpacity style={{ right: -80, backgroundColor: '#4169E1', padding: 5, borderRadius: 50}}>
+                        <MaterialIcons name='notifications-active' size={30} style={{ color: '#FFF'}}/>
+                    </TouchableOpacity>
                 </View>
 
-                <View
-                    style={{
-                        alignItems: 'center',
-                        width: '70%',
-                        height: '7%',
-                        marginTop: '5%',
-                        backgroundColor: '#f97d25',
-                        borderBottomEndRadius: 15,
-                        borderTopEndRadius: 15,
-                        borderTopLeftRadius: 20,
-                        borderBottomStartRadius: 20,
-                    }}
-                >
-                    <View style={{ flexDirection: 'row'}}>
-                        <View style={{ width: '20%', justifyContent: 'center'}}>
-                            <IconFont5 name='bars' style={{ color: '#FFF', marginLeft: 12}} size={35} />             
-                        </View>
-                        <View style={{ width: '80%', justifyContent: 'center'}}>
-                            <TouchableOpacity style={style.buttonGame} onPress={(() => setModalMenu(true))}>
-                                <View>                            
-                                    <Text style={style.textButtonGame}>MENU</Text>
-                                </View>                        
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('mainActivity')}
+                    style={{ left: 20, top: 80 }}>
+                    <Image source={require('../../assets/image/Explorar.png')} style={{ width: 100, height: 100, borderRadius: 50, left: -5 }} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Game')}
+                    style={{ left: 20, top: 100 }}>
+                    <Image source={require('../../assets/image/Loja.png')} style={{ width: 100, height: 100, borderRadius: 50, left: -5 }} />
+                </TouchableOpacity>
+
+
+                <FlatList
+                    data={configMenu}
+                    horizontal={true}
+                    keyExtractor={item => item.id}
+                    style={{ position: 'absolute', bottom: 3 }}
+                    renderItem={({ item }) => {
+                        return (
+                            <TouchableOpacity key={item.id} onPress={() => CaseScreen(item.id)} style={{ backgroundColor: item.color_background, alignItems: 'center', width: 150, borderRadius: 20, height: 100, margin: 5, justifyContent: 'center' }}>
+                                <IconFont5 name={item.name_icon} style={{ color: item.color_icon, }} size={40} />
+                                <Text style={{ color: item.color_title, fontWeight: 'bold' }}>{item.title}</Text>
                             </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-
-                <View
-                    style={{
-                        alignItems: 'center',
-                        width: '70%',
-                        height: '7%',
-                        marginTop: '5%',
-                        backgroundColor: '#f97d25',
-                        borderBottomEndRadius: 15,
-                        borderTopEndRadius: 15,
-                        borderTopLeftRadius: 20,
-                        borderBottomStartRadius: 20,
+                        );
                     }}
-                >
-                    <View style={{ flexDirection: 'row'}}>
-                        <View style={{ width: '20%', justifyContent: 'center' }}>
-                            <IconFont5 name='gamepad' style={{ color: '#FFF', marginLeft: 5}} size={35} />             
-                        </View>
-                        <View style={{ width: '80%', justifyContent: 'center'}}>
-                            <TouchableOpacity style={style.buttonGame} onPress={() => {navigation.navigate('Game')}}>
-                                <View>                            
-                                    <Text style={style.textButtonGame}>GAMIFICAÇÃO</Text>
-                                </View>                        
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+                />
+            </Animatable.View>
 
-                <Text style={{ color: '#FFF', marginTop: 35}}>Escolha uma das opções acima e divirta-se!</Text>
-               
-            </Animatable.View>    
-
-             <Modal visible={modalVisible} style={style.modalMenu} animationType="slide" >
-                <View style={{backgroundColor: '#FFF', padding: 12, flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={() => {setModalMenu(false)}}>
-                        <Icon name="arrow-down-left" size={26} style={{ color : '#000'}} />
-                    </TouchableOpacity>                    
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000000', marginLeft: 10}}>Voltar</Text>
+            <Modal visible={modalVisible} style={style.modalMenu} animationType="slide" >
+                <View style={{ backgroundColor: '#FFF', padding: 12, flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => { setModalMenu(false) }}>
+                        <Icon name="arrow-down-left" size={26} style={{ color: '#000' }} />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000000', marginLeft: 10 }}>Voltar</Text>
                 </View>
 
                 <FlatList data={configMenu} keyExtractor={item => item.id} renderItem={({ item }) => {
                     return (
-                        <TouchableOpacity key={item.id} onPress={() => CaseScreen(item.id)} style={{ backgroundColor: item.color_background, flexDirection: 'row', padding: 15, borderRadius: 20, margin: 5}}>
-                            <IconFont5 name={item.name_icon} style={{ color: item.color_icon, marginRight: 10}} size={20} />
-                            <Text style={{ color: item.color_title}}>{item.title}</Text>
+                        <TouchableOpacity key={item.id} onPress={() => CaseScreen(item.id)} style={{ backgroundColor: item.color_background, flexDirection: 'row', padding: 15, borderRadius: 20, margin: 5 }}>
+                            <IconFont5 name={item.name_icon} style={{ color: item.color_icon, marginRight: 10 }} size={20} />
+                            <Text style={{ color: item.color_title }}>{item.title}</Text>
                         </TouchableOpacity>
                     );
                 }}
                 />
                 <WindMill />
-            </Modal>    
+            </Modal>
 
             <Modal style={style.modalLoading} visible={isLoading}>
                 <View style={[style.containerLoad, style.horizontal]}>
-                    <ActivityIndicator size="large" color="green" />                                                    
-                </View>  
-            </Modal>    
+                    <ActivityIndicator size="large" color="green" />
+                </View>
+            </Modal>
+
+
         </View>
     )
 }
 
 const style = StyleSheet.create({
-    containerMaster:{
+    containerMaster: {
         flex: 1,
         backgroundColor: '#FFF'
     },
-    containerChild:{
-        alignItems: 'center',
-        flex: 1
+    containerChild: {
+        flex: 1,
+        width: '100%',
     },
-    containerHeader:{
+    containerHeader: {
         alignItems: 'flex-end',
         flexDirection: 'row',
-        width: '90%'
-    },  
+        width: '100%'
+    },
     containerLoad: {
         flex: 1,
         justifyContent: "center"
@@ -248,23 +198,24 @@ const style = StyleSheet.create({
         padding: 10,
         marginTop: 15,
         marginRight: 20,
+        left: 15,
         width: '40%',
         flexDirection: 'row',
         backgroundColor: 'rgba(0,0,0,0.4)',
         borderRadius: 10,
     },
-    buttonGame:{
+    buttonGame: {
         backgroundColor: '#FFF',
         borderBottomEndRadius: 15,
         borderTopEndRadius: 15,
         width: '100%',
         height: '100%',
         justifyContent: 'center',
-        alignItems: 'center',   
+        alignItems: 'center',
         borderColor: '#9225ed',
         borderWidth: 2
     },
-    textButtonGame:{
+    textButtonGame: {
         color: '#9225ed',
         fontWeight: 'bold',
         fontSize: 20
@@ -275,7 +226,7 @@ const style = StyleSheet.create({
     modalLoading: {
         position: 'absolute'
     },
-    title:{
+    title: {
         fontSize: 50,
         textAlign: 'center',
     },
