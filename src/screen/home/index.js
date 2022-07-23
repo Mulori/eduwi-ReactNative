@@ -48,7 +48,7 @@ export default function Home() {
             <Stack.Screen name='mainSearchActivity' options={{ headerShown: false }} component={MainSearchActivity} />            
             <Stack.Screen name='passActivity' options={{ headerShown: false }} component={PassActivity} />   
             <Stack.Screen name='responseQuestion' options={{ headerShown: false }} component={ResponseQuestion} />    
-            <Stack.Screen name='pageSucess' options={{ headerShown: false }} component={PageSucess} />         
+           
             <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={UsersActivity} />
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
             <Stack.Screen name='sentencesActivity' options={{ headerShown: false }} component={SentencesActivity} /> 

@@ -21,7 +21,7 @@ export default function newActivityQuestions({ navigation, route }) {
     React.useEffect(
         () =>
             navigation.addListener('beforeRemove', (e) => {
-                if(concluded){
+                if (concluded) {
                     return;
                 }
 
@@ -125,7 +125,13 @@ export default function newActivityQuestions({ navigation, route }) {
                         //setEnd(true);
                         setLoadingSend(false);
 
-                        navigation.navigate('Sucess', { title: 'Atividade Criada', avaliable: true })
+                        navigation.reset({
+                            index: 1,
+                            routes: [
+                                { name: 'Main' },
+                                { name: 'Sucess', params: { title: 'Atividade Criada', avaliable: false, activity_id: 0 }, },
+                            ],
+                        })
                     })
                     .catch((error) => {
                         console.log(error);

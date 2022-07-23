@@ -83,7 +83,16 @@ export default function responseQuestion({ navigation, route }) {
                     })  
 
                     if (sucess) {
-                        navigation.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
+                        //navigation.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
+                        //navigation.navigate('Sucess', { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id })
+
+                        navigation.reset({
+                            index: 1,
+                            routes: [
+                              { name: 'Main'},
+                              { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
+                            ],
+                          })
                     }                
                 })
                 .catch((error) => {
@@ -505,7 +514,16 @@ class RenderActivity extends React.Component {
                 })  
 
                 if (sucess) {
-                    navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
+                    //navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
+                    //navi.navigate('Sucess', { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id })
+
+                    navi.reset({
+                        index: 1,
+                        routes: [
+                          { name: 'Main'},
+                          { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
+                        ],
+                      })
                 }                
             })
             .catch((error) => {
