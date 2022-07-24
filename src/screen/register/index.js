@@ -89,7 +89,7 @@ export default function Register({ navigation }) {
                     })
                     .catch((error) => {
                         console.log(error);
-                        Alert.alert('Erro', 'Ocorreu um problema ao criar a conta', [{ text: 'Ok', style: 'destructive', }]);
+                        Alert.alert('Ocorreu um problema ao criar a conta', error, [{ text: 'Ok', style: 'destructive', }]);
                     })
             })
             .catch((erro) => {
