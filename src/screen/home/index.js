@@ -31,6 +31,8 @@ import NewActivityName from '../mainActivity/newActivity/newActivityName';
 import NewActivityImage from '../mainActivity/newActivity/newActivityImage';
 import NewActivityOptions from '../mainActivity/newActivity/newActivityOptions';
 import Sucess from '../sucess';
+import Notification from '../../screen/notification';
+import Details from '../../screen/notification/details';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,7 +50,16 @@ export default function Home() {
             <Stack.Screen name='mainSearchActivity' options={{ headerShown: false }} component={MainSearchActivity} />            
             <Stack.Screen name='passActivity' options={{ headerShown: false }} component={PassActivity} />   
             <Stack.Screen name='responseQuestion' options={{ headerShown: false }} component={ResponseQuestion} />    
-           
+            <Stack.Screen name='Notification' options={{ 
+                headerTitle: 'Notificações', 
+                headerStyle: { backgroundColor: '#4169E1', color: '#FFF' }, 
+                headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
+                }} component={Notification} />
+             <Stack.Screen name='Details' options={{ 
+                headerTitle: '', 
+                headerStyle: { backgroundColor: '#4169E1', color: '#FFF' }, 
+                headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
+                }} component={Details} />
             <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={UsersActivity} />
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />    
             <Stack.Screen name='sentencesActivity' options={{ headerShown: false }} component={SentencesActivity} /> 

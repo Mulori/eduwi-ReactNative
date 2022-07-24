@@ -105,9 +105,11 @@ export default function Main({ navigation }) {
                             </View> */}
                         </View>
                     </View>
-                    
-                    <TouchableOpacity style={{ right: -80, backgroundColor: '#4169E1', padding: 5, borderRadius: 50}}>
-                        <MaterialIcons name='notifications-active' size={30} style={{ color: '#FFF'}}/>
+
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Notification')}
+                        style={{ right: -80, backgroundColor: '#4169E1', padding: 5, borderRadius: 50 }}>
+                        <MaterialIcons name='notifications-active' size={30} style={{ color: '#FFF' }} />
                     </TouchableOpacity>
                 </View>
 
