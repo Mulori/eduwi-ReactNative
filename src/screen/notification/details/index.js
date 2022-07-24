@@ -4,7 +4,7 @@ import styles from './styles';
 
 export default function Details({ navigation, route }) {
     const { data } = route.params;
-    const months = ["JAN", "FEB", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+    const months = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
     var date = new Date(data.notification_date);
 
     const formatDate = (date) => {

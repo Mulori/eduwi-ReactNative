@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     image_body: {
         width: '100%',
         height: '100%', 
-        backgroundColor: 'red'   
     },
     container_body: {
         width: '100%', 
