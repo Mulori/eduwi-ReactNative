@@ -514,9 +514,6 @@ class RenderActivity extends React.Component {
                 })  
 
                 if (sucess) {
-                    //navi.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
-                    //navi.navigate('Sucess', { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id })
-
                     navi.reset({
                         index: 1,
                         routes: [
