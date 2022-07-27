@@ -113,19 +113,23 @@ export default function Main({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('mainActivity')}
-                    style={{ left: 20, top: 80 }}>
-                    <Image source={require('../../assets/image/Explorar.png')} style={{ width: 100, height: 100, borderRadius: 50, left: -5 }} />
-                </TouchableOpacity>
+                <View style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 50, top: -35}}>
+                    <Image source={require('../../assets/image/Eduwi.png')} style={{ width: 300, height: 300, borderRadius: 75}} />
+                </View>
 
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('Game')}
-                    style={{ left: 20, top: 100 }}>
-                    <Image source={require('../../assets/image/Loja.png')} style={{ width: 100, height: 100, borderRadius: 50, left: -5 }} />
-                </TouchableOpacity>
-
-
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', top: 50 }}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('mainActivity')}
+                        style={{ width: '50%', alignItems: 'center' }}>
+                        <Image source={require('../../assets/image/Explorar.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Game')}
+                        style={{ width: '50%', alignItems: 'center'  }}>
+                        <Image source={require('../../assets/image/Loja.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
+                    </TouchableOpacity>
+                </View>
+                
                 <FlatList
                     data={configMenu}
                     horizontal={true}

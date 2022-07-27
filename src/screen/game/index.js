@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, ImageBackground, StyleSheet, StatusBar, F
 import * as Animatable from 'react-native-animatable';
 import VG from '../../components/variables/VG';
 import mainservices from '../../services/mainService/mainService';
+import IconFont5 from 'react-native-vector-icons/FontAwesome5';
 
 export default function Game({ navigation }) {
     const [ListShop, setListShop] = useState(null);
@@ -50,19 +51,17 @@ function ListShopComponent(props){
                     style={{ margin: 2, borderRadius: 15, width: '50%'}}
                     onPress={() => {props.navigate.navigate('GameDetail', { item: item})}}
                     >
-                        <Animatable.View duration={2000} animation='bounceInDown' style={{backgroundColor: '#3CB371', borderRadius: 15, padding: 25, width: '90%'}}>
+                        <Animatable.View duration={2000} animation='bounceInDown' 
+                        style={{backgroundColor: '#F8F8FF', borderRadius: 10, padding: 25, width: '90%', borderWidth: 1, borderColor: '#D3D3D3'}}>
                             <View style={style.containerImage}>      
                                 <ImageBackground  
                                     source={image} 
-                                    style={{width: 115, height: 100}}  
+                                    style={{width: 100, height: 100}}  
                                 />                        
                             </View>  
-                            <Text style={{fontWeight: 'bold', fontSize: 18, color: '#FFF'}}>{item.name}</Text>
+                            <Text style={{fontWeight: 'bold', fontSize: 18, color: '#000'}}>{item.name}</Text>
                             <View style={style.containerValue}>      
-                                <ImageBackground  
-                                    source={require('../../assets/image/cifrao.png')} 
-                                    style={{width: 20, height: 20}}  
-                                />                        
+                                <IconFont5 name='coins' size={20} style={{ color: '#ffd700' }} />                      
                                 <Text style={{color: '#FFF', fontWeight: 'bold', marginLeft: 5}}>{item.value}</Text>  
                             </View>                                 
                         </Animatable.View>      
@@ -76,7 +75,7 @@ function ListShopComponent(props){
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        backgroundColor: '#F5F5F5'
     },
     containerValue: {
         padding: 10,
