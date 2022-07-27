@@ -4,6 +4,7 @@ import * as Animatable from 'react-native-animatable';
 import VG from '../../../components/variables/VG';
 import mainservices from '../../../services/mainService/mainService';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import IconFont5 from 'react-native-vector-icons/FontAwesome5';
 
 export default function GameDetail({ navigation, route }) {
     const { item } = route.params;
@@ -71,10 +72,7 @@ export default function GameDetail({ navigation, route }) {
                 <Animatable.View animation='bounceInDown' duration={2000} style={{ backgroundColor: '#FFF', height: '99%', width: '100%', alignItems: 'center'}}>
                     <View style={{ width: '100%', alignItems: 'flex-start'}}>
                         <View style={style.containerValue}>      
-                            <ImageBackground  
-                                source={require('../../../assets/image/cifrao.png')} 
-                                style={{width: 20, height: 20}}  
-                            />                        
+                        <IconFont5 name='coins' size={20} style={{ color: '#ffd700' }} />                        
                             <Text style={{color: '#FFF', fontWeight: 'bold', marginLeft: 5}}>{!user ? '0' : user.score}</Text>  
                         </View> 
                     </View>                   
@@ -87,10 +85,7 @@ export default function GameDetail({ navigation, route }) {
                     <Text style={style.title}>{item.name}</Text>
                     <Text style={style.description}>{item.description.replace('*', '\n')}</Text>
                     <View style={style.containerPrice}>      
-                        <ImageBackground  
-                            source={require('../../../assets/image/cifrao.png')} 
-                            style={{width: 35, height: 35}}  
-                        />                        
+                        <IconFont5 name='coins' size={20} style={{ color: '#ffd700' }} />                        
                         <Text style={{color: '#000', fontWeight: 'bold', marginLeft: 8, fontSize: 25}}>{item.value}</Text>  
                         <Text style={{color: '#000', marginLeft: 8, fontSize: 15, bottom: -10}}>/ Por recompensa</Text>  
                     </View> 
@@ -102,7 +97,7 @@ export default function GameDetail({ navigation, route }) {
                         </View>
                         <View style={{ width: '25%',  alignItems: 'flex-end'}}>
                             <TouchableOpacity onPress={Less}>
-                                <IconAntDesign name='minussquare' size={50}/>
+                                <IconAntDesign name='minussquare' size={50} style={{ color: '#3CB371' }}/>
                             </TouchableOpacity>
                         </View>
                         <View style={{ width: '10%', alignItems: 'center', }}>
@@ -112,7 +107,7 @@ export default function GameDetail({ navigation, route }) {
                         </View>
                         <View style={{ width: '25%', alignItems: 'flex-start'}}>
                             <TouchableOpacity onPress={More}>
-                                <IconAntDesign name='plussquare' size={50}/>
+                                <IconAntDesign name='plussquare' size={50} style={{ color: '#3CB371' }}/>
                             </TouchableOpacity>
                         </View>                        
                     </View>

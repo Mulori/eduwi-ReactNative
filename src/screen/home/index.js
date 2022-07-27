@@ -65,8 +65,16 @@ export default function Home() {
             <Stack.Screen name='sentencesActivity' options={{ headerShown: false }} component={SentencesActivity} /> 
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />    
             <Stack.Screen name='myProfile' options={{ headerTitle: 'Meu Perfil' }} component={MyProfile} />
-            <Stack.Screen name='Game' options={{ headerTitle: 'Gamificação - Loja' }} component={Game} />
-            <Stack.Screen name='GameDetail' options={{ headerTitle: 'Gamificação - Item' }} component={GameDetail} />
+            <Stack.Screen name='Game'options={{ 
+                headerTitle: 'Loja', 
+                headerStyle: { backgroundColor: '#3CB371', color: '#FFF' }, 
+                headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
+                }} component={Game} />
+            <Stack.Screen name='GameDetail' options={{ 
+                headerTitle: 'Item', 
+                headerStyle: { backgroundColor: '#3CB371', color: '#FFF' }, 
+                headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
+                }} component={GameDetail} />
             <Stack.Screen name='newActivityCompleteSentence' options={{ headerShown: false }} component={NewActivityCompleteSentence} />
             <Stack.Screen name='newActivitySentence' options={{ headerShown: false }} component={NewActivitySentence} />
             <Stack.Screen name='responsesentences' options={{ headerShown: false }} component={ResponseSentences} />  
@@ -75,7 +83,7 @@ export default function Home() {
             <Stack.Screen name='NewActivityImage' options={{ headerShown: false, }} component={NewActivityImage} /> 
             <Stack.Screen name='NewActivityOptions' options={{ headerShown: false, }} component={NewActivityOptions} /> 
             <Stack.Screen name='Sucess' options={{ headerShown: false, }} component={Sucess} /> 
-            <Stack.Screen name='testee' component={Teste} />   
+            <Stack.Screen name='testee' options={{ headerShown: false, }} component={Teste} />   
             <Stack.Screen name='viewerImage' component={ViewerImage} options={{ headerTitle: 'Imagem', headerStyle: { backgroundColor: '#000',  color: '#000'}, headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />   
             <Stack.Screen name='sentencesUsers' 
             options={{ 

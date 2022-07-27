@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, Modal, StyleSheet, StatusBar, FlatList, Image, RefreshControl, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, Modal, StyleSheet, StatusBar, FlatList, Image, RefreshControl, ScrollView, ImageBackground } from 'react-native';
 import mainservices from '../../services/mainService/mainService';
 import activityServices from '../../services/activityService/activityService';
 import WindMill from '../../components/lotties/WindMill';
@@ -97,6 +97,10 @@ export default function MainActivity({ navigation }) {
     return (
         <View style={style.container}>
             <StatusBar barStyle='dark-content' backgroundColor='#FFF' />
+            <ImageBackground
+                source={require('../../assets/image/imageBackgroundMain.png')}
+                style={{ width: '100%', height: '100%', position: 'absolute' }}
+            />
             {
                 !bannerVisible ? null :
                     <View style={{ width: '90%', height: '18%', }}>
