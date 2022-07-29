@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, Button, StyleSheet, StatusBar, SafeAreaView  } from 'react-native';
+import { View, TouchableOpacity, Text, ImageBackground, StyleSheet, StatusBar, SafeAreaView  } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LottieQuestion from '../../../components/lotties/question';
 import LottieWrite from '../../../components/lotties/write';
@@ -31,7 +31,11 @@ export default function newActivity({ navigation }) {
 
     return(
         <SafeAreaView style={style.container}>
-            <StatusBar barStyle='light-content' backgroundColor='#4169E1' />            
+            <StatusBar barStyle='light-content' backgroundColor='#4169E1' />       
+            <ImageBackground
+                source={require('../../../assets/image/imageBackgroundMain.png')}
+                style={{ width: '100%', height: '100%', position: 'absolute' }}
+            />     
             {info? 
                 <Animatable.View animation='bounceInDown' duration={2000} style={style.content}>
                     <Info />

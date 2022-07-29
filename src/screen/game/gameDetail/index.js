@@ -68,6 +68,7 @@ export default function GameDetail({ navigation, route }) {
     return(
         <View style={style.container}>
             <StatusBar barStyle='light-content' backgroundColor='#3CB371' />
+            
             <View style={{ alignItems: 'center'}}>
                 <Animatable.View animation='bounceInDown' duration={2000} style={{ backgroundColor: '#FFF', height: '99%', width: '100%', alignItems: 'center'}}>
                     <View style={{ width: '100%', alignItems: 'flex-start'}}>
@@ -120,7 +121,6 @@ export default function GameDetail({ navigation, route }) {
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
     },
     containerImage: {
         width: '100%',
