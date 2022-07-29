@@ -120,12 +120,17 @@ export default function Main({ navigation }) {
                 <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', top: 50 }}>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('mainActivity')}
-                        style={{ width: '50%', alignItems: 'center' }}>
+                        style={{ width: '33%', alignItems: 'center' }}>
                         <Image source={require('../../assets/image/Explorar.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
                     </TouchableOpacity>
                     <TouchableOpacity
+                        onPress={() => navigation.navigate('Eduvida')}
+                        style={{ width: '33%', alignItems: 'center'  }}>
+                        <Image source={require('../../assets/image/Eduvidas.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={() => navigation.navigate('Game')}
-                        style={{ width: '50%', alignItems: 'center'  }}>
+                        style={{ width: '33%', alignItems: 'center'  }}>
                         <Image source={require('../../assets/image/Loja.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
                     </TouchableOpacity>
                 </View>

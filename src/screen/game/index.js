@@ -38,6 +38,11 @@ export default function Game({ navigation }) {
 
 function ListShopComponent(props){
     return(
+        <View>
+            <ImageBackground
+                source={require('../../assets/image/imageBackgroundMain.png')}
+                style={{ width: '100%', height: '100%', position: 'absolute' }}
+            />
         <FlatList 
             data={props.item}  
             numColumns={2} 
@@ -52,14 +57,14 @@ function ListShopComponent(props){
                     onPress={() => {props.navigate.navigate('GameDetail', { item: item})}}
                     >
                         <Animatable.View duration={2000} animation='bounceInDown' 
-                        style={{backgroundColor: '#F8F8FF', borderRadius: 10, padding: 25, width: '90%', borderWidth: 1, borderColor: '#D3D3D3'}}>
+                        style={{backgroundColor: '#8d4a07', borderRadius: 10, padding: 25, width: '90%', borderWidth: 1, borderColor: '#8d4a07'}}>
                             <View style={style.containerImage}>      
                                 <ImageBackground  
                                     source={image} 
                                     style={{width: 100, height: 100}}  
                                 />                        
                             </View>  
-                            <Text style={{fontWeight: 'bold', fontSize: 18, color: '#000'}}>{item.name}</Text>
+                            <Text style={{fontWeight: 'bold', fontSize: 18, color: '#FFF'}}>{item.name}</Text>
                             <View style={style.containerValue}>      
                                 <IconFont5 name='coins' size={20} style={{ color: '#ffd700' }} />                      
                                 <Text style={{color: '#FFF', fontWeight: 'bold', marginLeft: 5}}>{item.value}</Text>  
@@ -68,7 +73,9 @@ function ListShopComponent(props){
                     </TouchableOpacity>
                 );
             }}
-        />                                 
+        /> 
+        </View>
+                                        
     )
 }
 
