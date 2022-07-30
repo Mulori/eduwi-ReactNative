@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, StatusBar, ImageBackground, Alert, ActivityIndicator, FlatList, Image, ScrollView, TextInput } from 'react-native';
+import React, { useEffect, useState, useRef } from "react";
+import { View, TouchableOpacity, Text, StatusBar, ImageBackground, Alert, Keyboard, FlatList, Image, KeyboardAvoidingView, TextInput } from 'react-native';
 import styles from "./styles";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Axios from '../../../services/mainService/mainService'
@@ -11,6 +11,28 @@ export default function EduvidaDetail({ navigation, route }) {
     const [comment, setComment] = useState(null);
     const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
     var date_header = new Date(data_header.created);
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    const flatList = useRef(null);
+
+    React.useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // or some other action
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // or some other action
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     const formatDate = (date) => {
         let formatted_date = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear()
@@ -20,16 +42,17 @@ export default function EduvidaDetail({ navigation, route }) {
     async function GetList() {
         await Axios.Get('/eduvida/' + data_header.id + '/comments', VG.user_uid)
             .then((value) => {
-                setData(value.data)
+                setData(value.data);
             }).catch((error) => {
                 Alert.alert('Error', error)
                 console.log(error)
             })
     }
 
+
     useEffect(() => {
         GetList();
-    }, [5000])
+    }, [])
 
     async function Comment() {
 
@@ -45,9 +68,12 @@ export default function EduvidaDetail({ navigation, route }) {
             image_size_wh: '',
         }
 
+        console.log('foi')
+
         await Axios.Post('/eduvida/' + data_header.id + '/comment', VG.user_uid, json)
             .then((sucess) => {
-
+                GetList();
+                setComment(null);
             })
             .catch((error) => {
                 Alert.alert('Erro ao adicionar um comentário', error)
@@ -75,17 +101,34 @@ export default function EduvidaDetail({ navigation, route }) {
         )
     }
 
-    useEffect(() => {
-        console.log(data_header)
-    }, [])
+    function CardCommentyou({ data_comment }) {
+        var date = new Date(data_comment.created);
+
+        return (
+            <View style={styles.header_comments}>
+                <View style={styles.conteiner_comment_you}>
+                    <View style={styles.container_name_two}>
+                        <Text style={styles.text_name}>{data_comment.name + ' ' + data_comment.last_name}</Text>
+                        <Text style={styles.text_date}>{formatDate(date)}</Text>
+                    </View>
+                    <View style={styles.container_text}>
+                        <Text>{data_comment.comment}</Text>
+                    </View>
+                </View>
+                <View style={{ width: '15%', left: 10 }}>
+                    <Image style={styles.logo} source={data_comment.image_user ? { uri: data_comment.image_user } : require('../../../assets/image/imageNotFound.png')} />
+                </View>
+            </View>
+        )
+    }
+
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "height" : "padding"}
+            style={styles.container}
+        >
             <StatusBar backgroundColor='#9400D3' barStyle='light-content' />
-            <ImageBackground
-                source={require('../../../assets/image/imageBackgroundMain.png')}
-                style={{ width: '100%', height: '100%', position: 'absolute' }}
-            />
             <View style={styles.header}>
                 <View style={{ width: '15%', }}>
                     <Image style={styles.logo} source={data_header.image_url ? { uri: data_header.image_url } : require('../../../assets/image/imageNotFound.png')} />
@@ -101,22 +144,40 @@ export default function EduvidaDetail({ navigation, route }) {
                 </View>
             </View>
             <View>
-                <View style={{ height: '87%', padding: 13,}}>
-                    <FlatList data={data}  keyExtractor={item => item.id} renderItem={({ item, index }) => {
-                        return (
-                            <CardComment key={index} data_comment={item} />
-                        );
+                <FlatList
+                    data={data}
+                    style={{ height: !isKeyboardVisible ? '76%' : '100%' }}
+                    ref={flatList}
+                    onContentSizeChange={() => flatList.current.scrollToEnd()}
+                    renderItem={({ item }) => {
+
+                        if (item.firebase_uid == VG.user_uid) {
+                            return (
+                                <CardCommentyou  data_comment={item} />
+                            );
+                        } else {
+                            return (
+                                <CardComment  data_comment={item} />
+                            );
+                        }
+
+
                     }}
-                    />
-                </View>
-                <View style={styles.comment}>
-                    <TextInput placeholder='Mensagem' style={styles.text_input_comment} multiline={true} onChangeText={(value) => setComment(value)} />
-                    <TouchableOpacity style={styles.button_send} onPress={() => Comment}>
-                        <MaterialIcons name='send' size={18} style={styles.icon_send} />
-                    </TouchableOpacity>
-                </View>
+                />
             </View>
-            
-        </View>
+            <View style={styles.comment}>
+                <TextInput
+                    placeholder='Responder'
+                    placeholderTextColor='#FFF'
+                    style={styles.text_input_comment}
+                    multiline={true}
+                    value={comment}
+                    onChangeText={(value) => setComment(value)} />
+                <TouchableOpacity style={styles.button_send} onPress={Comment}>
+                    <MaterialIcons name='send' size={18} style={styles.icon_send} />
+                </TouchableOpacity>
+            </View>
+
+        </KeyboardAvoidingView>
     )
 }

@@ -2,15 +2,13 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     header: {
-        width: '100%',
         top: 10,
         flexDirection: 'row',
     },
     header_comments: {
-        width: '100%',
         top: 10,
         marginTop: 10,
         marginBottom: 10,
@@ -45,10 +43,19 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.5,
         elevation: 5,
-        height: '100%',
         width: '82%',
         backgroundColor: '#FFF',
         borderRadius: 15,
+    },
+    conteiner_comment_you: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.5,
+        elevation: 5,
+        width: '82%',
+        backgroundColor: '#FFF',
+        borderRadius: 15,
+        left: 15,
     },
     text_name: {
         color: '#FFF',
@@ -64,25 +71,27 @@ const styles = StyleSheet.create({
     },
     comment: {
         position: 'absolute',
-        bottom: 25,
-        marginTop: 10,
+        bottom:  10,
         width: '100%',
         flexDirection: 'row',
-        padding: 8,
+        padding: 1,
     },
     text_input_comment: {
-        width: '87%',
-        backgroundColor: '#FFF',
+        width: '85%',
+        backgroundColor: 'green',
+        color: '#FFF',
         borderRadius: 15,
         padding: 8,
         fontSize: 15,
+        left: 5,
+        maxHeight: 120
     },
     button_send: {
         backgroundColor: '#9400D3',
         padding: 10,
         borderRadius: 50,
-        right: 10,
-        top: 10,
+        right: 5,
+        top: 5,
         position: 'absolute'
     },
     icon_send: {
