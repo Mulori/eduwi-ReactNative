@@ -35,6 +35,7 @@ import Notification from '../../screen/notification';
 import Details from '../../screen/notification/details';
 import Eduvida from '../eduvida';
 import eduvidaDetail from '../eduvida/eduvidaDetail';
+import NewEduvida from '../eduvida/newEduvida';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,11 @@ export default function Home() {
                 headerStyle: { backgroundColor: '#9400D3', color: '#FFF' },
                 headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
             }} component={eduvidaDetail} />
+            <Stack.Screen name='NewEduvida' options={{
+                headerTitle: 'Compartilhar Dúvida',
+                headerStyle: { backgroundColor: '#9400D3', color: '#FFF' },
+                headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
+            }} component={NewEduvida} />
             <Stack.Screen name='Eduvida' options={{
                 headerTitle: 'Eduvidas',
                 headerStyle: { backgroundColor: '#9400D3', color: '#FFF' },

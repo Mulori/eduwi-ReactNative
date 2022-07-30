@@ -50,7 +50,7 @@ export default function Eduvida({ navigation }) {
                             <View style={styles.container_content}>
                                 <Image style={styles.logo} source={item.image_url ? { uri: item.image_url } : require('../../assets/image/imageNotFound.png')} />
                                 <View>
-                                    <Text style={styles.title}>{item.title.substring(0, 32)}...</Text>
+                                    <Text style={styles.title}>{item.title.substring(0, 30)}...</Text>
                                     <View style={styles.container_content_two}>
                                         <View style={{ width: '50%', flexDirection: 'row'}}>
                                             <MaterialCommunityIcons name='brain' size={15} style={styles.materialcommunityicons} />
@@ -68,7 +68,7 @@ export default function Eduvida({ navigation }) {
                 );
             }}
             />
-            <TouchableOpacity style={styles.button_plus}>
+            <TouchableOpacity style={styles.button_plus} onPress={() => navigation.navigate('NewEduvida')}>
                 <MaterialCommunityIcons name='head-plus' size={40} style={styles.button_plus_icon} />
             </TouchableOpacity>
         </View>
