@@ -21,6 +21,7 @@ export default function EduvidaDetail({ navigation, route }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [send, setSend] = useState(false)
     const [viewImage, setViewImage] = useState(false);
 
     async function imagePickerCallback(data) {
@@ -87,10 +88,15 @@ export default function EduvidaDetail({ navigation, route }) {
     }, [])
 
     async function Comment() {
+        if (send) {
+            return;
+        }
 
         if (!comment) {
             return;
         }
+
+        setSend(true)
 
         let json = {
             comment: comment,
@@ -109,13 +115,21 @@ export default function EduvidaDetail({ navigation, route }) {
             .catch((error) => {
                 Alert.alert('Erro ao adicionar um comentário', error)
             })
+
+        setSend(false)
     }
 
     async function CommentWithMedia() {
 
+        if (send) {
+            return;
+        }
+
         if (!image) {
             return;
         }
+
+        setSend(true)
 
         await ModuleStorage.SendFileStorage('eduvida/media/image/' + image.assets[0].fileName, image.assets[0].uri)
             .then(async () => {
@@ -130,7 +144,6 @@ export default function EduvidaDetail({ navigation, route }) {
                             image_size_wh: image.assets[0].width + '|' + image.assets[0].height,
                         }
 
-                        console.log('foi')
 
                         await Axios.Post('/eduvida/' + data_header.id + '/comment', VG.user_uid, json)
                             .then((sucess) => {
@@ -151,7 +164,7 @@ export default function EduvidaDetail({ navigation, route }) {
                 Alert.alert('Erro ao adicionar um comentário com media.', imageUrlError)
             })
 
-
+        setSend(false)
     }
 
     function CardComment({ data_comment, index, sizeData }) {
@@ -219,7 +232,7 @@ export default function EduvidaDetail({ navigation, route }) {
             <View style={styles.comment}>
                 <TextInput
                     placeholder='Responder'
-                    maxLength={500} 
+                    maxLength={500}
                     placeholderTextColor='#FFF'
                     style={styles.text_input_comment}
                     multiline={true}
@@ -228,9 +241,12 @@ export default function EduvidaDetail({ navigation, route }) {
                 <TouchableOpacity style={styles.button_media} onPress={() => setModalVisible(true)} >
                     <MaterialIcons name='perm-media' size={18} style={styles.icon_send} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button_send} onPress={Comment}>
-                    <MaterialIcons name='send' size={18} style={styles.icon_send} />
-                </TouchableOpacity>
+                {
+                    send ? null :
+                        <TouchableOpacity style={styles.button_send} onPress={Comment}>
+                            <MaterialIcons name='send' size={18} style={styles.icon_send} />
+                        </TouchableOpacity>
+                }
             </View>
             <Modal visible={modalVisible} >
                 <View style={styles.container_modal_media}>
@@ -246,15 +262,18 @@ export default function EduvidaDetail({ navigation, route }) {
                     <View style={styles.comment}>
                         <TextInput
                             placeholder='Responder'
-                            maxLength={500} 
+                            maxLength={500}
                             placeholderTextColor='#FFF'
                             style={styles.text_input_comment_media}
                             multiline={true}
                             value={comment}
                             onChangeText={(value) => setComment(value)} />
-                        <TouchableOpacity style={styles.button_send} onPress={CommentWithMedia}>
-                            <MaterialIcons name='send' size={18} style={styles.icon_send} />
-                        </TouchableOpacity>
+                        {
+                            send ? null :
+                                <TouchableOpacity style={styles.button_send} onPress={CommentWithMedia}>
+                                    <MaterialIcons name='send' size={18} style={styles.icon_send} />
+                                </TouchableOpacity>
+                        }
                     </View>
                     <TouchableOpacity onPress={() => {
                         setModalVisible(false);
