@@ -60,7 +60,7 @@ export default function searchActivity({ navigation }) {
         <View style={style.container}>
             <StatusBar barStyle='light-content' backgroundColor='#9400D3' />
             <View style={{ alignItems: 'center', marginTop: '25%'}}>
-                <Animatable.Text animation="slideInDown" iterationCount={3} direction="alternate" style={style.textTitle}>Informe o código da atividade:</Animatable.Text>
+                <Animatable.Text animation="slideInDown" iterationCount={1} direction="alternate" style={style.textTitle}>Informe o código da atividade:</Animatable.Text>
                 <TextInput placeholder='Informe o código' onChangeText={(value) => setCode(value)} autoCapitalize='none' style={style.textInput} />
                 <TouchableOpacity 
                 onPress={Search}
@@ -70,8 +70,7 @@ export default function searchActivity({ navigation }) {
                     marginTop: 10, 
                     width: '90%', 
                     alignItems: 'center',
-                    borderBottomStartRadius: 20,
-                    borderTopEndRadius: 20,
+                    borderRadius: 20,
                     flexDirection: 'row',
                 }}>
                     <Icon name='search' size={20} style={{color: '#FFF', marginLeft: '30%'}}/>

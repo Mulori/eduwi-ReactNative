@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, StatusBar, Alert, ScrollView, ActivityIndicator, Modal, ImageBackground, FlatList } from 'react-native';
 import APIActivity from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
@@ -6,7 +6,7 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 import MainServices from '../../../../services/mainService/mainService';
-import {NavigationActions, StackActions} from '@react-navigation/native';
+import { NavigationActions, StackActions } from '@react-navigation/native';
 
 export default function responseQuestion({ navigation, route }) {
     const { data } = route.params;
@@ -16,10 +16,10 @@ export default function responseQuestion({ navigation, route }) {
     const [ModalMenuVisible, setModalMenuVisible] = useState(false);
     const [Type, setType] = useState(0);
 
-    function Rewarding(number_question, type){
-        switch(type){
+    function Rewarding(number_question, type) {
+        switch (type) {
             case 6: //Espie uma resposta
-                switch(listQuestion[number_question - 1].right_answer){
+                switch (listQuestion[number_question - 1].right_answer) {
                     case 'one':
                         Alert.alert('Espiando Questão ' + number_question, listQuestion[number_question - 1].answer_one)
                         break;
@@ -37,7 +37,7 @@ export default function responseQuestion({ navigation, route }) {
                 break;
             case 7: //Dica de resposta
 
-                switch(listQuestion[number_question - 1].right_answer){
+                switch (listQuestion[number_question - 1].right_answer) {
                     case 'one':
                         Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_one.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_one.split(' ')[2]  )
                         break;
@@ -51,7 +51,7 @@ export default function responseQuestion({ navigation, route }) {
                         Alert.alert('Dica da Questão ' + number_question, listQuestion[number_question - 1].answer_four.split(' ')[0])// + ' ' + listQuestion[number_question - 1].answer_four.split(' ')[2]  )
                         break;
                 }
-                
+
                 break;
             case 5: //Gabarite uma atividade
 
@@ -63,93 +63,91 @@ export default function responseQuestion({ navigation, route }) {
                 var activityArray = [];
 
                 listQuestion.forEach(item => {
-                    index++                    
+                    index++
                     activity.activity_id = parseInt(listQuestion[0].activity_id);
                     activity.number_question = index;
                     activity.answer = item.right_answer;
-                    activityArray.push({...activity});    
-                });   
+                    activityArray.push({ ...activity });
+                });
 
                 console.log(JSON.stringify(activityArray))
 
                 APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: listQuestion[0].activity_id }) //Faz a postagem do cabeçalho da atividade
-                .then(() => {    
-                    APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
-                    .then()
-                    .catch((erro) => {
-                        sucess = false;
-                        console.log(erro)
-                        Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{text: 'Ok',style: 'destructive', }]);
-                    })  
+                    .then(() => {
+                        APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
+                            .then()
+                            .catch((erro) => {
+                                sucess = false;
+                                console.log(erro)
+                                Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                            })
 
-                    if (sucess) {
-                        //navigation.dispatch(StackActions.replace('pageSucess', { text: 'Atividade Enviada!'}));
-                        //navigation.navigate('Sucess', { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id })
-
-                        navigation.reset({
-                            index: 1,
-                            routes: [
-                              { name: 'Main'},
-                              { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
-                            ],
-                          })
-                    }                
-                })
-                .catch((error) => {
-                    console.log(error);
-                    Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{text: 'Ok',style: 'destructive', }]);
-                }) 
+                        if (sucess) {
+                            navigation.reset({
+                                index: 1,
+                                routes: [
+                                    { name: 'Main' },
+                                    { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
+                                ],
+                            })
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                    })
 
                 break;
         }
     }
 
-    function Reward(item){
-        if(item[0].type.toString() == '6'){ //Espie uma resposta
+    function Reward(item) {
+        if (item[0].type.toString() == '6') { //Espie uma resposta
             setType(6);
-            setModalMenuVisible(true); 
+            setModalMenuVisible(true);
         }
 
-        if(item[0].type.toString() == '7'){ //Dica de resposta
+        if (item[0].type.toString() == '7') { //Dica de resposta
             setType(7);
-            setModalMenuVisible(true); 
+            setModalMenuVisible(true);
         }
 
-        if(item[0].type.toString() == '5'){ //Gabarite uma atividade
+        if (item[0].type.toString() == '5') { //Gabarite uma atividade
             Rewarding(item.number_question, 5)
         }
     }
 
-    function UseReward(item){
-        Alert.alert(item.name, "Deseja utilizar está recompensa?",  
-            [{  text: "Sim",
+    function UseReward(item) {
+        Alert.alert(item.name, "Deseja utilizar está recompensa?",
+            [{
+                text: "Sim",
                 onPress: () => {
                     MainServices.Post("/reward/" + item.id_amount + "/use", VG.user_uid, null)
-                    .then((response) => {
-                        GetReward();
-                        Reward(response.data);  
-                    })
-                    .catch((error) => {
-                        Alert.alert('Atenção', error)   
-                    })  
+                        .then((response) => {
+                            GetReward();
+                            Reward(response.data);
+                        })
+                        .catch((error) => {
+                            Alert.alert('Atenção', error)
+                        })
                 },
-            },  
-                {
+            },
+            {
                 text: "Não",
-                },
+            },
             ]
         );
     }
 
 
-    function GetReward(){
+    function GetReward() {
         MainServices.Get("/reward/users", VG.user_uid)
-        .then((response) => {
-            setDataReward(response.data);    
-        })
-        .catch((error) => {
-            console.log(error);
-        })         
+            .then((response) => {
+                setDataReward(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
     useEffect(() => {
@@ -157,25 +155,25 @@ export default function responseQuestion({ navigation, route }) {
         setModalVisible(true);
 
         APIActivity.Get('/activity/' + data.id + '/response', VG.user_uid)
-        .then((questions) => {
-            setListQuestions(questions.data);
-            GetReward();
-            setModalVisible(false);
-        })
-        .catch(() => {
-            Alert.alert('Erro', 'Ocorreu um erro ao baixar as questões. Tente novamente', 'Ok');
-            setModalVisible(false);
-        })
-        
-    }, [])   
+            .then((questions) => {
+                setListQuestions(questions.data);
+                GetReward();
+                setModalVisible(false);
+            })
+            .catch(() => {
+                Alert.alert('Erro', 'Ocorreu um erro ao baixar as questões. Tente novamente', 'Ok');
+                setModalVisible(false);
+            })
 
-    return(
+    }, [])
+
+    return (
         <View style={style.container}>
-             <ImageBackground  
-                    source={require('../../../../assets/image/wallpaperSentence.png')} 
-                    style={{width: '100%', height: '100%', position: 'absolute'}}  
+            <ImageBackground
+                source={require('../../../../assets/image/imageBackgroundMain.png')}
+                style={{ width: '100%', height: '100%', position: 'absolute' }}
             />
-            <StatusBar barStyle='dark-content' backgroundColor='#5271ff' />   
+            <StatusBar barStyle='dark-content' backgroundColor='#5271ff' />
             <View>
                 <View>
                     <Modal
@@ -186,67 +184,69 @@ export default function responseQuestion({ navigation, route }) {
                             <Text style={{ fontSize: 18 }}>Selecione uma questão</Text>
                             <FlatList
                                 data={listQuestion}
-                                style={{  width: '100%', margin: 15 }}
-                                renderItem={({ item }) => {return(
-                                    <TouchableOpacity 
-                                    key={item} 
-                                    style={{ backgroundColor: '#878286', padding: 15, margin: 5}}
-                                    onPress={() => {
-                                        console.log(item);
-                                        setModalMenuVisible(false);
-                                        Rewarding(item.number_question, Type)
-                                    }}
-                                    >
-                                        <Text style={{ color: '#FFF', fontWeight: 'bold' }}>{item.number_question} - {item.question}</Text>
-                                    </TouchableOpacity>
-                                )}}
+                                style={{ width: '100%', margin: 15 }}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={item}
+                                            style={{ backgroundColor: '#878286', padding: 15, margin: 5 }}
+                                            onPress={() => {
+                                                console.log(item);
+                                                setModalMenuVisible(false);
+                                                Rewarding(item.number_question, Type)
+                                            }}
+                                        >
+                                            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>{item.number_question} - {item.question}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                }}
                             />
-                        </View>                        
+                        </View>
                     </Modal>
                 </View>
                 {
-                !dataReward ? null :
-                    dataReward.length == 0 ? null :
-                    <View>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 0}}>Recompensas Disponíveis</Text>
-                        <FlatList 
-                            data={dataReward} 
-                            horizontal
-                            style={{ marginLeft: 20, marginTop: 0}}
-                            keyExtractor={item => item.id} 
-                            renderItem={({ item }) => {
-                                const image = { uri: item.picture };
+                    !dataReward ? null :
+                        dataReward.length == 0 ? null :
+                            <View>
+                                <Text style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 20, marginTop: 0 }}>Recompensas Disponíveis</Text>
+                                <FlatList
+                                    data={dataReward}
+                                    horizontal
+                                    style={{ marginLeft: 20, marginTop: 0 }}
+                                    keyExtractor={item => item.id}
+                                    renderItem={({ item }) => {
+                                        const image = { uri: item.picture };
 
-                                return (                             
-                                    <TouchableOpacity 
-                                    key={item.id} 
-                                    style={{backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
-                                    onPress={() => UseReward(item)}
-                                    >
-                                        <View style={style.containerImage}>      
-                                            <ImageBackground  
-                                                source={image} 
-                                                style={{width: 40, height: 40, borderRadius: 50}}  
-                                            />                        
-                                        </View>  
-                                        <Text style={{fontWeight: 'bold', fontSize: 10, color: '#000'}}>{item.name}</Text>
-                                        <View style={style.containerValue}>                      
-                                            <Text style={{color: '#000', marginLeft: 5, fontSize: 10,}}>Quantidade: {item.amount}</Text>  
-                                        </View>                                 
-                                    </TouchableOpacity>      
-                                );
-                            }}
-                        />   
-                    </View>
+                                        return (
+                                            <TouchableOpacity
+                                                key={item.id}
+                                                style={{ backgroundColor: '#FFF', borderRadius: 15, padding: 10, margin: 5, }}
+                                                onPress={() => UseReward(item)}
+                                            >
+                                                <View style={style.containerImage}>
+                                                    <ImageBackground
+                                                        source={image}
+                                                        style={{ width: 40, height: 40, borderRadius: 50 }}
+                                                    />
+                                                </View>
+                                                <Text style={{ fontWeight: 'bold', fontSize: 10, color: '#000' }}>{item.name}</Text>
+                                                <View style={style.containerValue}>
+                                                    <Text style={{ color: '#000', marginLeft: 5, fontSize: 10, }}>Quantidade: {item.amount}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        );
+                                    }}
+                                />
+                            </View>
                 }
             </View>
-            <RenderActivity data={listQuestion} user={VG.user_uid} navi={navigation}/>    
+            <RenderActivity data={listQuestion} user={VG.user_uid} navi={navigation} />
             <Modal visible={modalVisible}>
                 <View style={[style.containerLoad, style.horizontal]}>
-                    <ActivityIndicator size="large" color="green" />                                                    
-                </View>     
+                    <ActivityIndicator size="large" color="green" />
+                </View>
             </Modal>
-        </View>        
+        </View>
     );
 }
 
@@ -266,7 +266,7 @@ const style = StyleSheet.create({
     },
     button_one: {
         width: '90%',
-        padding: 10,
+        padding: 15,
         backgroundColor: 'red',
         margin: 5,
         borderRadius: 12,
@@ -274,7 +274,7 @@ const style = StyleSheet.create({
     },
     button_two: {
         width: '90%',
-        padding: 10,
+        padding: 15,
         backgroundColor: 'blue',
         margin: 5,
         borderRadius: 12,
@@ -282,7 +282,7 @@ const style = StyleSheet.create({
     },
     button_tree: {
         width: '90%',
-        padding: 10,
+        padding: 15,
         backgroundColor: 'green',
         margin: 5,
         borderRadius: 12,
@@ -290,7 +290,7 @@ const style = StyleSheet.create({
     },
     button_four: {
         width: '90%',
-        padding: 10,
+        padding: 15,
         backgroundColor: 'orange',
         margin: 5,
         borderRadius: 12,
@@ -327,220 +327,228 @@ const style = StyleSheet.create({
     },
     containerValue: {
         alignItems: 'center',
-    }, 
+    },
 })
 
-function ListResponse(props){
+function ListResponse(props) {
     const [icons, setIcons] = useState(null);
     const [item, setItem] = useState(props.item);
 
-    return(
-        <View style={{ flex: 1, marginTop: 15}}>            
-            <View style={{width: '90%'}}>
-                <Text style={style.number_question}>Questão: {item.number_question}</Text>
-            </View>                
-            <View style={{width: '90%', marginTop: 15, marginBottom: 15}}>
-                <Text style={style.question}>{item.question}</Text>
+    return (
+        <View style={{ flex: 1, marginTop: 15 }}>
+            <View style={{ width: '100%', alignItems: 'center' }}>
+                <View style={{ 
+                    width: '90%', 
+                    marginTop: 15, 
+                    marginBottom: 15, 
+                    backgroundColor: '#5271ff', 
+                    padding: 10, 
+                    borderRadius: 10, 
+                    }}>
+                    <Text style={style.number_question}>Questão: {item.number_question}</Text>
+                    <Text style={style.question}>{item.question}</Text>
+                </View>
             </View>
+
             <ScrollView>
-                <View style={{ alignItems: 'center'}}>
+                <View style={{ alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => {
                         setIcons('one');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
-                        .update({
-                            response: 'one',
-                        })
-                        .then()
-                        .catch((erro) => {
-                            console.log(erro)
-                            Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
-                        }) 
+                            .update({
+                                response: 'one',
+                            })
+                            .then()
+                            .catch((erro) => {
+                                console.log(erro)
+                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                            })
 
                     }} style={style.button_one}>
                         {icons == 'one' ?
-                        <Icon name='checkmark-circle' size={20} style={{color: '#FFF', marginRight: 10}}/> 
-                        : null}                            
+                            <Icon name='checkmark-circle' size={20} style={{ color: '#FFF', marginRight: 10 }} />
+                            : null}
                         <Text style={style.text_response}>
                             {item.answer_one}
-                        </Text>      
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                         setIcons('two');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
-                        .update({
-                            response: 'two',
-                        })
-                        .then()
-                        .catch(() => {
-                            Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
-                        }) 
+                            .update({
+                                response: 'two',
+                            })
+                            .then()
+                            .catch(() => {
+                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                            })
                     }} style={style.button_two}>
                         {icons == 'two' ?
-                        <Icon name='checkmark-circle' size={20} style={{color: '#FFF', marginRight: 10}}/> 
-                        : null}    
+                            <Icon name='checkmark-circle' size={20} style={{ color: '#FFF', marginRight: 10 }} />
+                            : null}
                         <Text style={style.text_response}>
                             {item.answer_two}
-                        </Text>                    
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                         setIcons('tree');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
-                        .update({
-                            response: 'tree',
-                        })
-                        .then()
-                        .catch(() => {
-                            Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
-                        }) 
-                    }}style={style.button_tree}>
+                            .update({
+                                response: 'tree',
+                            })
+                            .then()
+                            .catch(() => {
+                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                            })
+                    }} style={style.button_tree}>
                         {icons == 'tree' ?
-                        <Icon name='checkmark-circle' size={20} style={{color: '#FFF', marginRight: 10}}/> 
-                        : null}    
+                            <Icon name='checkmark-circle' size={20} style={{ color: '#FFF', marginRight: 10 }} />
+                            : null}
                         <Text style={style.text_response}>
                             {item.answer_tree}
-                        </Text>                     
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                         setIcons('four');
                         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
-                        .update({
-                            response: 'four',
-                        })
-                        .then()
-                        .catch(() => {
-                            Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
-                        }) 
+                            .update({
+                                response: 'four',
+                            })
+                            .then()
+                            .catch(() => {
+                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                            })
                     }} style={style.button_four}>
                         {icons == 'four' ?
-                        <Icon name='checkmark-circle' size={20} style={{color: '#FFF', marginRight: 10}}/> 
-                        : null}    
+                            <Icon name='checkmark-circle' size={20} style={{ color: '#FFF', marginRight: 10 }} />
+                            : null}
                         <Text style={style.text_response}>
                             {item.answer_four}
-                        </Text>                    
+                        </Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>  
-        </View>                     
+            </ScrollView>
+        </View>
     )
 }
 
-class RenderActivity extends React.Component {    
+class RenderActivity extends React.Component {
 
-    _renderSlides = ({item}) => {   
+    _renderSlides = ({ item }) => {
 
         firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
-        .set({
-            response: 'null',
-        })
-        .then()
-        .catch((erro) => {
-            console.log(erro)
-            Alert.alert('Erro', 'Ocorreu um erro ao montar as questões. Tente novamente!');
-        }) 
-        
-        return(
-           <ListResponse item={item} />                  
+            .set({
+                response: 'null',
+            })
+            .then()
+            .catch((erro) => {
+                console.log(erro)
+                Alert.alert('Erro', 'Ocorreu um erro ao montar as questões. Tente novamente!');
+            })
+
+        return (
+            <ListResponse item={item} />
         )
     };
 
     _renderNextButton = () => {
-      return (
-        <View style={style.buttonCircle}>
-            <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15}}>Próxima</Text> 
-            <Icon
-                name="arrow-forward-sharp"
-                color="rgba(255, 255, 255, .9)"
-                size={24}
-            />
-        </View>
-      );
+        return (
+            <View style={style.buttonCircle}>
+                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15 }}>Próxima</Text>
+                <Icon
+                    name="arrow-forward-sharp"
+                    color="rgba(255, 255, 255, .9)"
+                    size={24}
+                />
+            </View>
+        );
     };
     _renderDoneButton = () => {
-      return (
-        <View style={style.buttonCircle}>
-            <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15}}>Finalizar</Text> 
-            <Icon
-                name="md-checkmark"
-                color="rgba(255, 255, 255, .9)"
-                size={24}
-            />
-        </View>
-      );
+        return (
+            <View style={style.buttonCircle}>
+                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15 }}>Finalizar</Text>
+                <Icon
+                    name="md-checkmark"
+                    color="rgba(255, 255, 255, .9)"
+                    size={24}
+                />
+            </View>
+        );
     };
 
     render() {
-      const { data, user, navi } = this.props;
-      function done(){
-        firestore().collection('user_activity_' + data[0].activity_id + '_response_' + VG.user_uid).get()
-        .then(querySnapshot => {
-            var bloqueia_post = false;
-            var sucess = true;
-            var index = 0;
-            var activity = {};
-            var activityArray = [];
+        const { data, user, navi } = this.props;
+        function done() {
+            firestore().collection('user_activity_' + data[0].activity_id + '_response_' + VG.user_uid).get()
+                .then(querySnapshot => {
+                    var bloqueia_post = false;
+                    var sucess = true;
+                    var index = 0;
+                    var activity = {};
+                    var activityArray = [];
 
-            querySnapshot.forEach(documentSnapshot => {
-                const valid = documentSnapshot.data()
-                if(valid.response == 'null'){
-                    Alert.alert('Atenção', 'Responda todas as questões.');
-                    bloqueia_post = true;
-                    return;
-                }
+                    querySnapshot.forEach(documentSnapshot => {
+                        const valid = documentSnapshot.data()
+                        if (valid.response == 'null') {
+                            Alert.alert('Atenção', 'Responda todas as questões.');
+                            bloqueia_post = true;
+                            return;
+                        }
 
-                index++
-                
-                activity.activity_id = parseInt(data[0].activity_id);
-                activity.number_question = index;
-                activity.answer = valid.response;
-                activityArray.push({...activity});             
+                        index++
 
-            });   
+                        activity.activity_id = parseInt(data[0].activity_id);
+                        activity.number_question = index;
+                        activity.answer = valid.response;
+                        activityArray.push({ ...activity });
 
-            console.log(bloqueia_post)
-            if(bloqueia_post){
-                return;
-            }
+                    });
 
-            console.log(JSON.stringify(activityArray))
+                    console.log(bloqueia_post)
+                    if (bloqueia_post) {
+                        return;
+                    }
 
-            APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
-            .then(() => {    
-                APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
-                .then()
-                .catch((erro) => {
-                    sucess = false;
-                    console.log(erro)
-                    Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{text: 'Ok',style: 'destructive', }]);
-                })  
+                    console.log(JSON.stringify(activityArray))
 
-                if (sucess) {
-                    navi.reset({
-                        index: 1,
-                        routes: [
-                          { name: 'Main'},
-                          { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
-                        ],
-                      })
-                }                
-            })
-            .catch((error) => {
-                console.log(error);
-                Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{text: 'Ok',style: 'destructive', }]);
-            })                  
-        })
-        .catch(() => {
-            Alert.alert('Erro', 'Ocorreu um erro ao realizara leitura das respostas temporarias.');
-        });  
-      }
+                    APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
+                        .then(() => {
+                            APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
+                                .then()
+                                .catch((erro) => {
+                                    sucess = false;
+                                    console.log(erro)
+                                    Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                                })
 
-      return (
-        <AppIntroSlider
-          data={data}
-          renderItem={this._renderSlides}
-          onDone={done}
-          renderNextButton={this._renderNextButton}
-          renderDoneButton={this._renderDoneButton}
-        />
-      );
+                            if (sucess) {
+                                navi.reset({
+                                    index: 1,
+                                    routes: [
+                                        { name: 'Main' },
+                                        { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
+                                    ],
+                                })
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                        })
+                })
+                .catch(() => {
+                    Alert.alert('Erro', 'Ocorreu um erro ao realizara leitura das respostas temporarias.');
+                });
+        }
+
+        return (
+            <AppIntroSlider
+                data={data}
+                renderItem={this._renderSlides}
+                onDone={done}
+                renderNextButton={this._renderNextButton}
+                renderDoneButton={this._renderDoneButton}
+            />
+        );
     }
-  }
+}

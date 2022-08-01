@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, TouchableOpacity, Text, StatusBar, Alert, Keyboard, FlatList, Image, KeyboardAvoidingView, TextInput, Modal, ImageBackground } from 'react-native';
+import { View, TouchableOpacity, Text, StatusBar, Alert, Keyboard, ActivityIndicator, FlatList, Image, KeyboardAvoidingView, TextInput, Modal, ImageBackground } from 'react-native';
 import styles from "./styles";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Axios from '../../../services/mainService/mainService'
@@ -125,6 +125,11 @@ export default function EduvidaDetail({ navigation, route }) {
             return;
         }
 
+        if (!comment) {
+            Alert.alert('Ei', 'Adicione um comentário.')
+            return;
+        }
+
         if (!image) {
             return;
         }
@@ -137,7 +142,7 @@ export default function EduvidaDetail({ navigation, route }) {
                     .then(async (value) => {
 
                         let json = {
-                            comment: comment,
+                            comment: comment.trim(),
                             image_reference: 'eduvida/media/image/' + image.assets[0].fileName,
                             image_url: value,
                             image_type: image.assets[0].type,
@@ -259,24 +264,27 @@ export default function EduvidaDetail({ navigation, route }) {
                 </View>
                 <Modal visible={modalVisible} >
                     <View style={styles.container_modal_media}>
-                        <TouchableOpacity 
-                        style={styles.button_image_selected}
-                        onPress={() => {
-                            if (viewImage) {
-                                setViewImage(false)
-                            } else {
-                                setViewImage(true)
-                            }
-                        }}>
+
+                        <TouchableOpacity
+                            style={styles.button_image_selected}
+                            onPress={() => {
+                                if (viewImage) {
+                                    setViewImage(false)
+                                } else {
+                                    setViewImage(true)
+                                }
+                            }}>
                             {
-                                image ? 
-                                <Image source={{ uri: image.assets[0].uri }} resizeMode='contain' style={styles.image_selected} />
-                                :
-                                <View style={styles.container_icon_image}>
-                                    <FontAwesome name='image' size={40} style={styles.icon_image} /> 
-                                </View>
-                                
-                            } 
+                                image ?
+                                    <Image source={{ uri: image.assets[0].uri }} resizeMode='contain' style={styles.image_selected} />
+                                    :
+                                    <View style={styles.container_icon_image}>
+                                        <FontAwesome name='image' size={40} style={styles.icon_image} />
+                                    </View>
+                            }
+                            {
+                                send ? <ActivityIndicator size='large' color='#9400D3' /> : null
+                            }
                         </TouchableOpacity>
                         <View style={styles.comment}>
                             <TextInput
