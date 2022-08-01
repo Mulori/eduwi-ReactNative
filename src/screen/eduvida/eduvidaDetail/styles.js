@@ -6,13 +6,13 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        width: '100%',
+        width: '100%',        
     },
     header_comments: {
         top: 10,
         marginTop: 10,
         marginBottom: 10,
-        flexDirection: 'row',
+        flexDirection: 'row',        
     },
     logo: {
         height: 40,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         width: '82%',
         backgroundColor: '#FFF',
-        borderRadius: 15,
+        borderRadius: 15,        
     },
     conteiner_comment_main:{
         shadowColor: '#000',
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#FFF',
         borderRadius: 15,
+        backgroundColor: '#9400D3'
     },
     conteiner_comment_you: {
         shadowColor: '#000',
@@ -68,13 +69,24 @@ const styles = StyleSheet.create({
     text_name: {
         color: '#FFF',
         left: 15,
+        top: 10,
         fontWeight: 'bold',
     },
     text_date: {
         position: 'absolute',
         color: '#FFF',
         right: 10,
-        top: 5,
+        top: 14,
+    },
+    text_name_comment: {
+        color: '#FFF',
+        left: 15,
+        fontWeight: 'bold',
+    },
+    text_date_comment: {
+        position: 'absolute',
+        color: '#FFF',
+        right: 10,
     },
     container_text: {
         padding: 10,
@@ -150,7 +162,7 @@ const styles = StyleSheet.create({
     button_media_library:{
         width: '50%',
         height: '100%',
-        backgroundColor: '#9400D3',
+        backgroundColor: '#8d4a07',
         borderTopStartRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
@@ -158,7 +170,7 @@ const styles = StyleSheet.create({
     button_media_camera: {
         width: '50%',
         height: '100%',
-        backgroundColor: '#9400D3',
+        backgroundColor: '#8d4a07',
         borderTopEndRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
@@ -186,6 +198,22 @@ const styles = StyleSheet.create({
         fontSize: 15,
         left: 5,
         maxHeight: 120
+    },
+    icon_image: {
+        color: '#8d4a07'
+    },
+    image_selected:{
+        width: '100%', 
+        height: '100%' ,
+    },
+    button_image_selected: {
+        alignItems: 'center',
+    },
+    container_icon_image: {
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 })
 
