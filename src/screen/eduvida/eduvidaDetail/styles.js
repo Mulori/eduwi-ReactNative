@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     button_media_library:{
         width: '50%',
         height: '100%',
-        backgroundColor: '#8d4a07',
+        backgroundColor: '#9400D3',
         borderTopStartRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     button_media_camera: {
         width: '50%',
         height: '100%',
-        backgroundColor: '#8d4a07',
+        backgroundColor: '#9400D3',
         borderTopEndRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
         maxHeight: 120
     },
     icon_image: {
-        color: '#8d4a07'
+        color: '#9400D3'
     },
     image_selected:{
         width: '100%', 
