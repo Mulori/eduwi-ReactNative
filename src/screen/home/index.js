@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import VG from '../../components/variables/VG';
+
 import MainActivity from '../mainActivity';
 import NewActivity from '../mainActivity/newActivity';
 import NewActivityQuestionMain from '../mainActivity/newActivityQuestionMain';
@@ -53,11 +55,7 @@ export default function Home() {
             <Stack.Screen name='mainSearchActivity' options={{ headerShown: false }} component={MainSearchActivity} />
             <Stack.Screen name='passActivity' options={{ headerShown: false }} component={PassActivity} />
             <Stack.Screen name='responseQuestion' options={{ headerShown: false }} component={ResponseQuestion} />
-            <Stack.Screen name='EduvidaDetail' options={{
-                headerTitle: 'Eduvidas',
-                headerStyle: { backgroundColor: '#9400D3', color: '#FFF' },
-                headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
-            }} component={eduvidaDetail} />
+            <Stack.Screen name='EduvidaDetail' options={{ headerShown: false }} component={eduvidaDetail} />
             <Stack.Screen name='NewEduvida' options={{
                 headerTitle: 'Compartilhar Dúvida',
                 headerStyle: { backgroundColor: '#9400D3', color: '#FFF' },

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     },
     list_item: {
         width: '90%',
-        backgroundColor: '#2b8f17',
+        backgroundColor: '#FFF',
         padding: 15,
         marginBottom: 10,
         borderRadius: 10,
@@ -20,29 +20,33 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        color: '#FFF',
+        color: '#1C1C1C',
         fontWeight: 'bold',
         left: 10,
-        fontSize: 17,
+        fontSize: 19,
     },
     info:{
-        color: '#FFF',
+        color: '#9400D3',
+        fontSize: 13,
+        fontWeight: 'bold',
         left: 10,
     },
     logo: {
         height: 40,
         width: 40,
         borderRadius: 25,
+        top: 2
     },
     container_content: {
         flexDirection: 'row',
+        width: '100%'
     },
     container_content_two: {
         flexDirection: 'row',
         width: '100%'
     },
     materialcommunityicons: {
-        color: '#FFF',
+        color: '#9400D3',
         left: 10,
         top: 2
     },

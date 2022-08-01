@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, TouchableOpacity, Text, StatusBar, Alert, Keyboard, FlatList, Image, KeyboardAvoidingView, TextInput, Modal } from 'react-native';
+import { View, TouchableOpacity, Text, StatusBar, Alert, Keyboard, FlatList, Image, KeyboardAvoidingView, TextInput, Modal, ImageBackground } from 'react-native';
 import styles from "./styles";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Axios from '../../../services/mainService/mainService'
@@ -177,12 +177,12 @@ export default function EduvidaDetail({ navigation, route }) {
         return (
             <View style={styles.header_comments}>
                 <View style={{ width: '15%', }}>
-                    <Image style={styles.logo} source={data_comment.image_user ? { uri: data_comment.image_user } : require('../../../assets/image/imageNotFound.png')} />
+                    <Image style={styles.logo} source={data_comment.image_user ? { uri: data_comment.image_user } : require('../../../assets/image/avatarMissing.png')} />
                 </View>
                 <View style={styles.conteiner_comment}>
                     <View style={styles.container_name_two}>
-                        <Text style={styles.text_name}>{data_comment.name + ' ' + data_comment.last_name}</Text>
-                        <Text style={styles.text_date}>{formatDate(date)}</Text>
+                        <Text style={styles.text_name_comment}>{data_comment.name + ' ' + data_comment.last_name}</Text>
+                        <Text style={styles.text_date_comment}>{formatDate(date)}</Text>
                     </View>
                     <View style={styles.container_text}>
                         <Text>{data_comment.comment}</Text>
@@ -199,105 +199,126 @@ export default function EduvidaDetail({ navigation, route }) {
     }
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "height" : "padding"}
-            style={styles.container}
-        >
-            <StatusBar backgroundColor='#9400D3' barStyle='light-content' />
-            <View style={styles.header}>
-                <View style={styles.conteiner_comment_main}>
-                    <View style={styles.container_name}>
-                        <Image style={styles.logo} source={data_header.image_url ? { uri: data_header.image_url } : require('../../../assets/image/imageNotFound.png')} />
-                        <Text style={styles.text_name}>{data_header.name + ' ' + data_header.last_name}</Text>
-                        <Text style={styles.text_date}>{formatDate(date_header)}</Text>
-                    </View>
-                    <View style={styles.container_text}>
-                        <Text>{data_header.help_text}</Text>
+        <View style={{ flex: 1 }}>
+            <ImageBackground
+                source={require('../../../assets/image/imageBackgroundMain.png')}
+                style={{ width: '100%', height: '100%', position: 'absolute' }}
+            />
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "height" : "padding"}
+                style={styles.container}
+            >
+                <StatusBar backgroundColor='#9400D3' barStyle='light-content' />
+                <View style={styles.header}>
+                    <View style={styles.conteiner_comment_main}>
+                        <View style={styles.container_name}>
+                            <Image style={styles.logo} source={data_header.image_url ? { uri: data_header.image_url } : require('../../../assets/image/avatarMissing.png')} />
+                            <Text style={styles.text_name}>{data_header.name + ' ' + data_header.last_name}</Text>
+                            <Text style={styles.text_date}>{formatDate(date_header)}</Text>
+                        </View>
+                        <View style={styles.container_text}>
+                            <Text style={{ color: '#FFF' }}>{data_header.help_text}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View>
-                <FlatList
-                    data={data}
-                    ref={flatList}
-                    scrollToEnd={{ animated: false }}
-                    style={{ height: !isKeyboardVisible ? '76%' : '100%' }}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <CardComment data_comment={item} index={index} sizeData={data.length} />
-                        );
-                    }}
-                />
-            </View>
-            <View style={styles.comment}>
-                <TextInput
-                    placeholder='Responder'
-                    maxLength={500}
-                    placeholderTextColor='#FFF'
-                    style={styles.text_input_comment}
-                    multiline={true}
-                    value={comment}
-                    onChangeText={(value) => setComment(value)} />
-                <TouchableOpacity style={styles.button_media} onPress={() => setModalVisible(true)} >
-                    <MaterialIcons name='perm-media' size={18} style={styles.icon_send} />
-                </TouchableOpacity>
-                {
-                    send ? null :
-                        <TouchableOpacity style={styles.button_send} onPress={Comment}>
-                            <MaterialIcons name='send' size={18} style={styles.icon_send} />
-                        </TouchableOpacity>
-                }
-            </View>
-            <Modal visible={modalVisible} >
-                <View style={styles.container_modal_media}>
-                    <TouchableOpacity onPress={() => {
-                        if (viewImage) {
-                            setViewImage(false)
-                        } else {
-                            setViewImage(true)
-                        }
-                    }}>
-                        <Image source={image ? { uri: image.assets[0].uri } : require('../../../assets/image/imageNotFound.png')} resizeMode='contain' style={{ width: '100%', height: '100%' }} />
+                <View>
+                    <FlatList
+                        data={data}
+                        ref={flatList}
+                        scrollToEnd={{ animated: false }}
+                        style={{ height: !isKeyboardVisible ? '76%' : '125%' }}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <CardComment data_comment={item} index={index} sizeData={data.length} />
+                            );
+                        }}
+                    />
+                </View>
+                <View style={styles.comment}>
+                    <TextInput
+                        placeholder='Responder'
+                        maxLength={500}
+                        placeholderTextColor='#FFF'
+                        style={styles.text_input_comment}
+                        multiline={true}
+                        value={comment}
+                        onChangeText={(value) => setComment(value)} />
+                    <TouchableOpacity style={styles.button_media} onPress={() => {
+
+                        setModalVisible(true);
+                        setViewImage(true);
+                    }} >
+                        <MaterialIcons name='perm-media' size={18} style={styles.icon_send} />
                     </TouchableOpacity>
-                    <View style={styles.comment}>
-                        <TextInput
-                            placeholder='Responder'
-                            maxLength={500}
-                            placeholderTextColor='#FFF'
-                            style={styles.text_input_comment_media}
-                            multiline={true}
-                            value={comment}
-                            onChangeText={(value) => setComment(value)} />
-                        {
-                            send ? null :
-                                <TouchableOpacity style={styles.button_send} onPress={CommentWithMedia}>
-                                    <MaterialIcons name='send' size={18} style={styles.icon_send} />
-                                </TouchableOpacity>
-                        }
-                    </View>
-                    <TouchableOpacity onPress={() => {
-                        setModalVisible(false);
-                        setImage(null);
-                    }}
-                        style={{ position: 'absolute', right: 10, top: 10, }}>
-                        <FontAwesome name='window-close' size={30} style={{ color: '#808080' }} />
-                    </TouchableOpacity>
-                    {!viewImage ? null :
-                        <Animatable.View animation='bounceInUp' duration={2000} style={styles.container_avatar}>
-                            <View style={styles.container_buttons_media}>
-                                <TouchableOpacity style={styles.button_media_library} onPress={() => { launchImageLibrary({}, imagePickerCallback) }}>
-                                    <MaterialCommunityIcons name='folder-multiple-image' size={20} style={styles.icon_galery} />
-                                    <Text style={styles.text_button_media_library}>Galeria</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.button_media_camera} onPress={() => { launchCamera({}, imagePickerCallback) }}>
-                                    <FontAwesome name='camera' size={20} style={styles.icon_camera} />
-                                    <Text style={styles.text_button_media_camera}>Camera</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </Animatable.View>
+                    {
+                        send ? null :
+                            <TouchableOpacity style={styles.button_send} onPress={Comment}>
+                                <MaterialIcons name='send' size={18} style={styles.icon_send} />
+                            </TouchableOpacity>
                     }
                 </View>
-            </Modal>
-        </KeyboardAvoidingView>
+                <Modal visible={modalVisible} >
+                    <View style={styles.container_modal_media}>
+                        <TouchableOpacity 
+                        style={styles.button_image_selected}
+                        onPress={() => {
+                            if (viewImage) {
+                                setViewImage(false)
+                            } else {
+                                setViewImage(true)
+                            }
+                        }}>
+                            {
+                                image ? 
+                                <Image source={{ uri: image.assets[0].uri }} resizeMode='contain' style={styles.image_selected} />
+                                :
+                                <View style={styles.container_icon_image}>
+                                    <FontAwesome name='image' size={40} style={styles.icon_image} /> 
+                                </View>
+                                
+                            } 
+                        </TouchableOpacity>
+                        <View style={styles.comment}>
+                            <TextInput
+                                placeholder='Responder'
+                                maxLength={500}
+                                placeholderTextColor='#FFF'
+                                style={styles.text_input_comment_media}
+                                multiline={true}
+                                value={comment}
+                                onChangeText={(value) => setComment(value)} />
+                            {
+                                send ? null :
+                                    <TouchableOpacity style={styles.button_send} onPress={CommentWithMedia}>
+                                        <MaterialIcons name='send' size={18} style={styles.icon_send} />
+                                    </TouchableOpacity>
+                            }
+                        </View>
+                        <TouchableOpacity onPress={() => {
+                            setModalVisible(false);
+                            setImage(null);
+                        }}
+                            style={{ position: 'absolute', right: 10, top: 10, }}>
+                            <FontAwesome name='window-close' size={30} style={{ color: '#808080' }} />
+                        </TouchableOpacity>
+                        {!viewImage ? null :
+                            <Animatable.View animation='bounceInUp' duration={2000} style={styles.container_avatar}>
+                                <View style={styles.container_buttons_media}>
+                                    <TouchableOpacity style={styles.button_media_library} onPress={() => { launchImageLibrary({}, imagePickerCallback) }}>
+                                        <MaterialCommunityIcons name='folder-multiple-image' size={20} style={styles.icon_galery} />
+                                        <Text style={styles.text_button_media_library}>Galeria</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.button_media_camera} onPress={() => { launchCamera({}, imagePickerCallback) }}>
+                                        <FontAwesome name='camera' size={20} style={styles.icon_camera} />
+                                        <Text style={styles.text_button_media_camera}>Camera</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </Animatable.View>
+                        }
+                    </View>
+                </Modal>
+            </KeyboardAvoidingView>
+        </View>
+
     )
 }

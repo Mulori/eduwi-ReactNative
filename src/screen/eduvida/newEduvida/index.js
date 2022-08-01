@@ -9,16 +9,23 @@ import { Picker } from '@react-native-picker/picker';
 export default function NewEduvida({ navigation }) {
     const [tipos, setTipos] = useState(['Artes', 'Ciências', 'Conhecimentos Gerais', 'Culturas', 'Engenharias', 'Exatas', 'Física', 'História', 'Humanas', 'Linguística', 'Meio Ambiente', 'Química', 'Tecnologia', 'Outro(s)']);
     const [tipoSelecionado, setTipoSelecionado] = useState('Artes');
+    const [title, setTitle] = useState(null);
     const [text, setText] = useState(null);
 
     async function Post() {
-        if(!text){
-            Alert.alert('Aviso', 'Para compartilhar uma dúvida é necessário informa-la.')
+
+        if (!title) {
+            Alert.alert('Aviso', 'Informe o titulo.')
+            return;
+        }
+
+        if (!text) {
+            Alert.alert('Aviso', 'Informe sua dúvida.')
             return;
         }
 
         let json = {
-            title: text.substring(0, 35),
+            title: title.trim(),
             help_text: text.trim(),
             help_type: tipoSelecionado,
             image_reference: "",
@@ -48,14 +55,23 @@ export default function NewEduvida({ navigation }) {
             style={styles.container}>
             <StatusBar backgroundColor='#9400D3' barStyle='light-content' />
             <View style={styles.container_content}>
+                <Text style={styles.title}>Titulo:</Text>
+                <TextInput
+                    style={styles.text_input}
+                    placeholderTextColor={'#000'}
+                    multiline={true}
+                    maxLength={50}
+                    placeholder='Digite aqui...'
+                    onChangeText={(value) => setTitle(value)}
+                />
                 <Text style={styles.title}>Conte-nos sua dúvida:</Text>
-                <TextInput 
-                style={styles.text_input} 
-                placeholderTextColor={'#000'} 
-                multiline={true} 
-                maxLength={500} 
-                placeholder='Digite aqui...'
-                onChangeText={(value) => setText(value)}
+                <TextInput
+                    style={styles.text_input}
+                    placeholderTextColor={'#000'}
+                    multiline={true}
+                    maxLength={500}
+                    placeholder='Digite aqui...'
+                    onChangeText={(value) => setText(value)}
                 />
                 <Text style={styles.title}>Área:</Text>
                 <Picker
@@ -71,7 +87,7 @@ export default function NewEduvida({ navigation }) {
                 <TouchableOpacity style={styles.button_send} onPress={Post}>
                     <Text style={styles.button_send_text}>Compartilhar</Text>
                 </TouchableOpacity>
-            </View>            
+            </View>
         </KeyboardAvoidingView>
     )
 }

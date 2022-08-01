@@ -46,17 +46,19 @@ export default function Eduvida({ navigation }) {
                 var date = new Date(item.created);
                 return (
                     <View style={styles.list}>
-                        <TouchableOpacity onPress={() => navigation.navigate('EduvidaDetail', { data_header: item })} key={item.id} style={styles.list_item}>
+                        <TouchableOpacity onPress={() => 
+                            navigation.navigate('EduvidaDetail', { data_header: item })                        
+                        } key={item.id} style={styles.list_item}>
                             <View style={styles.container_content}>
-                                <Image style={styles.logo} source={item.image_url ? { uri: item.image_url } : require('../../assets/image/imageNotFound.png')} />
+                                <Image style={styles.logo} source={item.image_url ? { uri: item.image_url } : require('../../assets/image/avatarMissing.png')} />
                                 <View>
-                                    <Text style={styles.title}>{item.title.substring(0, 30)}...</Text>
+                                    <Text style={styles.title}>{item.title.substring(0, 26)}...</Text>
                                     <View style={styles.container_content_two}>
-                                        <View style={{ width: '50%', flexDirection: 'row'}}>
+                                        <View style={{ width: '60%', flexDirection: 'row'}}>
                                             <MaterialCommunityIcons name='brain' size={15} style={styles.materialcommunityicons} />
                                             <Text style={styles.info}>{item.help_type}</Text>
                                         </View>
-                                        <View style={{ width: '50%'}}>
+                                        <View style={{ width: '40%'}}>
                                             <Text style={styles.info}>{formatDate(date)}</Text>
                                         </View>
                                     </View>
