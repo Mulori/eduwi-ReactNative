@@ -66,7 +66,7 @@ export default function responseSentences({ navigation, route }) {
     return(
         <View style={style.container}>
             <ImageBackground  
-                    source={require('../../../../assets/image/wallpaperSentence.png')} 
+                    source={require('../../../../assets/image/imageBackgroundMain.png')} 
                     style={{width: '100%', height: '100%', position: 'absolute'}}  
             />
             <StatusBar barStyle='light-content' backgroundColor='#5271ff' />               
@@ -329,7 +329,7 @@ function ListResponse(props){
                 <Text style={style.question}>{item.question}</Text>
             </View>
             <ScrollView>
-                <View  style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center',  }}>
+                <View  style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 1, alignContent: 'center', borderRadius: 15, padding: 10 }}>
                 {
                     !item.marked_sentence ? null :
                     item.marked_sentence.split(' ').map((frase, index) =>
@@ -339,10 +339,12 @@ function ListResponse(props){
                                 <TextInput 
                                 autoCapitalize='none'
                                 style={{ 
-                                    backgroundColor: '#e7e4d5',
+                                    backgroundColor: '#5271ff',
                                     borderRadius: 15,
+                                    color: '#FFF',
                                     padding: 5, 
                                     margin: 5,
+                                    minWidth: 65,
                                     fontSize: 18, 
                                     fontWeight: 'bold', 
                                     textAlign: 'center',
@@ -351,7 +353,7 @@ function ListResponse(props){
                                     onChangeText={async(value) => HandleSaveText(value.toString().trim(), item.number_sentence, index)}
                                 />
                                 :
-                                <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: 'transparent', color: '#FFF', margin: 5, padding: 5, borderRadius: 15,  }}>{frase}</Text>        
+                                <Text style={{ fontWeight: 'bold', fontSize: 18, backgroundColor: 'transparent', color: '#000', margin: 5, padding: 5, borderRadius: 15,  }}>{frase}</Text>        
                             }        
                         </View>  
                     )
