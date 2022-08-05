@@ -150,11 +150,11 @@ export default function MainActivity({ navigation }) {
                                     />
                                     <View >
                                         <View>
-                                            <Text style={{color: '#FFF', fontSize: 18, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5 }}>{item.title.toString().substring(0, 20)}</Text>     
+                                            <Text style={{color: '#FFF',  width: '90%', fontSize: 18, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5, top: 5 }}>{item.title.toString()}</Text>     
                                         </View>
-                                        <View>
+                                        {/* <View>
                                             <Text style={{color: '#FFF', fontSize: 18, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5 }}>{item.title.toString().substring(20, 40)}</Text>     
-                                        </View>
+                                        </View> */}
                                     </View>                                    
                                     <Text style={{ color: '#FFF', position: 'absolute', bottom: 0, left: 115, fontSize: 15 }}>Dificuldade: {item.difficulty_level}</Text>
                                     <FontAwesome name='star' size={22} style={{ color: '#FFF', position: 'absolute', bottom: 3, right: 20}} />
