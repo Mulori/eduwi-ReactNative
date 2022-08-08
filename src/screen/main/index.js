@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, ImageBackground, Modal, FlatList, Image } from 'react-native';
+import { StatusBar, StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, ImageBackground, Modal, FlatList, Image, Alert, TextInput } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Feather';
 import IconFont5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import IconFoundation from 'react-native-vector-icons/Foundation';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import WindMill from '../../components/lotties/WindMill';
+import Feather from 'react-native-vector-icons/Feather';
 import mainservices from '../../services/mainService/mainService';
 import userService from '../../services/userService/userService';
 import VG from '../../components/variables/VG';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-
+import styles from './styles';
 
 
 export default function Main({ navigation }) {
@@ -18,6 +20,64 @@ export default function Main({ navigation }) {
     const [configMenu, setConfigMenu] = useState(null);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    const [starOne, setStarOne] = useState(false);
+    const [starTwo, setStarTwo] = useState(false);
+    const [starTree, setStarTree] = useState(false);
+    const [starFour, setStarFour] = useState(false);
+    const [starFive, setStarFive] = useState(false);
+    const [viewAvaliable, setViewAvaliable] = useState(true);
+    const [evaluatd, setEvaluated] = useState(null);
+
+    function SetStar(value) {
+
+        setEvaluated(value);
+
+        switch (value) {
+            case 1:
+                setStarOne(true);
+                setStarTwo(false);
+                setStarTree(false);
+                setStarFour(false);
+                setStarFive(false);
+                break;
+            case 2:
+                setStarOne(true);
+                setStarTwo(true);
+                setStarTree(false);
+                setStarFour(false);
+                setStarFive(false);
+                break;
+            case 3:
+                setStarOne(true);
+                setStarTwo(true);
+                setStarTree(true);
+                setStarFour(false);
+                setStarFive(false);
+                break;
+            case 4:
+                setStarOne(true);
+                setStarTwo(true);
+                setStarTree(true);
+                setStarFour(true);
+                setStarFive(false);
+                break;
+            case 5:
+                setStarOne(true);
+                setStarTwo(true);
+                setStarTree(true);
+                setStarFour(true);
+                setStarFive(true);
+                break;
+        }
+    }
+
+    function SendEvaluated() {
+        if (!evaluatd) {
+            Alert.alert('Atenção', 'Informe sua experiência.')
+            return;
+        }
+    }
 
     useEffect(() => {
         setIsLoading(true);
@@ -113,28 +173,37 @@ export default function Main({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                <View style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 50, top: -35}}>
-                    <Image source={require('../../assets/image/Eduwi.png')} style={{ width: 300, height: 300, borderRadius: 75}} />
+                <TouchableOpacity style={styles.container_avaliable}>
+                    <Animatable.View animation='bounceIn' duration={10000} style={styles.container_star}>
+                        <TouchableOpacity style={styles.container_close}>
+                            <FontAwesome style={styles.icon_close} name='close' size={22} />
+                        </TouchableOpacity>
+                        <Text style={styles.container_star_title}>Avalie-nos</Text>
+                    </Animatable.View>
+                </TouchableOpacity>
+
+                <View style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 50, top: -35 }}>
+                    <Image source={require('../../assets/image/Eduwi.png')} style={{ width: 300, height: 300, borderRadius: 75 }} />
                 </View>
 
-                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', top: 50 }}>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', top: 25 }}>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('mainActivity')}
                         style={{ width: '33%', alignItems: 'center' }}>
-                        <Image source={require('../../assets/image/Explorar.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
+                        <Image source={require('../../assets/image/Explorar.png')} style={{ width: 100, height: 100, borderRadius: 15, }} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Eduvida')}
-                        style={{ width: '33%', alignItems: 'center'  }}>
-                        <Image source={require('../../assets/image/Eduvidas.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
+                        style={{ width: '33%', alignItems: 'center' }}>
+                        <Image source={require('../../assets/image/Eduvidas.png')} style={{ width: 100, height: 100, borderRadius: 15, }} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Game')}
-                        style={{ width: '33%', alignItems: 'center'  }}>
-                        <Image source={require('../../assets/image/Loja.png')} style={{ width: 100, height: 100, borderRadius: 15,  }} />
+                        style={{ width: '33%', alignItems: 'center' }}>
+                        <Image source={require('../../assets/image/Loja.png')} style={{ width: 100, height: 100, borderRadius: 15, }} />
                     </TouchableOpacity>
-                </View>
-                
+                </View>                
+
                 <FlatList
                     data={configMenu}
                     horizontal={true}
