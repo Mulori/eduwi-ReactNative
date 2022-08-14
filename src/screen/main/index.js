@@ -173,7 +173,7 @@ export default function Main({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.container_avaliable}>
+                <TouchableOpacity style={styles.container_avaliable} onPress={() => navigation.navigate('Evaluation')}>
                     <Animatable.View animation='bounceIn' duration={10000} style={styles.container_star}>
                         <TouchableOpacity style={styles.container_close}>
                             <FontAwesome style={styles.icon_close} name='close' size={22} />
