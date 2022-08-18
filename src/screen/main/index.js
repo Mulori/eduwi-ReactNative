@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import WindMill from '../../components/lotties/WindMill';
-import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import mainservices from '../../services/mainService/mainService';
 import userService from '../../services/userService/userService';
 import VG from '../../components/variables/VG';
@@ -20,7 +20,7 @@ export default function Main({ navigation }) {
     const [configMenu, setConfigMenu] = useState(null);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [isEvaluation, setIsEvaluation] = useState(false);
     const [starOne, setStarOne] = useState(false);
     const [starTwo, setStarTwo] = useState(false);
     const [starTree, setStarTree] = useState(false);
@@ -72,22 +72,27 @@ export default function Main({ navigation }) {
         }
     }
 
-    function SendEvaluated() {
-        if (!evaluatd) {
-            Alert.alert('Atenção', 'Informe sua experiência.')
-            return;
-        }
+    async function Evaluated(){
+        const evaluated = await AsyncStorage.getItem('@evaluation')
+
+        if(!evaluated){
+            setIsEvaluation(false)
+        }else{
+            setIsEvaluation(true)
+        }  
     }
 
     useEffect(() => {
         setIsLoading(true);
         GetUser();
         configMenuMain();
+        Evaluated();
     }, [])
 
     setTimeout(() => {
         GetUser();
     }, 10000);
+
 
     function configMenuMain() {
         mainservices.GetConfigMenu(VG.user_uid)
@@ -173,14 +178,20 @@ export default function Main({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.container_avaliable} onPress={() => navigation.navigate('Evaluation')}>
-                    <Animatable.View animation='bounceIn' duration={10000} style={styles.container_star}>
-                        <TouchableOpacity style={styles.container_close}>
-                            <FontAwesome style={styles.icon_close} name='close' size={22} />
-                        </TouchableOpacity>
-                        <Text style={styles.container_star_title}>Avalie-nos</Text>
-                    </Animatable.View>
-                </TouchableOpacity>
+                {
+                    isEvaluation ? null :
+                    <TouchableOpacity style={styles.container_avaliable} onPress={() => {
+                        setIsEvaluation(true)
+                        navigation.navigate('Evaluation')
+                        }}>
+                        <Animatable.View animation='bounceIn' duration={10000} style={styles.container_star}>
+                            <TouchableOpacity style={styles.container_close}>
+                                <FontAwesome style={styles.icon_close} name='close' size={22} />
+                            </TouchableOpacity>
+                            <Text style={styles.container_star_title}>Avalie-nos</Text>
+                        </Animatable.View>
+                    </TouchableOpacity>
+                }                
 
                 <View style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 50, top: -35 }}>
                     <Image source={require('../../assets/image/Eduwi.png')} style={{ width: 300, height: 300, borderRadius: 75 }} />

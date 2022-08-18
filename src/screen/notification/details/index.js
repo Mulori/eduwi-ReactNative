@@ -16,7 +16,7 @@ export default function Details({ navigation, route }) {
         <View style={styles.container} >
             <StatusBar backgroundColor='#4169E1' barStyle='light-content' />
             <View style={styles.header}>
-                <Image source={{ uri: data.user_image }} style={styles.image_user} />
+                <Image source={data.user_image ? { uri : data.user_image } : require('../../../assets/image/avatarMissing.png')} style={styles.image_user} />
                 <View style={{ height: 50 }}>
                     <Text style={styles.name}>{data.user_name + ' ' + data.user_last_name}</Text>
                     <Text style={styles.date}>{formatDate(date)}</Text>
