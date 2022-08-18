@@ -40,7 +40,7 @@ export default function Notification({ navigation }) {
 
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Details', { data: item })}>
-                            <Image source={{ uri: item.user_image }} style={styles.image} />
+                            <Image source={item.user_image ? { uri : item.user_image } : require('../../assets/image/avatarMissing.png')} style={styles.image} />
                             <View style={styles.context}>
                                 <View style={styles.container_header}>
                                     <Text style={styles.name}>{item.user_name + ' ' + item.user_last_name}</Text>

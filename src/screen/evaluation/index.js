@@ -1,15 +1,19 @@
-import React, { useState }  from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
 import styles from './styles';
+import VG from '../../components/variables/VG';
+import Axios from '../../services/mainService/mainService'
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Evaluation() {
+export default function Evaluation({ navigation }) {
     const [starOne, setStarOne] = useState(false);
     const [starTwo, setStarTwo] = useState(false);
     const [starTree, setStarTree] = useState(false);
     const [starFour, setStarFour] = useState(false);
     const [starFive, setStarFive] = useState(false);
     const [evaluatd, setEvaluated] = useState(null);
+    const [comment, setComment] = useState('');
 
     function SetStar(value) {
 
@@ -54,6 +58,31 @@ export default function Evaluation() {
         }
     }
 
+    function SendEvaluated() {
+        if (!evaluatd || comment == "") {
+            Alert.alert('Por favor', 'Informe sua experiência')
+            return;
+        }
+
+        let json = {
+            star: evaluatd,
+            comment: comment
+        }
+
+        Axios.Post('/evaluation', VG.user_uid, json)
+            .then( async (value) => {
+
+                await AsyncStorage.setItem('@evaluation', 'ok')
+
+                Alert.alert('Obrigado!', 'Agradecemos sua avaliação, faremos o possivel para melhorar!')
+                navigation.pop();
+            })
+            .catch((error) => {
+                Alert.alert('Erro', 'Ocorreu um erro ao enviar sua experiência. Tente novamente.' + error)
+                return;
+            })
+    }
+
     return (
         <KeyboardAvoidingView behavior='padding' style={styles.container}>
             <View style={styles.container_header}>
@@ -79,9 +108,9 @@ export default function Evaluation() {
                     <View style={styles.container_input_title}>
                         <Text style={styles.title_input}>Conte-nos o que achou:</Text>
                     </View>
-                    <TextInput style={styles.input} multiline={true} />
+                    <TextInput style={styles.input} multiline={true} onChangeText={(value) => setComment(value)} />
                     <View style={styles.container_button_send}>
-                        <TouchableOpacity style={styles.button_send}>
+                        <TouchableOpacity style={styles.button_send} onPress={SendEvaluated}>
                             <Text style={styles.text_button_send}>Enviar</Text>
                         </TouchableOpacity>
                     </View>
