@@ -59,42 +59,44 @@ export default function Register({ navigation }) {
         let data_email = {
             email: email_clean
         }
-        
+
         await MainActivity.PostByKey('/users/email/exist', data_email)
-        .then((ret) => {
-            console.log(ret.data)
-            if(ret.data.length > 0){
-                Alert.alert('Aviso de e-mail', 'O e-mail informado já está cadastrado.')
-                return;
-            }
-        })
-        .catch((cat) => {
-            console.log(cat.data)
-        })
+            .then((ret) => {
+                console.log(ret.data)
+                if (ret.data.length > 0) {
+                    Alert.alert('Aviso de e-mail', 'O e-mail informado já está cadastrado.')
+                    return;
+                } else {
+                    auth()
+                        .createUserWithEmailAndPassword(email_clean, password_clean)
+                        .then(ok => {
+                            let data = {
+                                firebase_uid: ok.user.uid,
+                                email: ok.user.email,
+                                name: name_clean,
+                                last_name: last_name_clean
+                            }
 
-        auth()
-            .createUserWithEmailAndPassword(email_clean, password_clean)
-            .then(ok => {
-                let data = {
-                    firebase_uid: ok.user.uid,
-                    email: ok.user.email,
-                    name: name_clean,
-                    last_name: last_name_clean
+                            userServices.userCreate(data)
+                                .then((response) => {
+                                    auth().signOut();
+                                    Alert.alert('Sucesso', 'Conta criada com sucesso!', [{ text: 'Ok', style: 'destructive', }]);
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                    Alert.alert('Ocorreu um problema ao criar a conta', error, [{ text: 'Ok', style: 'destructive', }]);
+                                })
+                        })
+                        .catch((erro) => {
+                            Alert.alert("Erro", erro);
+                        })
                 }
+            })
+            .catch((cat) => {
+                console.log(cat.data)
+            })
 
-                userServices.userCreate(data)
-                    .then((response) => {
-                        auth().signOut();
-                        Alert.alert('Sucesso', 'Conta criada com sucesso!', [{ text: 'Ok', style: 'destructive', }]);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        Alert.alert('Ocorreu um problema ao criar a conta', error, [{ text: 'Ok', style: 'destructive', }]);
-                    })
-            })
-            .catch((erro) => {
-                Alert.alert("Erro", erro);
-            })
+
     }
 
     function back() {
