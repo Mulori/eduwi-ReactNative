@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 35,
         right: 20,
-        padding: 10,
+        padding: 5,
         borderRadius: 50,
     },
     button_plus_icon:{
