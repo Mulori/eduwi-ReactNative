@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import IconFont5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WindMill from '../../components/lotties/WindMill';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import mainservices from '../../services/mainService/mainService';
@@ -72,14 +72,14 @@ export default function Main({ navigation }) {
         }
     }
 
-    async function Evaluated(){
+    async function Evaluated() {
         const evaluated = await AsyncStorage.getItem('@evaluation')
 
-        if(!evaluated){
+        if (!evaluated) {
             setIsEvaluation(false)
-        }else{
+        } else {
             setIsEvaluation(true)
-        }  
+        }
     }
 
     useEffect(() => {
@@ -173,25 +173,31 @@ export default function Main({ navigation }) {
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Notification')}
-                        style={{ right: -80, backgroundColor: '#4169E1', padding: 5, borderRadius: 50 }}>
+                        style={{ right: -40, backgroundColor: '#4169E1', padding: 7, borderRadius: 50 }}>
                         <MaterialIcons name='notifications-active' size={30} style={{ color: '#FFF' }} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Notification')}
+                        style={{ right: -60, backgroundColor: '#4169E1', padding: 7, borderRadius: 50 }}>
+                        <MaterialCommunityIcons name='podium' size={30} style={{ color: '#FFF' }} />
                     </TouchableOpacity>
                 </View>
 
                 {
                     isEvaluation ? null :
-                    <TouchableOpacity style={styles.container_avaliable} onPress={() => {
-                        setIsEvaluation(true)
-                        navigation.navigate('Evaluation')
+                        <TouchableOpacity style={styles.container_avaliable} onPress={() => {
+                            setIsEvaluation(true)
+                            navigation.navigate('Evaluation')
                         }}>
-                        <Animatable.View animation='bounceIn' duration={10000} style={styles.container_star}>
-                            <TouchableOpacity style={styles.container_close}>
-                                <FontAwesome style={styles.icon_close} name='close' size={22} />
-                            </TouchableOpacity>
-                            <Text style={styles.container_star_title}>Avalie-nos</Text>
-                        </Animatable.View>
-                    </TouchableOpacity>
-                }                
+                            <Animatable.View animation='bounceIn' duration={10000} style={styles.container_star}>
+                                <TouchableOpacity style={styles.container_close}>
+                                    <FontAwesome style={styles.icon_close} name='close' size={22} />
+                                </TouchableOpacity>
+                                <Text style={styles.container_star_title}>Avalie-nos</Text>
+                            </Animatable.View>
+                        </TouchableOpacity>
+                }
 
                 <View style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 50, top: -35 }}>
                     <Image source={require('../../assets/image/Eduwi.png')} style={{ width: 300, height: 300, borderRadius: 75 }} />
@@ -201,19 +207,19 @@ export default function Main({ navigation }) {
                     <TouchableOpacity
                         onPress={() => navigation.navigate('mainActivity')}
                         style={{ width: '33%', alignItems: 'center' }}>
-                        <Image source={require('../../assets/image/Explorar.png')} style={{ width: 100, height: 100, borderRadius: 15, }} />
+                        <Image source={require('../../assets/image/Explorar.png')} style={{ width: 80, height: 80, borderRadius: 15, }} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Eduvida')}
                         style={{ width: '33%', alignItems: 'center' }}>
-                        <Image source={require('../../assets/image/Eduvidas.png')} style={{ width: 100, height: 100, borderRadius: 15, }} />
+                        <Image source={require('../../assets/image/Eduvidas.png')} style={{ width: 80, height: 80, borderRadius: 15, }} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Game')}
                         style={{ width: '33%', alignItems: 'center' }}>
-                        <Image source={require('../../assets/image/Loja.png')} style={{ width: 100, height: 100, borderRadius: 15, }} />
+                        <Image source={require('../../assets/image/Loja.png')} style={{ width: 80, height: 80, borderRadius: 15, }} />
                     </TouchableOpacity>
-                </View>                
+                </View>
 
                 <FlatList
                     data={configMenu}
