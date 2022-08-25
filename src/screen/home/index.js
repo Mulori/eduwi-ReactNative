@@ -39,6 +39,7 @@ import Eduvida from '../eduvida';
 import eduvidaDetail from '../eduvida/eduvidaDetail';
 import NewEduvida from '../eduvida/newEduvida';
 import Evaluation from '../evaluation';
+import Ranking from '../ranking';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,7 @@ export default function Home() {
             <Stack.Screen name='passActivity' options={{ headerShown: false }} component={PassActivity} />
             <Stack.Screen name='responseQuestion' options={{ headerShown: false }} component={ResponseQuestion} />
             <Stack.Screen name='EduvidaDetail' options={{ headerShown: false }} component={eduvidaDetail} />
+            <Stack.Screen name='Ranking' options={{ headerShown: false }} component={Ranking} />
             <Stack.Screen name='Evaluation' options={{
                 headerTitle: 'Avalie-nos',
                 headerStyle: { backgroundColor: '#FFF', color: '#FFF' },

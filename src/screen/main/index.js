@@ -178,7 +178,7 @@ export default function Main({ navigation }) {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('Notification')}
+                        onPress={() => navigation.navigate('Ranking')}
                         style={{ right: -60, backgroundColor: '#4169E1', padding: 7, borderRadius: 50 }}>
                         <MaterialCommunityIcons name='podium' size={30} style={{ color: '#FFF' }} />
                     </TouchableOpacity>
