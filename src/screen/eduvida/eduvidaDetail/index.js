@@ -186,8 +186,12 @@ export default function EduvidaDetail({ navigation, route }) {
                 </View>
                 <View style={styles.conteiner_comment}>
                     <View style={styles.container_name_two}>
-                        <Text style={styles.text_name_comment}>{data_comment.name + ' ' + data_comment.last_name}</Text>
-                        <Text style={styles.text_date_comment}>{formatDate(date)}</Text>
+                        <Text style={styles.text_name_comment}>{data_comment.name + ' ' + data_comment.last_name} - {formatDate(date)}</Text>
+                        {/* <Text style={styles.text_date_comment}>{formatDate(date)}</Text> */}
+                        <TouchableOpacity style={styles.button_close}>
+                            <MaterialCommunityIcons name='comment-check' size={30}  style={styles.comment_top}/>
+                        </TouchableOpacity>
+                        
                     </View>
                     <View style={styles.container_text}>
                         <Text>{data_comment.comment}</Text>
@@ -222,7 +226,7 @@ export default function EduvidaDetail({ navigation, route }) {
                             <Text style={styles.text_date}>{formatDate(date_header)}</Text>
                         </View>
                         <View style={styles.container_text}>
-                            <Text style={{ color: '#FFF' }}>{data_header.help_text}</Text>
+                            <Text style={{ color: '#FFF', fontSize: 18, }}>{data_header.help_text}</Text>
                         </View>
                     </View>
                 </View>
