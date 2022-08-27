@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     },
     container_list:{
         width: '100%',
-        height: '100%',
+        height: '80%',
         position: 'absolute',
         justifyContent: 'center',
         alignItems: 'center',
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     },
     list:{       
         width: '95%',
+        height: '100%',
     },
     container_item:{
         padding: 10,

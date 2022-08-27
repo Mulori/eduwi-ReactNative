@@ -49,6 +49,7 @@ export default function EduvidaDetail({ navigation, route }) {
     }
 
     React.useEffect(() => {
+
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
@@ -84,6 +85,7 @@ export default function EduvidaDetail({ navigation, route }) {
     }
 
     useEffect(() => {
+        console.log(data_header)
         GetList();
     }, [])
 
@@ -172,6 +174,24 @@ export default function EduvidaDetail({ navigation, route }) {
         setSend(false)
     }
 
+
+    const closeTopic = () =>
+        Alert.alert(
+            "Concluir Tópico",
+            "Deseja concluir este tópico e premiar a resposta como MELHOR RESPOSTA?",
+            [
+                {
+                    text: "NÃO", style: "no"                    
+                },
+                {
+                    text: "SIM", style: "yes", onPress: () => {
+
+                    }
+                }
+            ]
+        );
+
+
     function CardComment({ data_comment, index, sizeData }) {
         var date = new Date(data_comment.created);
 
@@ -188,10 +208,10 @@ export default function EduvidaDetail({ navigation, route }) {
                     <View style={styles.container_name_two}>
                         <Text style={styles.text_name_comment}>{data_comment.name + ' ' + data_comment.last_name} - {formatDate(date)}</Text>
                         {/* <Text style={styles.text_date_comment}>{formatDate(date)}</Text> */}
-                        <TouchableOpacity style={styles.button_close}>
-                            <MaterialCommunityIcons name='comment-check' size={30}  style={styles.comment_top}/>
+                        <TouchableOpacity style={styles.button_close} onPress={closeTopic}>
+                            <MaterialCommunityIcons name='comment-check' size={30} style={styles.comment_top} />
                         </TouchableOpacity>
-                        
+
                     </View>
                     <View style={styles.container_text}>
                         <Text>{data_comment.comment}</Text>
