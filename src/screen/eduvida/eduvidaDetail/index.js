@@ -174,22 +174,10 @@ export default function EduvidaDetail({ navigation, route }) {
         setSend(false)
     }
 
+     async function CloseAll(){
+       
+    }   
 
-    const closeTopic = () =>
-        Alert.alert(
-            "Concluir Tópico",
-            "Deseja concluir este tópico e premiar a resposta como MELHOR RESPOSTA?",
-            [
-                {
-                    text: "NÃO", style: "no"                    
-                },
-                {
-                    text: "SIM", style: "yes", onPress: () => {
-
-                    }
-                }
-            ]
-        );
 
 
     function CardComment({ data_comment, index, sizeData }) {
@@ -208,7 +196,34 @@ export default function EduvidaDetail({ navigation, route }) {
                     <View style={styles.container_name_two}>
                         <Text style={styles.text_name_comment}>{data_comment.name + ' ' + data_comment.last_name} - {formatDate(date)}</Text>
                         {/* <Text style={styles.text_date_comment}>{formatDate(date)}</Text> */}
-                        <TouchableOpacity style={styles.button_close} onPress={closeTopic}>
+                        <TouchableOpacity style={styles.button_close} onPress={() => {
+                            Alert.alert(
+                                "Concluir Tópico",
+                                "Deseja concluir este tópico e premiar a resposta como MELHOR RESPOSTA?",
+                                [
+                                    {
+                                        text: "NÃO", style: "no"                    
+                                    },
+                                    {
+                                        text: "SIM", style: "yes", onPress: async () => {
+
+                                            await Axios.Post('/eduvida/' + data_comment.id +'/close', VG.user_uid, { user_uid: data_comment.firebase_uid })
+                                            .then((sucess) => {
+                                                navigation.reset({
+                                                    index: 1,
+                                                    routes: [
+                                                        { name: 'Main' },
+                                                    ],
+                                                }) 
+                                            })
+                                            .catch((error) => {
+                                                Alert.alert('Erro ao concluir a atividade', error)
+                                            }) 
+                                        }
+                                    }
+                                ]
+                            );
+                        }}>
                             <MaterialCommunityIcons name='comment-check' size={30} style={styles.comment_top} />
                         </TouchableOpacity>
 
