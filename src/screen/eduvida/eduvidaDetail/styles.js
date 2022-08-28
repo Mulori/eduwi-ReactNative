@@ -214,6 +214,17 @@ const styles = StyleSheet.create({
         height: '100%',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    comment_top: {        
+        color: '#9400D3'
+    },
+    button_close: {
+        position: 'absolute',
+        right: 0,
+        top: -15,
+        backgroundColor: '#FFF',
+        borderRadius: 50,
+        padding: 2,
     }
 })
 
