@@ -60,7 +60,18 @@ const styles = StyleSheet.create({
     },
     button_plus_icon:{
         color: '#FFF',
-    }
+    },
+    button_search_icon:{
+        color: '#FFF',
+    },
+    button_search: {
+        backgroundColor: '#9400D3',
+        position: 'absolute',
+        bottom: 105,
+        right: 20,
+        padding: 5,
+        borderRadius: 50,
+    },
 })
 
 export default styles;
