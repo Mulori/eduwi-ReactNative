@@ -207,7 +207,7 @@ export default function EduvidaDetail({ navigation, route }) {
                                     {
                                         text: "SIM", style: "yes", onPress: async () => {
 
-                                            await Axios.Post('/eduvida/' + data_comment.id +'/close', VG.user_uid, { user_uid: data_comment.firebase_uid })
+                                            await Axios.Post('/eduvida/' + data_header.id +'/close', VG.user_uid, { user_uid: data_comment.firebase_uid })
                                             .then((sucess) => {
                                                 navigation.reset({
                                                     index: 1,
