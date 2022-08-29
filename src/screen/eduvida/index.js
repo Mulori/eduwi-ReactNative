@@ -70,6 +70,9 @@ export default function Eduvida({ navigation }) {
                 );
             }}
             />
+            <TouchableOpacity style={styles.button_search} onPress={() => navigation.navigate('NewEduvida')}>
+                <MaterialCommunityIcons name='search-web' size={40} style={styles.button_search_icon} />
+            </TouchableOpacity>
             <TouchableOpacity style={styles.button_plus} onPress={() => navigation.navigate('NewEduvida')}>
                 <MaterialCommunityIcons name='head-plus' size={40} style={styles.button_plus_icon} />
             </TouchableOpacity>
