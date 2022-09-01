@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     },
     container_content_two: {
         flexDirection: 'row',
-        width: '100%'
+        width: '100%',
     },
     materialcommunityicons: {
         color: '#9400D3',
