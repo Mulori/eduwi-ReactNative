@@ -134,7 +134,7 @@ export default function usersActivity({ navigation, route }) {
                 <Header title={activity.title} />
             </View>
             <View style={style.container}>
-                <FlatList data={data} keyExtractor={item => item.id} renderItem={({ item }) => {
+                <FlatList style={{ height: '88%', borderRadius: 20 }} data={data} keyExtractor={item => item.id} renderItem={({ item }) => {
                     var date = new Date(item.created);
                     return (
                         <View style={{ backgroundColor: '#FFF', margin: 10, borderRadius: 15 }}>
