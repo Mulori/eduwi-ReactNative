@@ -72,6 +72,45 @@ const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 50,
     },
+    container_modal_search:{
+        position: 'absolute',
+        backgroundColor: 'rgba(52, 52, 52, 0.6)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+    },
+    container_modal_seach_form:{
+        width: '90%',
+        height: 180,
+        backgroundColor: 'white',
+        borderRadius: 15,
+        alignItems: 'center',
+    },
+    text_title:{
+        fontWeight: 'bold',
+        fontSize: 16,
+        top: 10,
+    },
+    input_search:{
+        backgroundColor: '#DCDCDC',
+        borderRadius: 10,
+        width: '90%',
+        height: 50,
+        top: 25,
+    },
+    input_button_search:{
+        top: 50,
+        backgroundColor: '#696969',
+        padding: 15,
+        borderRadius: 15,
+        width: '50%',
+        alignItems: 'center',
+    },
+    input_button_search_text: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    }
 })
 
 export default styles;
