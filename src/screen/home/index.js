@@ -22,6 +22,7 @@ import Game from '../game';
 import GameDetail from '../game/gameDetail';
 import NewActivityCompleteSentence from '../mainActivity/newActivityCompleteSentence';
 import NewActivitySentence from '../mainActivity/newActivityCompleteSentence/newActivitySentence';
+import NewActivityTrueOrFalse from '../mainActivity/newActivityTrueOrFalse/';
 import ResponseSentences from '../mainActivity/response/sentences';
 import SentencesUsers from '../mainActivity/response/sentencesUsers';
 import ResponseSentenceUser from '../mainActivity/response/responseSentenceUser';
@@ -52,6 +53,7 @@ export default function Home() {
             <Stack.Screen name='newActivity' options={{ headerShown: false }} component={NewActivity} />
             <Stack.Screen name='newActivityQuestionMain' options={{ headerShown: false }} component={NewActivityQuestionMain} />
             <Stack.Screen name='newActivityQuestions' options={{ headerShown: false }} component={NewActivityQuestions} />
+            <Stack.Screen name='NewActivityTrueOrFalse' options={{ headerShown: false }} component={NewActivityTrueOrFalse} />
             <Stack.Screen name='searchActivity' options={{ headerShown: false }} component={SearchActivity} />
             <Stack.Screen name='myActivity' options={{ headerShown: false, }} component={MyActivity} />
             <Stack.Screen name='mainSearchActivity' options={{ headerShown: false }} component={MainSearchActivity} />

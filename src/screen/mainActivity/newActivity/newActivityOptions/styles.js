@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: '#6ec846',
         borderRadius: 25,
+        position: 'absolute',
     },
     button_next_text:{
         color: '#FFF',
@@ -28,6 +29,11 @@ const styles = StyleSheet.create({
     container_input: {
         position: 'relative',
         top: '30%',
+        width: '100%',
+        alignItems: 'center',
+    },
+    container_quantidade:{
+        position: 'relative',
         width: '100%',
         alignItems: 'center',
     },
@@ -57,6 +63,13 @@ const styles = StyleSheet.create({
         color: '#000000', 
         padding: 15,
         fontWeight: 'bold',
+    },
+    button_next_two:{
+        padding: 15,
+        backgroundColor: '#6ec846',
+        borderRadius: 25,
+        position: 'absolute',
+        bottom: -150,
     }
 })
 

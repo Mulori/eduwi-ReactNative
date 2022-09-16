@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, TextInput, KeyboardAvoidingView, StatusBar, ActivityIndicator, ImageBackground, Image, Alert } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, KeyboardAvoidingView, StatusBar, ActivityIndicator, ImageBackground, Alert } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import styles from './styles';
 import { Picker } from '@react-native-picker/picker';
@@ -29,6 +29,9 @@ export default function NewActivityOptions({ navigation, route }) {
                 } else if (types == 2) {
                     setIsLoading(false);
                     navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
+                } else if (types == 3) {
+                    setIsLoading(false);
+                    navigation.navigate('NewActivityTrueOrFalse', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
                 }
             })
             .catch(() => {
@@ -38,16 +41,33 @@ export default function NewActivityOptions({ navigation, route }) {
     }
 
     function next() {
+
         if (!itens) {
-            Alert.alert('Eii', 'Informe a quantidade de ' + types == 1 ? 'questões' : 'frases' + '.');
+            switch (types) {
+                case 1:
+                    Alert.alert('Eii', 'Informe a quantidade de questões. O valor não pode ser menor que 1.');
+                case 2:
+                    Alert.alert('Eii', 'Informe a quantidade de frases. O valor não pode ser menor que 1.');
+                case 3:
+                    Alert.alert('Eii', 'Informe a quantidade de tópicos. O valor não pode ser menor que 1.');
+            }
             return;
         }
         else {
             if (itens < 1) {
-                Alert.alert('Eii', 'Informe a quantidade de ' + types == 1 ? 'questões' : 'frases' + ' não pode ser menor que 1.');
+                switch (types) {
+                    case 1:
+                        Alert.alert('Eii', 'Informe a quantidade de questões. O valor não pode ser menor que 1.');
+                    case 2:
+                        Alert.alert('Eii', 'Informe a quantidade de frases. O valor não pode ser menor que 1.');
+                    case 3:
+                        Alert.alert('Eii', 'Informe a quantidade de tópicos. O valor não pode ser menor que 1.');
+                }
+
                 return;
             }
         }
+
 
         setIsLoading(true);
         DeleteActivityTemp();
@@ -78,7 +98,7 @@ export default function NewActivityOptions({ navigation, route }) {
                 <TouchableOpacity
                     onPress={next}
                     style={styles.button_next}>
-                    { isLoading ? <ActivityIndicator size='large' color='#FFF' /> : <Text style={styles.button_next_text}>Próximo</Text> }
+                    {isLoading ? <ActivityIndicator size='large' color='#FFF' /> : <Text style={styles.button_next_text}>Próximo</Text>}
                 </TouchableOpacity>
             </View>
 
