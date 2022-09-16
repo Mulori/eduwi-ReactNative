@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, ImageBackground, StyleSheet, StatusBar, S
 import * as Animatable from 'react-native-animatable';
 import LottieQuestion from '../../../components/lotties/question';
 import LottieWrite from '../../../components/lotties/write';
+import LottieTrue from '../../../components/lotties/true';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
 
@@ -15,7 +16,7 @@ export default function newActivity({ navigation }) {
             <View>
                 <View style={style.container_info} >
                     <Text style={style.title}>Primeiros Passos</Text>
-                    <Text style={style.subtitle}>Para construir uma nova atividade, selecione o tipo de atuação em que sua dinâmica se encaixa.
+                    <Text style={style.subtitle}>Para construir uma nova atividade, selecione a categoria em que sua dinâmica se encaixa.
                     Para cada tipo, a atividade se comportará de uma forma. Assim que concluir a criação, sua atividade estará disponível 
                     para ser acessada. Caso tenha um publico restrito para a realização da dinâmica, informe uma senha para que sua atividade fique privada.
                     </Text>            
@@ -54,9 +55,10 @@ export default function newActivity({ navigation }) {
                             width: '30%',
                             alignItems: 'center',
                             borderRadius: 20,
+                            height: 160,
                         }}>
                             <LottieQuestion />
-                            <Text style={{fontWeight: 'bold', color: '#FFF'}}>Questões</Text>
+                            <Text style={{ position: 'absolute', fontWeight: 'bold', color: '#FFF', bottom: 35,}}>Questões</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => navigation.navigate('NewActivityName', { types: 2 })} style={{
                             backgroundColor: '#D2691E',
@@ -65,9 +67,24 @@ export default function newActivity({ navigation }) {
                             width: '30%',
                             alignItems: 'center',
                             borderRadius: 20,
+                            height: 160,
                         }}>
                             <LottieWrite />
-                            <Text style={{fontWeight: 'bold', color: '#FFF', textAlign: 'center'}}>Complete a Frase</Text>
+                            <Text style={{position: 'absolute', fontWeight: 'bold', color: '#FFF', bottom: 20, textAlign: 'center'}}>Complete a Frase</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <TouchableOpacity onPress={() => navigation.navigate('NewActivityName', { types: 3 })} style={{
+                            backgroundColor: '#4169E1',
+                            padding: 15,
+                            margin: 10,
+                            width: '30%',
+                            alignItems: 'center',
+                            borderRadius: 20,
+                            height: 160,
+                        }}>
+                            <LottieTrue />
+                            <Text style={{fontWeight: 'bold', color: '#FFF', textAlign: 'center'}}>Verdadeiro ou Falso</Text>
                         </TouchableOpacity>
                     </View>
                     </View>
