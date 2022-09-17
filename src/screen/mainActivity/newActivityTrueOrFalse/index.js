@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ScrollView, Alert, ActivityIndicator, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
 import ActivityServices from '../../../services/activityService/activityService';
@@ -143,62 +144,109 @@ export default function newActivityQuestions({ navigation, route }) {
                 Alert.alert('Erro', 'Ocorreu um erro ao concluir a atividade. Tente novamente!')
                 setLoadingSend(false);
             });
-    }   
+    }
 
     for (let i = 0; i < itens; i++) {
         const [showModal, setShowModal] = useState(true);
-        const [Doubt, setDoubt] = useState(null);
+        const [text, setText] = useState(null);
         const [image, setImage] = useState(null);
         const [isLoading, setIsLoading] = useState(false);
-        const [checked, setChecked] = React.useState('one');
+        const [response, setResponse] = useState(null);
+        const [imageSelected, setImageSelected] = useState(false);
 
         async function imagePickerCallback(data) {
             setIsLoading(true);
-    
+
             if (data.didCancel) {
                 console.log(data_);
                 setIsLoading(false);
+                setImageSelected(false);
                 return;
             }
             if (data.assets[0].error) {
                 console.log(data);
                 setIsLoading(false);
+                setImageSelected(false);
                 return;
             }
             if (!data.assets[0].uri) {
                 console.log(data);
                 setIsLoading(false);
+                setImageSelected(false);
                 return;
             }
-    
+
             setImage(data)
             setIsLoading(false);
+            setImageSelected(true);
         }
 
-        function Finish(value, Doubt, ResponseOne, ResponseTwo, ResponseTree, ResponseFour, checked) {
+        async function Finish(item) {
+            var data_image = {}
+            var obj = {}
 
-            if (!Doubt || !ResponseOne || !ResponseTwo || !ResponseTree || !ResponseFour || !checked || !value) {
-                Alert.alert('Atenção', 'Preencha todos os campos!');
+            if (!text || !response) {
+                Alert.alert('Atenção', 'Informe todas informações necessárias.');
                 return;
             }
 
-            let obj = {
-                number_question: value.toString(),
-                question: Doubt,
-                responseOne: ResponseOne,
-                responseTwo: ResponseTwo,
-                responseTree: ResponseTree,
-                responseFour: ResponseFour,
-                question_correcty: checked
+            setIsLoading(true);
+            if (imageSelected) {
+                await ModuleStorage.SendFileStorage('activity/truefalse/images/' + image.assets[0].fileName, image.assets[0].uri)
+                    .then(async () => {
+                        await ModuleStorage.GetFileStorage('activity/truefalse/images/' + image.assets[0].fileName)
+                            .then((value) => {
+
+                                data_image = {
+                                    image_reference: 'activity/truefalse/images/' + image.assets[0].fileName,
+                                    image_url: value,
+                                    image_type: image.assets[0].type,
+                                    image_size_wh: image.assets[0].width + '|' + image.assets[0].height,
+                                }
+
+                                obj = {
+                                    number_question: item.toString(),
+                                    text: text.trim(),
+                                    response: response,
+                                    image_reference: data_image.image_reference,
+                                    image_url: data_image.image_url,
+                                    image_type: data_image.image_type,
+                                    image_size_wh: data_image.image_size_wh
+                                }
+
+                            })
+                            .catch((error) => {
+                                setIsLoading(false);
+                                console.log(error)
+                                return;
+                            })
+                    })
+                    .catch((imageUrlError) => {
+                        setIsLoading(false);
+                        console.log(imageUrlError)
+                        return;
+                    })
+            }else{
+                obj = {
+                    number_question: item.toString(),
+                    text: text.trim(),
+                    response: response,
+                    image_reference: '*',
+                    image_url: '*',
+                    image_type: '*',
+                    image_size_wh: '*'
+                }
             }
 
+            console.log(obj)
             firestore().collection('user_activity_build_' + VG.user_uid).add(obj)
                 .then(() => {
                     setShowModal(false);
+                    setIsLoading(false);
                 })
-                .catch((erro) => {
-                    console.log(erro)
-                    Alert.alert('Erro', 'Ocorreu um erro ao concluir a questão. Tente novamente!');
+                .catch(() => {
+                    Alert.alert('Erro', 'Ocorreu um erro ao concluir este tópico. Tente novamente!');
+                    setIsLoading(false);
                     return;
                 })
         }
@@ -219,9 +267,9 @@ export default function newActivityQuestions({ navigation, route }) {
                         :
                         <View style={{ width: '100%', padding: 10 }}>
                             <Text>Tópico: {i + 1}</Text>
-                            <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Texto:</Text>
+                            <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Texto: *</Text>
                             <View style={{ backgroundColor: 'black', borderRadius: 15, margin: 5 }}>
-                                <TextInput style={style.inputs} multiline placeholder='Digite um texto' onChangeText={(value) => setDoubt(value)} />
+                                <TextInput style={style.inputs} multiline placeholder='Digite um texto' onChangeText={(value) => setText(value)} />
                             </View>
                             <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Imagem:</Text>
                             <View style={{ borderRadius: 15, margin: 5 }}>
@@ -232,7 +280,7 @@ export default function newActivityQuestions({ navigation, route }) {
                                     {!isLoading ? null : <ActivityIndicator size='large' color='green' style={style.loading_image} />}
                                 </TouchableOpacity>
                             </View>
-                            <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Respostas:</Text>
+                            <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Respostas: *</Text>
                             <View style={{ flexDirection: 'row', width: '95%' }}>
                                 <TouchableOpacity style={{
                                     backgroundColor: 'green',
@@ -242,8 +290,14 @@ export default function newActivityQuestions({ navigation, route }) {
                                     height: 100,
                                     alignItems: 'center',
                                     justifyContent: 'center'
-                                }}>
+                                }}
+                                    onPress={() => setResponse('true')}
+                                >
                                     <Text style={style.textResponse}>Verdadeiro</Text>
+                                    {
+                                        response != 'true' ? null :
+                                            <FontAwesome name='check-circle' style={style.icon_check} size={30} />
+                                    }
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{
                                     backgroundColor: 'red',
@@ -253,11 +307,17 @@ export default function newActivityQuestions({ navigation, route }) {
                                     height: 100,
                                     alignItems: 'center',
                                     justifyContent: 'center'
-                                }}>
+                                }}
+                                    onPress={() => setResponse('false')}
+                                >
                                     <Text style={style.textResponse}>Falso</Text>
+                                    {
+                                        response != 'false' ? null :
+                                            <FontAwesome name='check-circle' style={style.icon_check} size={30} />
+                                    }
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity onPress={() => Finish(i + 1, Doubt, checked)} style={{
+                            <TouchableOpacity onPress={() => Finish(i + 1)} style={{
                                 backgroundColor: '#4169E1',
                                 borderRadius: 15,
                                 padding: 15,
@@ -266,7 +326,11 @@ export default function newActivityQuestions({ navigation, route }) {
                                 marginRight: 5,
                                 marginTop: 10,
                             }}>
-                                <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Concluir o Tópico</Text>
+                                {
+                                    isLoading
+                                        ? <ActivityIndicator size="large" color="white" />
+                                        : <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Concluir o Tópico</Text>
+                                }
                             </TouchableOpacity>
                         </View>
                 }
@@ -349,4 +413,7 @@ const style = StyleSheet.create({
         height: 250,
         borderRadius: 15,
     },
+    icon_check: {
+        color: '#FFF'
+    }
 })

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 15,
-    },
+    },    
 })
 
 export default styles;
