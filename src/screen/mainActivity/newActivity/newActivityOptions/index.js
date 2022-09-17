@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, KeyboardAvoidingView, StatusBar, ActivityIndicator, ImageBackground, Alert } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import styles from './styles';
 import { Picker } from '@react-native-picker/picker';
 import firestore from '@react-native-firebase/firestore';
@@ -20,6 +19,8 @@ export default function NewActivityOptions({ navigation, route }) {
             .get()
             .then(querySnapshot => {
                 querySnapshot.forEach(documentSnapshot => {
+                    console.log('teste teste teste')
+                    console.log(querySnapshot)
                     firestore().collection('user_activity_build_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => { }).catch((error) => { });
                 });
 
@@ -91,7 +92,10 @@ export default function NewActivityOptions({ navigation, route }) {
                 </Picker>
                 <Text style={styles.title}>Senha: (opcional)</Text>
                 <TextInput style={styles.input} autoCapitalize='none' secureTextEntry={true} onChangeText={(value) => setPassword(value)} />
-                <Text style={styles.title}>Quantidade de {types == 1 ? 'questões' : 'frases'}:</Text>
+             
+
+
+                <Text style={styles.title}>Quantidade de {types == 1 ? 'questões' : types == 2 ? 'frases' : 'tópicos'}:</Text>
                 <TextInput style={styles.input} autoCapitalize='none' keyboardType='numeric' onChangeText={(value) => setItens(value)} />
             </View>
             <View style={styles.container_button_next}>
