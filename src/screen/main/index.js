@@ -122,19 +122,19 @@ export default function Main({ navigation }) {
     function CaseScreen(item) {
         switch (item) {
             case 1:
-                navigation.navigate('newActivity')
+                navigation.navigate('NewActivity')
                 setModalVisible(false)
                 break;
             case 2:
-                navigation.navigate('activity')
+                navigation.navigate('Activity')
                 setModalVisible(false)
                 break;
             case 3:
-                navigation.navigate('searchActivity')
+                navigation.navigate('SearchActivity')
                 setModalVisible(false)
                 break;
             case 4:
-                navigation.navigate('myProfile')
+                navigation.navigate('MyProfile')
                 setModalVisible(false)
                 break;
             case 5:
@@ -205,7 +205,7 @@ export default function Main({ navigation }) {
 
                 <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', top: 25 }}>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('mainActivity')}
+                        onPress={() => navigation.navigate('MainActivity')}
                         style={{ width: '33%', alignItems: 'center' }}>
                         <Image source={require('../../assets/image/Explorar.png')} style={{ width: 80, height: 80, borderRadius: 15, }} />
                     </TouchableOpacity>

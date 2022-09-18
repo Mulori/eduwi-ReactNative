@@ -4,13 +4,9 @@ import * as Animatable from 'react-native-animatable';
 import LottieQuestion from '../../../components/lotties/question';
 import LottieWrite from '../../../components/lotties/write';
 import LottieTrue from '../../../components/lotties/true';
-import firestore from '@react-native-firebase/firestore';
-import VG from '../../../components/variables/VG';
 
-export default function newActivity({ navigation }) {
+export default function NewActivity({ navigation }) {
     const [info, setInfo] = useState(true);   
-    
-
     function Info(){
         return(
             <View>

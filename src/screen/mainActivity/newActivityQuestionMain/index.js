@@ -11,7 +11,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
 
-export default function newActivityQuestionMain({ navigation, route }) {
+export default function NewActivityQuestionMain({ navigation, route }) {
     const { types } = route.params;
     const [activity, setActivity] = useState({})
     const [itens, setItens] = useState(0)

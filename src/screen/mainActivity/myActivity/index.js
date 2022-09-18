@@ -5,7 +5,7 @@ import VG from '../../../components/variables/VG';
 import IconFont5 from 'react-native-vector-icons/FontAwesome5';
 import activityServices from '../../../services/activityService/activityService';
 
-export default function myActivity({ navigation }) {
+export default function MyActivity({ navigation }) {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -55,7 +55,7 @@ export default function myActivity({ navigation }) {
             <ScrollView>
                 {!data ? null :
                     data.map((item, key) =>
-                        <TouchableOpacity key={key} onPress={() => { navigation.navigate('usersActivity', { activity: item }) }}>
+                        <TouchableOpacity key={key} onPress={() => { navigation.navigate('UsersActivity', { activity: item }) }}>
                             <View style={{ backgroundColor: '#FFF', padding: 10, width: '100%', marginTop: 5 }}>
                                 <Text style={{ color: '#000', fontSize: 17, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text>
                                 <View style={{ width: '100%', flexDirection: 'row' }}>

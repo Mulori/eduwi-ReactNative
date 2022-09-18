@@ -11,7 +11,7 @@ import { TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModuleStorage from '../../../../services/storage';
 
-export default function newActivitySentence({ navigation, route }) {
+export default function NewActivitySentence({ navigation, route }) {
     const { itens, title, pass, type, objImage, tipoSelecionado } = route.params;
     const [activity, setActivity] = useState({})
     const [end, setEnd] = useState(false);

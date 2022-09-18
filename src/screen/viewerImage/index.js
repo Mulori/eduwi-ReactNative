@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Image, TouchableOpacity, View, StatusBar } from "react-native"; 
 import styles from "./styles";
 
-export default function viewerImage({ navigation, route }) {    
+export default function ViewerImage({ navigation, route }) {    
     const { url } = route.params;
 
     return(

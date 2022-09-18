@@ -7,7 +7,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import VG from '../../../../components/variables/VG';
 import style from './styles';
 
-export default function responseQuestionUser({ navigation, route }) {
+export default function ResponseQuestionUser({ navigation, route }) {
     const { data } = route.params;
     const [listQuestion, setListQuestions] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);

@@ -6,7 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import {StackActions} from '@react-navigation/native';
 import MainServices from '../../../../services/mainService/mainService';
 
-export default function mainSearchActivity({ navigation, route }) {
+export default function MainSearchActivity({ navigation, route }) {
     const { activity } = route.params;
     const [tipo, setTipo] = useState('');
     const [isVisibleButton, setIsVisibleButton] = useState(null);
@@ -19,7 +19,10 @@ export default function mainSearchActivity({ navigation, route }) {
                 break;   
             case 'sentences':             
                 setTipo('Complete a Frase')
-                break;      
+                break;   
+            case 'truefalse':             
+                setTipo('Complete a Frase')
+                break;     
         }
     }, [])
 
@@ -36,11 +39,11 @@ export default function mainSearchActivity({ navigation, route }) {
                     });
 
                     if(tipo == 'Questões'){
-                        navigation.dispatch(StackActions.replace('responseQuestion', { data: activity}));   
+                        navigation.dispatch(StackActions.replace('ResponseQuestion', { data: activity}));   
                         console.log(1);
                     }
                     else if(tipo == 'Complete a Frase'){
-                        navigation.dispatch(StackActions.replace('responsesentences', { data: activity}));     
+                        navigation.dispatch(StackActions.replace('Responsesentences', { data: activity}));     
                         console.log(2)   
                     }                           
                 })

@@ -61,19 +61,19 @@ export default function MainActivity({ navigation }) {
     function CaseScreen(item) {
         switch (item) {
             case 1:
-                navigation.navigate('newActivity')
+                navigation.navigate('NewActivity')
                 setModalVisible(false)
                 break;
             case 2:
-                navigation.navigate('myActivity')
+                navigation.navigate('MyActivity')
                 setModalVisible(false)
                 break;
             case 3:
-                navigation.navigate('searchActivity')
+                navigation.navigate('SearchActivity')
                 setModalVisible(false)
                 break;
             case 4:
-                navigation.navigate('myProfile')
+                navigation.navigate('MyProfile')
                 setModalVisible(false)
                 break;
             case 5:
@@ -84,12 +84,12 @@ export default function MainActivity({ navigation }) {
 
     function Enter(item) {
         if (item.author_uid == VG.user_uid) {
-            navigation.navigate('usersActivity', { activity: item })
+            navigation.navigate('UsersActivity', { activity: item })
         } else {
             if (item.with_password == 1) {
-                navigation.navigate('passActivity', { activity: item })
+                navigation.navigate('PassActivity', { activity: item })
             } else {
-                navigation.navigate('mainSearchActivity', { activity: item })
+                navigation.navigate('MainSearchActivity', { activity: item })
             }
         }
     }

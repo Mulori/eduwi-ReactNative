@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import ActivityServices from '../../../services/activityService/activityService';
 import VG from '../../../components/variables/VG';
 
-export default function searchActivity({ navigation }) {
+export default function SearchActivity({ navigation }) {
     const [code, setCode] = useState(null);
     const [error, setErro] = useState(false);
     const [msgErro, setMsgErro] = useState(null);
@@ -33,12 +33,12 @@ export default function searchActivity({ navigation }) {
             SetModal(false);
 
             if(response.data[0].author_uid == VG.user_uid){
-                navigation.navigate('usersActivity', { activity: response.data[0]})
+                navigation.navigate('UsersActivity', { activity: response.data[0]})
             }else{
                 if(response.data[0].with_password == 1){
-                    navigation.navigate('passActivity', { activity: response.data[0]})
+                    navigation.navigate('PassActivity', { activity: response.data[0]})
                 }else{
-                    navigation.navigate('mainSearchActivity', { activity: response.data[0]})
+                    navigation.navigate('MainSearchActivity', { activity: response.data[0]})
                 }
             }     
         })
