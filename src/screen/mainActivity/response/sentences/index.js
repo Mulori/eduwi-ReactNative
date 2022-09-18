@@ -10,7 +10,7 @@ import {NavigationActions, StackActions} from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function responseSentences({ navigation, route }) {
+export default function ResponseSentences({ navigation, route }) {
     const { data } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [listSentences, setListSentences] = useState([]);

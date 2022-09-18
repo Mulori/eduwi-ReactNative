@@ -11,7 +11,7 @@ import styles from './styles';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ModuleStorage from '../../services/storage';
 
-export default function myProfile({ navigation }) {
+export default function MyProfile({ navigation }) {
     const [data, setData] = useState(null);
     const [dataReward, setDataReward] = useState(null);
     const [viewAvatar, setViewAvatar] = useState(false);

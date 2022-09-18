@@ -3,7 +3,7 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, FlatList } from 'react-native';
 import Video from 'react-native-video';
 
-export default function testee({ navigation }) {
+export default function Testee({ navigation }) {
 
     const Card = (props) => {
         return (

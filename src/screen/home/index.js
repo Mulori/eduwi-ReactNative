@@ -22,7 +22,7 @@ import Game from '../game';
 import GameDetail from '../game/gameDetail';
 import NewActivityCompleteSentence from '../mainActivity/newActivityCompleteSentence';
 import NewActivitySentence from '../mainActivity/newActivityCompleteSentence/newActivitySentence';
-import NewActivityTrueOrFalse from '../mainActivity/newActivityTrueOrFalse/';
+import NewActivityQuestionsTrueOrFalse from '../mainActivity/newActivityTrueOrFalse/';
 import ResponseSentences from '../mainActivity/response/sentences';
 import SentencesUsers from '../mainActivity/response/sentencesUsers';
 import ResponseSentenceUser from '../mainActivity/response/responseSentenceUser';
@@ -49,16 +49,16 @@ export default function Home() {
     return (
         <Stack.Navigator initialRouteName="Main">
             <Stack.Screen name='Main' options={{ headerShown: false }} component={Main} />
-            <Stack.Screen name='mainActivity' options={{ headerShown: false }} component={MainActivity} />
-            <Stack.Screen name='newActivity' options={{ headerShown: false }} component={NewActivity} />
-            <Stack.Screen name='newActivityQuestionMain' options={{ headerShown: false }} component={NewActivityQuestionMain} />
-            <Stack.Screen name='newActivityQuestions' options={{ headerShown: false }} component={NewActivityQuestions} />
-            <Stack.Screen name='NewActivityTrueOrFalse' options={{ headerShown: false }} component={NewActivityTrueOrFalse} />
-            <Stack.Screen name='searchActivity' options={{ headerShown: false }} component={SearchActivity} />
-            <Stack.Screen name='myActivity' options={{ headerShown: false, }} component={MyActivity} />
-            <Stack.Screen name='mainSearchActivity' options={{ headerShown: false }} component={MainSearchActivity} />
-            <Stack.Screen name='passActivity' options={{ headerShown: false }} component={PassActivity} />
-            <Stack.Screen name='responseQuestion' options={{ headerShown: false }} component={ResponseQuestion} />
+            <Stack.Screen name='MainActivity' options={{ headerShown: false }} component={MainActivity} />
+            <Stack.Screen name='NewActivity' options={{ headerShown: false }} component={NewActivity} />
+            <Stack.Screen name='NewActivityQuestionMain' options={{ headerShown: false }} component={NewActivityQuestionMain} />
+            <Stack.Screen name='NewActivityQuestions' options={{ headerShown: false }} component={NewActivityQuestions} />
+            <Stack.Screen name='NewActivityQuestionsTrueOrFalse' options={{ headerShown: false }} component={NewActivityQuestionsTrueOrFalse} />
+            <Stack.Screen name='SearchActivity' options={{ headerShown: false }} component={SearchActivity} />
+            <Stack.Screen name='MyActivity' options={{ headerShown: false, }} component={MyActivity} />
+            <Stack.Screen name='MainSearchActivity' options={{ headerShown: false }} component={MainSearchActivity} />
+            <Stack.Screen name='PassActivity' options={{ headerShown: false }} component={PassActivity} />
+            <Stack.Screen name='ResponseQuestion' options={{ headerShown: false }} component={ResponseQuestion} />
             <Stack.Screen name='EduvidaDetail' options={{ headerShown: false }} component={eduvidaDetail} />
             <Stack.Screen name='Ranking' options={{ headerShown: false }} component={Ranking} />
             <Stack.Screen name='Evaluation' options={{
@@ -86,11 +86,11 @@ export default function Home() {
                 headerStyle: { backgroundColor: '#4169E1', color: '#FFF' },
                 headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
             }} component={Details} />
-            <Stack.Screen name='usersActivity' options={{ headerShown: false }} component={UsersActivity} />
+            <Stack.Screen name='UsersActivity' options={{ headerShown: false }} component={UsersActivity} />
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />
-            <Stack.Screen name='sentencesActivity' options={{ headerShown: false }} component={SentencesActivity} />
+            <Stack.Screen name='SentencesActivity' options={{ headerShown: false }} component={SentencesActivity} />
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />
-            <Stack.Screen name='myProfile' options={{ headerTitle: 'Meu Perfil' }} component={MyProfile} />
+            <Stack.Screen name='MyProfile' options={{ headerTitle: 'Meu Perfil' }} component={MyProfile} />
             <Stack.Screen name='Game' options={{
                 headerTitle: 'Loja',
                 headerStyle: { backgroundColor: '#3CB371', color: '#FFF' },
@@ -101,23 +101,23 @@ export default function Home() {
                 headerStyle: { backgroundColor: '#3CB371', color: '#FFF' },
                 headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
             }} component={GameDetail} />
-            <Stack.Screen name='newActivityCompleteSentence' options={{ headerShown: false }} component={NewActivityCompleteSentence} />
-            <Stack.Screen name='newActivitySentence' options={{ headerShown: false }} component={NewActivitySentence} />
-            <Stack.Screen name='responsesentences' options={{ headerShown: false }} component={ResponseSentences} />
-            <Stack.Screen name='activity' options={{ headerShown: false, }} component={Activitypage} />
+            <Stack.Screen name='NewActivityCompleteSentence' options={{ headerShown: false }} component={NewActivityCompleteSentence} />
+            <Stack.Screen name='NewActivitySentence' options={{ headerShown: false }} component={NewActivitySentence} />
+            <Stack.Screen name='Responsesentences' options={{ headerShown: false }} component={ResponseSentences} />
+            <Stack.Screen name='Activity' options={{ headerShown: false, }} component={Activitypage} />
             <Stack.Screen name='NewActivityName' options={{ headerShown: false, }} component={NewActivityName} />
             <Stack.Screen name='NewActivityImage' options={{ headerShown: false, }} component={NewActivityImage} />
             <Stack.Screen name='NewActivityOptions' options={{ headerShown: false, }} component={NewActivityOptions} />
             <Stack.Screen name='Sucess' options={{ headerShown: false, }} component={Sucess} />
-            <Stack.Screen name='testee' options={{ headerShown: false, }} component={Teste} />
-            <Stack.Screen name='viewerImage' component={ViewerImage} options={{ headerTitle: 'Imagem', headerStyle: { backgroundColor: '#000', color: '#000' }, headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />
-            <Stack.Screen name='sentencesUsers'
+            <Stack.Screen name='Testee' options={{ headerShown: false, }} component={Teste} />
+            <Stack.Screen name='ViewerImage' component={ViewerImage} options={{ headerTitle: 'Imagem', headerStyle: { backgroundColor: '#000', color: '#000' }, headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />
+            <Stack.Screen name='SentencesUsers'
                 options={{
                     headerTitle: 'Respostas do Participante',
                     headerStyle: { backgroundColor: '#582770', color: '#FFF' },
                     headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF',
                 }} component={SentencesUsers} />
-            <Stack.Screen name='responseSentenceUser'
+            <Stack.Screen name='ResponseSentenceUser'
                 options={{
                     headerTitle: 'Resposta',
                     headerStyle: {
@@ -129,7 +129,7 @@ export default function Home() {
                     },
                     headerTintColor: '#FFF',
                 }} component={ResponseSentenceUser} />
-            <Stack.Screen name='responseQuestionUser'
+            <Stack.Screen name='ResponseQuestionUser'
                 options={{
                     headerTitle: 'Resposta',
                     headerStyle: {

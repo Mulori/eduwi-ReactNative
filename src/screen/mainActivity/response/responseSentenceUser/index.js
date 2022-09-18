@@ -5,7 +5,7 @@ import VG from '../../../../components/variables/VG';
 import * as Animatable from 'react-native-animatable';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function responseSentenceUser({ navigation, route }) {
+export default function ResponseSentenceUser({ navigation, route }) {
     const { data, user_uid, name, value, title } = route.params;
     const [listSentences, setListSentences] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -82,7 +82,7 @@ function ListResponse(props){
                                 <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row', width: '100%', padding: 10}}>
                                 {
                                     item.comments.length == 0 ? null :
-                                    <Animatable.View animation='rubberBand' duration={3000} style={{ position: 'absolute', left: '100%', bottom: '145%' }}>
+                                    <Animatable.View animation='rubberBand' duration={3000} style={{ position: 'absolute', left: '90%', bottom: '145%' }}>
                                         <TouchableOpacity onPress={() => openComment(true, item.number_sentence)}>
                                             <MaterialCommunityIcons name='comment-text' style={{ color: '#FFF', }} size={30}/>
                                         </TouchableOpacity>

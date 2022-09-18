@@ -3,12 +3,11 @@ import { ActivityIndicator, View, StyleSheet, StatusBar, Text, FlatList, Modal, 
 import APIActivity  from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
 import * as Animatable from 'react-native-animatable';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { TextInput } from 'react-native-paper';
 
-export default function QuestionsUsers({ navigation, route }) {
+export default function SentencesUsers({ navigation, route }) {
     const { activity, user_uid, name, value, title } = route.params;
     const [listSentences, setListSentences] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -148,9 +147,10 @@ function ListResponse(props){
             />
             {
                 commentVisible ? 
-                <View
-                style={{flex: 1, position: 'absolute', width: '100%', height: '100%', alignItems: 'center', }}>
-                    <View style={{flex: 1, backgroundColor: '#FFF', width: '100%', height: 300, borderRadius: 50, position: 'absolute' }}>
+                <TouchableOpacity
+                 onPress={() => closeComment(false, numberSentence)}
+                 style={{flex: 1, position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(52, 52, 52, 0.6)', }}>
+                    <View style={{flex: 1, backgroundColor: '#FFF', width: '90%', height: 300, borderRadius: 50, position: 'absolute' }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => closeComment(false, numberSentence)}>
                             <View style={{ width: '85%', }}>
                                 
@@ -169,11 +169,10 @@ function ListResponse(props){
                                 IsLoadingComment 
                                 ?<ActivityIndicator size="large" color="#FFF" style={{ top: 17 }} />       
                                 :<Text style={{ top: 20, fontWeight: 'bold', color: '#FFF', }}>Adicionar</Text>
-                            }
-                            
+                            }                            
                         </TouchableOpacity>
                     </View>          
-                </View>  
+                </TouchableOpacity> 
                 : null
             }  
         </View>

@@ -4,7 +4,7 @@ import APIActivity  from '../../../../services/activityService/activityService';
 import VG from '../../../../components/variables/VG';
 import style from './styles';
 
-export default function responseSentenceUser({ navigation, route }) {
+export default function ResponseSentenceUser({ navigation, route }) {
     const { data } = route.params;
     const [listSentences, setListSentences] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -44,7 +44,7 @@ function ListResponse(props){
         <View>
             <FlatList data={props.item}  keyExtractor={item => item.id} renderItem={({ item }) => {       
                 return (
-                    <View key={item} style={style.container_item_list}>
+                    <View key={item.id} style={style.container_item_list}>
                         <View style={style.container_phrase}>
                             <Text style={style.number_question}>Frase: {item.number_sentence}</Text>
                         </View>                                                     

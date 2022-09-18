@@ -6,7 +6,7 @@ const Tab = createBottomTabNavigator();
 import myResponseActivity from '../../mainActivity/myResponseActivity';
 import myActivity from '../../mainActivity/myActivity';
 
-export default function activity() {
+export default function Activity() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

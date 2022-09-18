@@ -9,7 +9,7 @@ import LottieFinishBlue from '../../../../components/lotties/finishBlue';
 import * as Animatable from 'react-native-animatable';
 import ModuleStorage from '../../../../services/storage';
 
-export default function newActivityQuestions({ navigation, route }) {
+export default function NewActivityQuestions({ navigation, route }) {
     const { itens, title, pass, objImage, tipoSelecionado } = route.params;
     const [end, setEnd] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);

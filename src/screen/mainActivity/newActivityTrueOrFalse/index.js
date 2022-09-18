@@ -5,12 +5,13 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../components/variables/VG';
 import ActivityServices from '../../../services/activityService/activityService';
+import MainService from '../../../services/mainService/mainService';
 import LottieFinishBlue from '../../../components/lotties/finishBlue';
 import * as Animatable from 'react-native-animatable';
 import ModuleStorage from '../../../services/storage';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
-export default function newActivityQuestions({ navigation, route }) {
+export default function NewActivityQuestionsTrueOrFalse({ navigation, route }) {
     const { itens, title, pass, objImage, tipoSelecionado } = route.params;
     const [end, setEnd] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
@@ -88,7 +89,7 @@ export default function newActivityQuestions({ navigation, route }) {
                 let data_header = {
                     title: title,
                     password: !pass ? "" : pass,
-                    type_activity: 'questions',
+                    type_activity: 'truefalse',
                     image_reference: !data_image ? '' : data_image.image_reference,
                     image_url: !data_image ? '' : data_image.image_url,
                     image_type: !data_image ? '' : data_image.image_type,
@@ -104,26 +105,26 @@ export default function newActivityQuestions({ navigation, route }) {
                             let data_answer = {
                                 activity_id: parseInt(response.data.id),
                                 number_question: parseInt(obj_f.number_question),
-                                answer_one: obj_f.responseOne,
-                                answer_two: obj_f.responseTwo,
-                                answer_tree: obj_f.responseTree,
-                                answer_four: obj_f.responseFour,
-                                right_answer: obj_f.question_correcty,
-                                question: obj_f.question,
+                                text: obj_f.text,
+                                response: obj_f.response,
+                                image_reference: obj_f.image_reference,
+                                image_url: obj_f.image_url,
+                                image_type: obj_f.image_type,
+                                image_size_wh: obj_f.image_size_wh,
+                                help_text: obj_f.help_text
                             }
 
-                            ActivityServices.ActivityQuestionCreate(data_answer, VG.user_uid)
-                                .then((response) => {
-
-                                })
+                            MainService.Post('/activity/question/truefalse', VG.user_uid, data_answer)
+                                .then()
                                 .catch((error) => {
-                                    console.log(error);
                                     setLoadingSend(false);
-                                    Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                                    console.log(error)
+                                    Alert.alert('Erro', error, [{ text: 'Ok', style: 'destructive', }]);
+                                    //Alert.alert('Erro', 'Ocorreu um problema ao criar uma questão da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                                    return;
                                 })
                         });
                         setConcluded(true);
-                        //setEnd(true);
                         setLoadingSend(false);
 
                         navigation.reset({
@@ -150,6 +151,7 @@ export default function newActivityQuestions({ navigation, route }) {
         const [showModal, setShowModal] = useState(true);
         const [text, setText] = useState(null);
         const [image, setImage] = useState(null);
+        const [textHelp, setTextHelp] = useState(null);
         const [isLoading, setIsLoading] = useState(false);
         const [response, setResponse] = useState(null);
         const [imageSelected, setImageSelected] = useState(false);
@@ -186,7 +188,7 @@ export default function newActivityQuestions({ navigation, route }) {
             var obj = {}
 
             if (!text || !response) {
-                Alert.alert('Atenção', 'Informe todas informações necessárias.');
+                Alert.alert('Atenção', 'Informe todas as informações necessárias.');
                 return;
             }
 
@@ -211,7 +213,8 @@ export default function newActivityQuestions({ navigation, route }) {
                                     image_reference: data_image.image_reference,
                                     image_url: data_image.image_url,
                                     image_type: data_image.image_type,
-                                    image_size_wh: data_image.image_size_wh
+                                    image_size_wh: data_image.image_size_wh,
+                                    help_text: textHelp ? textHelp.trim() : '0'
                                 }
 
                             })
@@ -234,7 +237,8 @@ export default function newActivityQuestions({ navigation, route }) {
                     image_reference: '*',
                     image_url: '*',
                     image_type: '*',
-                    image_size_wh: '*'
+                    image_size_wh: '*',
+                    help_text: textHelp ? textHelp.trim() : '0'
                 }
             }
 
@@ -269,15 +273,15 @@ export default function newActivityQuestions({ navigation, route }) {
                             <Text>Tópico: {i + 1}</Text>
                             <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Texto: *</Text>
                             <View style={{ backgroundColor: 'black', borderRadius: 15, margin: 5 }}>
-                                <TextInput style={style.inputs} multiline placeholder='Digite um texto' onChangeText={(value) => setText(value)} />
+                                <TextInput style={style.inputs} maxLength={1000} multiline placeholder='Digite um texto' onChangeText={(value) => setText(value)} />
                             </View>
-                            <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Imagem:</Text>
+                            <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Imagem: (opcional)</Text>
                             <View style={{ borderRadius: 15, margin: 5 }}>
                                 <TouchableOpacity
                                     onPress={() => { launchImageLibrary({}, imagePickerCallback) }}
                                     style={style.container_input}>
                                     <Image source={!image ? require('../../../assets/image/imageNotFound.png') : { uri: image.assets[0].uri }} style={style.image} />
-                                    {!isLoading ? null : <ActivityIndicator size='large' color='green' style={style.loading_image} />}
+                                    {!isLoading ? null : <ActivityIndicator size='large' color='blue' style={style.loading_image} />}
                                 </TouchableOpacity>
                             </View>
                             <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Respostas: *</Text>
@@ -316,6 +320,10 @@ export default function newActivityQuestions({ navigation, route }) {
                                             <FontAwesome name='check-circle' style={style.icon_check} size={30} />
                                     }
                                 </TouchableOpacity>
+                            </View>
+                            <Text style={{ marginTop: 5, fontWeight: 'bold' }}>Ajuda: (opcional)</Text>
+                            <View style={{ backgroundColor: 'black', borderRadius: 15, margin: 5 }}>
+                                <TextInput style={style.inputs} maxLength={500}  multiline placeholder='Informe a ajuda' onChangeText={(value) => setTextHelp(value)} />
                             </View>
                             <TouchableOpacity onPress={() => Finish(i + 1)} style={{
                                 backgroundColor: '#4169E1',

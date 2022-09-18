@@ -4,6 +4,7 @@ import styles from './styles';
 import { Picker } from '@react-native-picker/picker';
 import firestore from '@react-native-firebase/firestore';
 import VG from '../../../../components/variables/VG';
+import ModuleStorage from '../../../../services/storage';
 
 export default function NewActivityOptions({ navigation, route }) {
     const { types, title, image } = route.params;
@@ -13,26 +14,25 @@ export default function NewActivityOptions({ navigation, route }) {
     const [itens, setItens] = useState(0);
     const [isLoading, setIsLoading] = useState(false)
 
-    function DeleteActivityTemp() {
+    async function DeleteActivityTemp() {
         firestore()
             .collection('user_activity_build_' + VG.user_uid)
             .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                    console.log('teste teste teste')
-                    console.log(querySnapshot)
+            .then(async querySnapshot => {
+                querySnapshot.forEach(async documentSnapshot => {
+                    //await ModuleStorage.DeleteStorage(documentSnapshot._data.image_url);
                     firestore().collection('user_activity_build_' + VG.user_uid).doc(documentSnapshot.id).delete().then((ok) => { }).catch((error) => { });
                 });
 
                 if (types == 1) {
                     setIsLoading(false);
-                    navigation.navigate('newActivityQuestions', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
+                    navigation.navigate('NewActivityQuestions', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
                 } else if (types == 2) {
                     setIsLoading(false);
-                    navigation.navigate('newActivitySentence', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
+                    navigation.navigate('NewActivitySentence', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
                 } else if (types == 3) {
                     setIsLoading(false);
-                    navigation.navigate('NewActivityTrueOrFalse', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
+                    navigation.navigate('NewActivityQuestionsTrueOrFalse', { itens: itens, title: title, pass: password, type: types, objImage: image, tipoSelecionado: tipoSelecionado })
                 }
             })
             .catch(() => {

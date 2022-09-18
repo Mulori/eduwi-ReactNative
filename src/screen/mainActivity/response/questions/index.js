@@ -8,7 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import MainServices from '../../../../services/mainService/mainService';
 import { NavigationActions, StackActions } from '@react-navigation/native';
 
-export default function responseQuestion({ navigation, route }) {
+export default function ResponseQuestion({ navigation, route }) {
     const { data } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [listQuestion, setListQuestions] = useState([]);

@@ -9,7 +9,7 @@ import { Buffer } from 'buffer'
 import Share from 'react-native-share';
 
 
-export default function usersActivity({ navigation, route }) {
+export default function UsersActivity({ navigation, route }) {
     const { activity } = route.params;
     const [data, setData] = useState(null);
     const [modalMenu, setModalMenu] = useState(false);
@@ -143,7 +143,7 @@ export default function usersActivity({ navigation, route }) {
                                     if (activity.type_activity == 'questions') {
                                         navigation.navigate('QuestionsUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title })
                                     } else if (activity.type_activity == 'sentences') {
-                                        navigation.navigate('sentencesUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title })
+                                        navigation.navigate('SentencesUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title })
                                     }
                                 }}
                                 style={{
@@ -214,7 +214,7 @@ export default function usersActivity({ navigation, route }) {
                                         navigation.navigate('QuestionsActivity', { data: activity });
                                     }
                                     else if (activity.type_activity == 'sentences') {
-                                        navigation.navigate('sentencesActivity', { data: activity });
+                                        navigation.navigate('SentencesActivity', { data: activity });
                                     }
 
                                 }}

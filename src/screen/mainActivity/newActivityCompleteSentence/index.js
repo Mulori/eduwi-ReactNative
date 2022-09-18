@@ -8,7 +8,7 @@ import VG from '../../../components/variables/VG';
 import ColorPalette from 'react-native-color-palette'
 
 
-export default function newActivityCompleteSentence({ navigation }) {
+export default function NewActivityCompleteSentence({ navigation }) {
     const [itens, setItens] = useState(0)
     const [title, setTitle] = useState(null);
     const [password, setPassword] = useState(null);

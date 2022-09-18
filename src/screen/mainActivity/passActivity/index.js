@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, TextInput, StyleSheet, StatusBar, ImageBa
 import {NavigationActions, StackActions} from '@react-navigation/native';
 import md5 from 'md5';
 
-export default function passActivity({ navigation, route }) {
+export default function PassActivity({ navigation, route }) {
     const { activity } = route.params;
     const [passwordInformed, setPasswordInformed] = useState(null);
     const pushAction = StackActions.push('mainSearchActivity', { activity: activity});
