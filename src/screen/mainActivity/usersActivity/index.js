@@ -158,7 +158,7 @@ export default function UsersActivity({ navigation, route }) {
                                     <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold', left: 5 }}>{item.full_name}</Text>
                                     <Text style={{ color: '#000', fontSize: 12, left: 5 }}>{formatDate(date)}</Text>
                                 </View>
-                                <View style={{ flexDirection: 'column', width: '15%' }}>
+                                <View style={{ flexDirection: 'column', width: '20%' }}>
                                     <Text style={{ color: item.value >= 50 ? 'green' : 'red', fontSize: 20, fontWeight: 'bold' }}>{item.value}%</Text>
                                 </View>
                             </TouchableOpacity>

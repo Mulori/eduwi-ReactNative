@@ -69,9 +69,6 @@ export default function MyResponseActivity({ navigation }) {
                             <View style={{ backgroundColor: '#FFF', padding: 10, width: '100%', marginTop: 5 }}>
                                 <Text style={{ color: '#000', fontSize: 17, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text>
                                 <View style={{ width: '100%', flexDirection: 'row' }}>
-                                    <View style={{ width: '80%' }}>
-                                        <Text style={{ color: '#000', fontSize: 13, borderColor: '#000', fontStyle: 'italic' }}>Membros: {item.number_members}</Text>
-                                    </View>
                                     <View style={{ width: '20%' }}>
                                         <Text style={{ color: '#000', fontSize: 13, borderColor: '#000', fontStyle: 'italic' }}>{formatDate(new Date(item.replied_in.substring(0, 4), item.replied_in.substring(5, 7), item.replied_in.substring(8, 10)))}</Text>
                                     </View>
