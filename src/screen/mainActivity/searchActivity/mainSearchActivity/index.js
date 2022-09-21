@@ -21,7 +21,7 @@ export default function MainSearchActivity({ navigation, route }) {
                 setTipo('Complete a Frase')
                 break;   
             case 'truefalse':             
-                setTipo('Complete a Frase')
+                setTipo('Verdadeiro ou Falso')
                 break;     
         }
     }, [])
@@ -43,9 +43,13 @@ export default function MainSearchActivity({ navigation, route }) {
                         console.log(1);
                     }
                     else if(tipo == 'Complete a Frase'){
-                        navigation.dispatch(StackActions.replace('Responsesentences', { data: activity}));     
+                        navigation.dispatch(StackActions.replace('ResponseSentences', { data: activity}));     
                         console.log(2)   
-                    }                           
+                    }     
+                    else if(tipo == 'Verdadeiro ou Falso'){
+                        navigation.dispatch(StackActions.replace('ResponseTrueFalse', { data: activity}));     
+                        console.log(3)   
+                    }                       
                 })
                 .catch(() => {
                     Alert.alert('Erro', 'Ocorreu um erro realizar a limpeza de atividades temporarias.');

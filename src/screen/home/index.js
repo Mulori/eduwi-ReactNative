@@ -41,6 +41,7 @@ import eduvidaDetail from '../eduvida/eduvidaDetail';
 import NewEduvida from '../eduvida/newEduvida';
 import Evaluation from '../evaluation';
 import Ranking from '../ranking';
+import ResponseTrueFalse from '../../screen/mainActivity/response/truefalse';
 
 const Stack = createNativeStackNavigator();
 
@@ -104,6 +105,7 @@ export default function Home() {
             <Stack.Screen name='NewActivityCompleteSentence' options={{ headerShown: false }} component={NewActivityCompleteSentence} />
             <Stack.Screen name='NewActivitySentence' options={{ headerShown: false }} component={NewActivitySentence} />
             <Stack.Screen name='Responsesentences' options={{ headerShown: false }} component={ResponseSentences} />
+            <Stack.Screen name='ResponseTrueFalse' options={{ headerShown: false }} component={ResponseTrueFalse} />
             <Stack.Screen name='Activity' options={{ headerShown: false, }} component={Activitypage} />
             <Stack.Screen name='NewActivityName' options={{ headerShown: false, }} component={NewActivityName} />
             <Stack.Screen name='NewActivityImage' options={{ headerShown: false, }} component={NewActivityImage} />
