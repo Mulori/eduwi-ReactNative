@@ -24,11 +24,12 @@ export default function MyActivity({ navigation }) {
     }
 
     function ConvertNameActivity(value) {
-        if (value) {
+        if (value == "questions") {
             return "Questões";
-        }
-        else {
+        } else if (value == "sentences") {
             return "Complete a Frase";
+        } else if (value == "truefalse") {
+            return "Verdadeiro ou Falso";
         }
     }
 

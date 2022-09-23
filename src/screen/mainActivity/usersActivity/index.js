@@ -137,13 +137,15 @@ export default function UsersActivity({ navigation, route }) {
                 <FlatList style={{ height: '88%', borderRadius: 20 }} data={data} keyExtractor={item => item.id} renderItem={({ item }) => {
                     var date = new Date(item.created);
                     return (
-                        <View style={{ backgroundColor: '#FFF', margin: 10, borderRadius: 15 }}>
+                        <View key={item.id} style={{ backgroundColor: '#FFF', margin: 10, borderRadius: 15 }}>
                             <TouchableOpacity key={item.id}
                                 onPress={() => {
                                     if (activity.type_activity == 'questions') {
                                         navigation.navigate('QuestionsUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title })
                                     } else if (activity.type_activity == 'sentences') {
                                         navigation.navigate('SentencesUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title })
+                                    } else if (activity.type_activity == 'truefalse') {
+                                        navigation.navigate('TrueFalseUsers', { activity: item.activity_id, user_uid: item.user_uid, name: item.full_name, value: item.value, title: activity.title })
                                     }
                                 }}
                                 style={{
@@ -154,11 +156,11 @@ export default function UsersActivity({ navigation, route }) {
                                     margin: 5
                                 }}>
                                 <Image source={ !item.image_url ? require('../../../assets/image/avatarMissing.png') : { uri: item.image_url }} style={{ width: 80, height: 80, borderRadius: 50 }} />
-                                <View style={{ flexDirection: 'column', width: '60%' }}>
+                                <View style={{ flexDirection: 'column', width: '58%' }}>
                                     <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold', left: 5 }}>{item.full_name}</Text>
                                     <Text style={{ color: '#000', fontSize: 12, left: 5 }}>{formatDate(date)}</Text>
                                 </View>
-                                <View style={{ flexDirection: 'column', width: '20%' }}>
+                                <View style={{ flexDirection: 'column', width: '23%' }}>
                                     <Text style={{ color: item.value >= 50 ? 'green' : 'red', fontSize: 20, fontWeight: 'bold' }}>{item.value}%</Text>
                                 </View>
                             </TouchableOpacity>
@@ -216,7 +218,9 @@ export default function UsersActivity({ navigation, route }) {
                                     else if (activity.type_activity == 'sentences') {
                                         navigation.navigate('SentencesActivity', { data: activity });
                                     }
-
+                                    else if (activity.type_activity == 'truefalse') {
+                                        navigation.navigate('TrueFalseActivity', { data: activity });
+                                    }
                                 }}
                                 style={{ padding: 15, margin: 5, backgroundColor: '#4e71ff', alignItems: 'center', borderRadius: 15 }}>
                                 <Text style={{ color: '#FFF', fontSize: 15, fontWeight: 'bold' }}>Visualizar {activity.type_activity == 'questions' ? 'Questões' : 'Frases'}</Text>

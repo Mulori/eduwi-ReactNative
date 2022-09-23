@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { TextInput } from 'react-native-paper';
 
 export default function SentencesUsers({ navigation, route }) {
-    const { activity, user_uid, name, value, title } = route.params;
+    const { activity, user_uid } = route.params;
     const [listSentences, setListSentences] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
 

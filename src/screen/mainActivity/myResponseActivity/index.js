@@ -65,6 +65,9 @@ export default function MyResponseActivity({ navigation }) {
                             else if (item.type_activity == 'sentences') {
                                 navigation.navigate('ResponseSentenceUser', { data: item });
                             }
+                            else if (item.type_activity == 'truefalse') {
+                                navigation.navigate('ResponseTrueFalseUser', { data: item });
+                            }
                         }}>
                             <View style={{ backgroundColor: '#FFF', padding: 10, width: '100%', marginTop: 5 }}>
                                 <Text style={{ color: '#000', fontSize: 17, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic' }}>{item.title}</Text>
