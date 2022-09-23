@@ -115,11 +115,11 @@ export default function MainActivity({ navigation }) {
                         </TouchableOpacity>
                     </View>
             }
-            <View style={{ width: '100%', marginTop: 25}}>
-            <Text style={{ left: 20, fontSize: 20, fontWeight: 'bold' }}>Atividades Populares</Text>
+            <View style={{ width: '100%', marginTop: 25 }}>
+                <Text style={{ left: 20, fontSize: 20, fontWeight: 'bold' }}>Atividades Populares</Text>
             </View>
             <ScrollView
-                style={{ width: '100%', height: '100%'}}
+                style={{ width: '100%', height: '100%' }}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -150,19 +150,22 @@ export default function MainActivity({ navigation }) {
                                     />
                                     <View >
                                         <View>
-                                            <Text style={{color: '#FFF',  width: '90%', fontSize: 18, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5, top: 5 }}>{item.title.toString()}</Text>     
+                                            <Text style={{ color: '#FFF', width: '86%', fontSize: 18, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5, top: 5 }}>{item.title}</Text>
                                         </View>
                                         {/* <View>
                                             <Text style={{color: '#FFF', fontSize: 18, fontWeight: 'bold', borderColor: '#000', fontStyle: 'italic', left: 5 }}>{item.title.toString().substring(20, 40)}</Text>     
                                         </View> */}
-                                    </View>                                    
+                                    </View>
                                     <Text style={{ color: '#FFF', position: 'absolute', bottom: 0, left: 115, fontSize: 15 }}>Dificuldade: {item.difficulty_level}</Text>
-                                    <FontAwesome name='star' size={22} style={{ color: '#FFF', position: 'absolute', bottom: 3, right: 20}} />
+                                    <FontAwesome name='star' size={22} style={{ color: '#FFF', position: 'absolute', bottom: 3, right: 20 }} />
                                     {
                                         key + 1 > 3 ? null :
-                                        <Icon name='medal' size={30} style={{ color: key + 1 == 1 ? '#eaea32' : key + 1 == 2 ? '#c0c0c0' : key + 1 == 3 ? '#996515' : '#FFF', position: 'absolute', top: -20, right: -5}} />
+                                            <Icon name='medal' size={30} style={{ color: key + 1 == 1 ? '#eaea32' : key + 1 == 2 ? '#c0c0c0' : key + 1 == 3 ? '#996515' : '#FFF', position: 'absolute', top: -20, right: -5 }} />
                                     }
-                                    <Text style={{ color: '#FFF', position: 'absolute', bottom: 0, right: 5, fontSize: 22 }}>5</Text>
+                                    {
+                                        item.stars < 1 ? null :
+                                            <Text style={{ color: '#FFF', position: 'absolute', bottom: 0, right: 5, fontSize: 22 }}>{item.stars}</Text>
+                                    }
                                 </View>
 
 

@@ -42,6 +42,9 @@ import NewEduvida from '../eduvida/newEduvida';
 import Evaluation from '../evaluation';
 import Ranking from '../ranking';
 import ResponseTrueFalse from '../../screen/mainActivity/response/truefalse';
+import TrueFalseUsers from '../mainActivity/response/trueFalseUsers';
+import TrueFalseActivity from '../mainActivity/myActivity/trueFalseActivity';
+import ResponseTrueFalseUser from '../mainActivity/response/responseTrueFalseUser';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +65,8 @@ export default function Home() {
             <Stack.Screen name='ResponseQuestion' options={{ headerShown: false }} component={ResponseQuestion} />
             <Stack.Screen name='EduvidaDetail' options={{ headerShown: false }} component={eduvidaDetail} />
             <Stack.Screen name='Ranking' options={{ headerShown: false }} component={Ranking} />
+            <Stack.Screen name='TrueFalseActivity' options={{ headerShown: false }} component={TrueFalseActivity} />
+            <Stack.Screen name='ResponseTrueFalseUser' options={{ headerShown: false }} component={ResponseTrueFalseUser} />
             <Stack.Screen name='Evaluation' options={{
                 headerTitle: 'Avalie-nos',
                 headerStyle: { backgroundColor: '#FFF', color: '#FFF' },
@@ -91,6 +96,7 @@ export default function Home() {
             <Stack.Screen name='QuestionsActivity' options={{ headerShown: false }} component={QuestionsActivity} />
             <Stack.Screen name='SentencesActivity' options={{ headerShown: false }} component={SentencesActivity} />
             <Stack.Screen name='QuestionsUsers' options={{ headerShown: false }} component={QuestionsUsers} />
+            <Stack.Screen name='TrueFalseUsers' options={{ headerShown: false }} component={TrueFalseUsers} />
             <Stack.Screen name='MyProfile' options={{ headerTitle: 'Meu Perfil' }} component={MyProfile} />
             <Stack.Screen name='Game' options={{
                 headerTitle: 'Loja',
@@ -112,7 +118,13 @@ export default function Home() {
             <Stack.Screen name='NewActivityOptions' options={{ headerShown: false, }} component={NewActivityOptions} />
             <Stack.Screen name='Sucess' options={{ headerShown: false, }} component={Sucess} />
             <Stack.Screen name='Testee' options={{ headerShown: false, }} component={Teste} />
-            <Stack.Screen name='ViewerImage' component={ViewerImage} options={{ headerTitle: 'Imagem', headerStyle: { backgroundColor: '#000', color: '#000' }, headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />
+            <Stack.Screen name='ViewerImage' component={ViewerImage} options={{ 
+                headerTitle: 'Imagem', 
+                headerStyle: { 
+                    backgroundColor: 
+                    '#000', 
+                    color: '#000' }, 
+                    headerTitleStyle: { color: '#FFF' }, headerTintColor: '#FFF' }} />
             <Stack.Screen name='SentencesUsers'
                 options={{
                     headerTitle: 'Respostas do Participante',

@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MainServices from '../../../../services/mainService/mainService';
 import { NavigationActions, StackActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 import style from './styles';
 
 export default function ResponseTrueFalse({ navigation, route }) {
@@ -225,7 +226,7 @@ function ListResponse(props) {
                 <View style={style.container_image}>
                     <Image source={{ uri: item.image_url }} style={style.image} />
                 </View>
-                <View style={{ flexDirection: 'row', width: '95%' }}>
+                <View style={style.container_button_truefalse}>
                     <TouchableOpacity style={{
                         backgroundColor: 'green',
                         borderRadius: 15,
@@ -235,7 +236,17 @@ function ListResponse(props) {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}
-                        onPress={() => setResponse('true')}
+                        onPress={() => {
+                            setResponse('true')
+                            firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
+                            .update({
+                                response: 'true',
+                            })
+                            .then()
+                            .catch(() => {
+                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                            })
+                        }}
                     >
                         <Text style={style.text_response}>Verdadeiro</Text>
                         {
@@ -252,7 +263,17 @@ function ListResponse(props) {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}
-                        onPress={() => setResponse('false')}
+                        onPress={() => {
+                            setResponse('false')
+                            firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
+                            .update({
+                                response: 'false',
+                            })
+                            .then()
+                            .catch(() => {
+                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                            })
+                        }}
                     >
                         <Text style={style.text_response}>Falso</Text>
                         {
@@ -273,6 +294,17 @@ class RenderActivity extends React.Component {
 
 
     _renderSlides = ({ item }) => {
+
+        firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
+            .set({
+                response: 'null',
+            })
+            .then()
+            .catch((erro) => {
+                console.log(erro)
+                Alert.alert('Erro', 'Ocorreu um erro ao montar as questões. Tente novamente!');
+            })
+
         return (
             <ListResponse item={item} />
         )
@@ -306,111 +338,66 @@ class RenderActivity extends React.Component {
         const { data, user, navi } = this.props;
 
         async function done() {
+            firestore().collection('user_activity_' + data[0].activity_id + '_response_' + VG.user_uid).get()
+                .then(querySnapshot => {
+                    var bloqueia_post = false;
+                    var sucess = true;
+                    var index = 0;
+                    var activity = {};
+                    var activityArray = [];
 
-            let keys = [];
-            let keys_done = [];
-            try {
-                keys = await AsyncStorage.getAllKeys();
-                const keys_insert = [];
-                var warning = false;
-
-                keys.forEach((item, index) => {
-                    var keyStorageName = item;
-                    item = item.replace('@', '');
-
-                    var array_item = item.split(';');
-
-                    if (array_item[0] + ';' + data[0].activity_id == 'response;' + data[0].activity_id) {
-                        keys_insert.push(keyStorageName);
-                    }
-                })
-
-                keys_insert.sort();
-
-                console.log(data.length)
-
-                for (var i = 0; i < data.length; i++) {
-                    let sub_keys = [];
-                    keys_insert.forEach((item_sentence, index) => {
-                        if (item_sentence.split(';')[2] == i + 1) {
-
-                            sub_keys.push(item_sentence)
+                    querySnapshot.forEach(documentSnapshot => {
+                        const valid = documentSnapshot.data()
+                        if (valid.response == 'null') {
+                            Alert.alert('Atenção', 'Responda todas as questões.');
+                            bloqueia_post = true;
+                            return;
                         }
-                    })
 
-                    sub_keys.sort();
+                        index++
 
-                    if (data[i].hidden_words.split(';').length !== sub_keys.length) {
-                        warning = true;
-                    }
+                        activity.activity_id = parseInt(data[0].activity_id);
+                        activity.number_question = index;
+                        activity.answer = valid.response;
+                        activityArray.push({ ...activity });
 
-                    let values;
-                    let text_informed = '';
-                    try {
-                        values = await AsyncStorage.multiGet(sub_keys)
-                        values.forEach((item) => {
-                            if (text_informed.length > 0) {
-                                text_informed = text_informed + ';' + JSON.parse(item[1]).sentence;
-                            } else {
-                                text_informed = JSON.parse(item[1]).sentence;
-                            }
-                        })
-                    } catch (e) {
-                        console.log(e);
+                    });
+
+                    console.log(bloqueia_post)
+                    if (bloqueia_post) {
                         return;
                     }
 
-                    console.log(text_informed)
+                    console.log(JSON.stringify(activityArray))
 
-                    let obj_sentence = {
-                        activity_id: parseInt(data[0].activity_id),
-                        number_sentence: i + 1,
-                        sentences_informed: text_informed
-                    }
+                    APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
+                        .then(() => {
+                            APIActivity.Post('/activity/question/users/response', VG.user_uid, activityArray)
+                                .then()
+                                .catch((erro) => {
+                                    sucess = false;
+                                    console.log(erro)
+                                    Alert.alert('Erro', 'Ocorreu um problema ao responder as questões da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                                })
 
-                    keys_done.push(obj_sentence);
-                }
-
-                if (warning) {
-                    return;
-                } else {
-                    SendResponse(keys_done)
-                }
-
-            } catch (e) {
-                console.log(e);
-                return;
-            }
-        }
-
-        async function SendResponse(value) {
-            var sucess = true;
-            console.log(value);
-            APIActivity.Post('/activity/question/users', VG.user_uid, { activity_id: data[0].activity_id }) //Faz a postagem do cabeçalho da atividade
-                .then(() => {
-                    APIActivity.Post('/activity/sentences/users/response', VG.user_uid, value)
-                        .then()
-                        .catch((erro) => {
-                            sucess = false;
-                            console.log(erro)
-                            Alert.alert('Erro', 'Ocorreu um problema ao responder as frases da atividade', [{ text: 'Ok', style: 'destructive', }]);
+                            if (sucess) {
+                                navi.reset({
+                                    index: 1,
+                                    routes: [
+                                        { name: 'Main' },
+                                        { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
+                                    ],
+                                })
+                            }
                         })
-
-                    if (sucess) {
-
-                        navi.reset({
-                            index: 1,
-                            routes: [
-                                { name: 'Main' },
-                                { name: 'Sucess', params: { title: 'Resposta Enviada', avaliable: true, activity_id: data[0].activity_id }, },
-                            ],
+                        .catch((error) => {
+                            console.log(error);
+                            Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{ text: 'Ok', style: 'destructive', }]);
                         })
-                    }
                 })
-                .catch((error) => {
-                    console.log(error);
-                    Alert.alert('Erro', 'Ocorreu um problema ao enviar a resposta da atividade', [{ text: 'Ok', style: 'destructive', }]);
-                })
+                .catch(() => {
+                    Alert.alert('Erro', 'Ocorreu um erro ao realizara leitura das respostas temporarias.');
+                });           
         }
 
         return (

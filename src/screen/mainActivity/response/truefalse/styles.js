@@ -79,8 +79,8 @@ const style = StyleSheet.create({
         alignItems: 'center',
     }, 
     image:{
-        width: 350,
-        height: 400,
+        width: 250,
+        height: 350,
         marginTop: 25,
         borderRadius: 25,
     },
@@ -112,6 +112,11 @@ const style = StyleSheet.create({
     },
     icon_check: {
         color: '#FFF'
+    },
+    container_button_truefalse:{
+        flexDirection: 'row', 
+        width: '95%',  
+        marginTop: 15,
     }
 })
 
