@@ -117,6 +117,10 @@ const style = StyleSheet.create({
         flexDirection: 'row', 
         width: '95%',  
         marginTop: 15,
+    },
+    container_modal_help: {
+        width: '100%',
+        height: '10%',
     }
 })
 

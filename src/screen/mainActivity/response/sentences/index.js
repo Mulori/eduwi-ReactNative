@@ -178,20 +178,11 @@ function ListResponse(props){
     }
 
     function Reward(item){
-        // if(item[0].type.toString() == '6'){ //Espie uma resposta
-        //     setType(6);
-        //     setIsVisible(true); 
-        // }
-
         if(item[0].type.toString() == '7'){ //Dica de resposta
             //setType(7);
             setIsVisible(false); 
             Rewarding(7);
         }
-
-        // if(item[0].type.toString() == '5'){ //Gabarite uma atividade
-        //     Rewarding(item.number_question, 5)
-        // }
     }
 
     function UseReward(item_){
@@ -201,6 +192,11 @@ function ListResponse(props){
                 Alert.alert('Atenção', 'Não existe dicas para está frase.');
                 return;
             }
+        }
+
+        if(item_.type == 5 || item_.type == 6){
+            Alert.alert('Atenção', 'Está recompensa não está disponivel para esta categoria de atividade');
+            return;
         }
 
         Alert.alert(item_.name, "Deseja utilizar está recompensa?",  
