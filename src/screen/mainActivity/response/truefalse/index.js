@@ -16,7 +16,7 @@ export default function ResponseTrueFalse({ navigation, route }) {
     const { data } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [listSentences, setListSentences] = useState([]);
-    
+
     useEffect(() => {
         setModalVisible(true);
 
@@ -59,23 +59,29 @@ function ListResponse(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [dataReward, setDataReward] = useState(null);
     const [response, setResponse] = useState(null);
+    const [modalHelp, setModalHelp] = useState(false);
+    const [textHelp, setTextHelp] = useState('')
 
     function Rewarding(type) {
-        switch (type) {
-            case 7: //Dica de resposta
-                setHelpVisible(true);
-                break;
+
+        if (type == 6) { //Espie uma resposta       
+            setTextHelp(item.response == "true" ? "Verdadeiro" : "Falso")
+            setModalHelp(true);
+        }
+
+        if (type == 7) { //Dica de Resposta
+            setTextHelp(item.help_text)
+            setModalHelp(true);
         }
     }
 
     function Reward(item) {
-        // if(item[0].type.toString() == '6'){ //Espie uma resposta
-        //     setType(6);
-        //     setIsVisible(true); 
-        // }
+        if (item[0].type.toString() == '6') { //Espie uma resposta
+            setIsVisible(false);
+            Rewarding(6);
+        }
 
         if (item[0].type.toString() == '7') { //Dica de resposta
-            //setType(7);
             setIsVisible(false);
             Rewarding(7);
         }
@@ -88,10 +94,15 @@ function ListResponse(props) {
     function UseReward(item_) {
         console.log(item_)
         if (item_.type == 7) {
-            if (item.words_help == "0") {
-                Alert.alert('Atenção', 'Não existe dicas para está frase.');
+            if (item.help_text == "0") {
+                Alert.alert('Atenção', 'Não existem dicas para está questão.');
                 return;
             }
+        }
+
+        if(item_.type == 5){
+            Alert.alert('Atenção', 'Está recompensa não está disponivel para esta categoria de atividade');
+            return;
         }
 
         Alert.alert(item_.name, "Deseja utilizar está recompensa?",
@@ -218,11 +229,22 @@ function ListResponse(props) {
                     <Icon name='game-controller' size={25} style={{ color: '#FFF' }} />
                 </TouchableOpacity>
             </View>
-            <View style={{ width: '90%', marginTop: 15, marginBottom: 15 }}>
-
-            </View>
             <ScrollView>
                 <Text style={style.question}>{item.text}</Text>
+                {
+                    !modalHelp ? null :
+                        <View style={{ alignItems: 'center' }}>
+                            <View style={{
+                                width: '90%', marginTop: 15,
+                                marginBottom: 15, alignItems: 'center',
+                                backgroundColor: '#5271ff', borderRadius: 20
+                            }}>
+                                <Text style={{ fontSize: 17, fontWeight: 'bold', color: '#FFF' }}>Ajuda</Text>
+                                <Text style={{ color: '#FFF' }}>{textHelp}</Text>
+                            </View>
+                        </View>
+
+                }
                 <View style={style.container_image}>
                     <Image source={{ uri: item.image_url }} style={style.image} />
                 </View>
@@ -239,13 +261,13 @@ function ListResponse(props) {
                         onPress={() => {
                             setResponse('true')
                             firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
-                            .update({
-                                response: 'true',
-                            })
-                            .then()
-                            .catch(() => {
-                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
-                            })
+                                .update({
+                                    response: 'true',
+                                })
+                                .then()
+                                .catch(() => {
+                                    Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                                })
                         }}
                     >
                         <Text style={style.text_response}>Verdadeiro</Text>
@@ -266,13 +288,13 @@ function ListResponse(props) {
                         onPress={() => {
                             setResponse('false')
                             firestore().collection('user_activity_' + item.activity_id + '_response_' + VG.user_uid).doc(item.number_question.toString())
-                            .update({
-                                response: 'false',
-                            })
-                            .then()
-                            .catch(() => {
-                                Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
-                            })
+                                .update({
+                                    response: 'false',
+                                })
+                                .then()
+                                .catch(() => {
+                                    Alert.alert('Erro', 'Ocorreu um erro ao responder essa questão. Tente novamente!');
+                                })
                         }}
                     >
                         <Text style={style.text_response}>Falso</Text>
@@ -397,7 +419,7 @@ class RenderActivity extends React.Component {
                 })
                 .catch(() => {
                     Alert.alert('Erro', 'Ocorreu um erro ao realizara leitura das respostas temporarias.');
-                });           
+                });
         }
 
         return (
